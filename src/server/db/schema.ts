@@ -1,3 +1,4 @@
+import type {z} from 'zod'
 import {relations, sql} from 'drizzle-orm'
 import {
   index,
@@ -8,6 +9,7 @@ import {
   varchar,
   pgTable,
 } from 'drizzle-orm/pg-core'
+import {createInsertSchema} from 'drizzle-zod'
 import {type AdapterAccount} from 'next-auth/adapters'
 
 export const users = pgTable('user', {
@@ -19,6 +21,9 @@ export const users = pgTable('user', {
   }).default(sql`CURRENT_TIMESTAMP`),
   image: varchar('image', {length: 255}),
 })
+
+const insertUsersSchema = createInsertSchema(users)
+export type UsersSchema = z.infer<typeof insertUsersSchema>
 
 export const usersRelations = relations(users, ({many}) => ({
   accounts: many(accounts),
@@ -51,6 +56,9 @@ export const accounts = pgTable(
   }),
 )
 
+const insertAccountsSchema = createInsertSchema(accounts)
+export type AccountsSchema = z.infer<typeof insertAccountsSchema>
+
 export const accountsRelations = relations(accounts, ({one}) => ({
   user: one(users, {fields: [accounts.userId], references: [users.id]}),
 }))
@@ -69,6 +77,9 @@ export const sessions = pgTable(
   }),
 )
 
+const insertSessionsSchema = createInsertSchema(sessions)
+export type SessionsSchema = z.infer<typeof insertSessionsSchema>
+
 export const sessionsRelations = relations(sessions, ({one}) => ({
   user: one(users, {fields: [sessions.userId], references: [users.id]}),
 }))
@@ -84,3 +95,8 @@ export const verificationTokens = pgTable(
     compoundKey: primaryKey({columns: [vt.identifier, vt.token]}),
   }),
 )
+
+const insertVerificationTokensSchema = createInsertSchema(verificationTokens)
+export type VerificationTokensSchema = z.infer<
+  typeof insertVerificationTokensSchema
+>
