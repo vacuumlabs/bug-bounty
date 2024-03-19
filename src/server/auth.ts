@@ -7,6 +7,7 @@ import {
 import {type Adapter} from 'next-auth/adapters'
 import TwitterProvider from 'next-auth/providers/twitter'
 
+import {env} from '@/env'
 import {db} from '@/server/db'
 
 /**
@@ -42,8 +43,8 @@ export const authOptions: NextAuthOptions = {
   adapter: DrizzleAdapter(db) as Adapter,
   providers: [
     TwitterProvider({
-      clientId: process.env.TWITTER_CLIENT_ID ?? '',
-      clientSecret: process.env.TWITTER_CLIENT_SECRET ?? '',
+      clientId: env.TWITTER_CLIENT_ID,
+      clientSecret: env.TWITTER_CLIENT_SECRET,
     }),
   ],
 }
