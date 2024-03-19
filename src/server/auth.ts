@@ -42,8 +42,8 @@ export const authOptions: NextAuthOptions = {
   adapter: DrizzleAdapter(db) as Adapter,
   providers: [
     TwitterProvider({
-      clientId: process.env.DISCORD_CLIENT_ID ?? '',
-      clientSecret: process.env.DISCORD_CLIENT_SECRET ?? '',
+      clientId: process.env.TWITTER_CLIENT_ID ?? '',
+      clientSecret: process.env.TWITTER_CLIENT_SECRET ?? '',
     }),
   ],
 }
