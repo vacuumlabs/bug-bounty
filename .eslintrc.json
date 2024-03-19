@@ -1,3 +1,74 @@
 {
-  "extends": "next/core-web-vitals"
+  "plugins": ["import", "@typescript-eslint", "jsx-a11y"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/strict-type-checked",
+    "plugin:@typescript-eslint/stylistic-type-checked",
+    "plugin:unicorn/recommended",
+    "next/core-web-vitals",
+    "plugin:jsx-a11y/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "import/order": [
+      "error",
+      {
+        "groups": [["builtin", "external"], ["parent", "sibling"], "index"],
+        "newlines-between": "always"
+      }
+    ],
+    "unicorn/no-null": 0,
+    "unicorn/no-array-callback-reference": 0,
+    "unicorn/no-array-reduce": 0,
+    "unicorn/no-array-for-each": 0,
+    "unicorn/no-useless-undefined": ["error", {"checkArguments": false}],
+    "unicorn/switch-case-braces": ["error", "avoid"],
+    "unicorn/filename-case": [
+      "error",
+      {
+        "cases": {
+          "camelCase": true,
+          "pascalCase": true
+        }
+      }
+    ],
+    "unicorn/prevent-abbreviations": 0,
+    "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": {
+          "arguments": false,
+          "attributes": false
+        }
+      }
+    ],
+    "@typescript-eslint/no-confusing-void-expression": [
+      "error",
+      {
+        "ignoreArrowShorthand": true
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "ignoreRestSiblings": true,
+        "varsIgnorePattern": "^_",
+        "destructuredArrayIgnorePattern": "^_"
+      }
+    ],
+    "react/function-component-definition": [
+      2,
+      {
+        "namedComponents": "arrow-function",
+        "unnamedComponents": "arrow-function"
+      }
+    ],
+    "no-empty": ["error", {"allowEmptyCatch": true}]
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": true,
+    "tsconfigRootDir": "__dirname"
+  }
 }
