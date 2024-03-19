@@ -64,7 +64,9 @@
         "unnamedComponents": "arrow-function"
       }
     ],
-    "no-empty": ["error", {"allowEmptyCatch": true}]
+    "no-empty": ["error", {"allowEmptyCatch": true}],
+    "drizzle/enforce-delete-with-where": "error",
+    "drizzle/enforce-update-with-where": "error"
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
