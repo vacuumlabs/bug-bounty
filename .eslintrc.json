@@ -1,5 +1,5 @@
 {
-  "plugins": ["import", "@typescript-eslint", "jsx-a11y"],
+  "plugins": ["import", "@typescript-eslint", "jsx-a11y", "drizzle"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/strict-type-checked",
