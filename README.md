@@ -8,10 +8,10 @@ Install dependencies:
 yarn install
 ```
 
-Create `.env` file:
+Copy `.env` file and add secrets to `.env.local`:
 
 ```bash
-cp .env.example .env
+cp .env .env.local
 ```
 
 Run postgres locally using docker:
