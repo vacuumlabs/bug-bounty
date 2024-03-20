@@ -46,6 +46,8 @@ export const accounts = pgTable(
     access_token: text('access_token'),
     expires_at: integer('expires_at'),
     token_type: varchar('token_type', {length: 255}),
+    oauth_token: text('oauth_token'),
+    oauth_token_secret: text('oauth_token_secret'),
     scope: varchar('scope', {length: 255}),
     id_token: text('id_token'),
     session_state: varchar('session_state', {length: 255}),
