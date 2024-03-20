@@ -1,11 +1,13 @@
+import {loadEnvConfig} from '@next/env'
+import {cwd} from 'node:process'
 import {type Config} from 'drizzle-kit'
 
-import {env} from '@/env'
+loadEnvConfig(cwd())
 
 export default {
-  schema: './src/server/db/schema.ts',
+  schema: './src/server/db/schema',
   driver: 'pg',
   dbCredentials: {
-    connectionString: env.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL ?? '',
   },
 } satisfies Config

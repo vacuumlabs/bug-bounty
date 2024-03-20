@@ -11,7 +11,7 @@ yarn install
 Copy `.env` file and add secrets to `.env.local`:
 
 ```bash
-cp .env .env.local
+cp .env.local.example .env.local
 ```
 
 Run postgres locally using docker:
