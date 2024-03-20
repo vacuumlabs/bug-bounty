@@ -24,8 +24,8 @@ export const users = pgTable('user', {
 
 const insertUsersSchema = createInsertSchema(users)
 const selectUsersSchema = createSelectSchema(users)
-export type UsersInsert = z.infer<typeof insertUsersSchema>
-export type UsersSelect = z.infer<typeof selectUsersSchema>
+export type InsertUser = z.infer<typeof insertUsersSchema>
+export type User = z.infer<typeof selectUsersSchema>
 
 export const usersRelations = relations(users, ({many}) => ({
   accounts: many(accounts),
@@ -60,8 +60,8 @@ export const accounts = pgTable(
 
 const insertAccountsSchema = createInsertSchema(accounts)
 const selectAccountsSchema = createSelectSchema(accounts)
-export type AccountsInsert = z.infer<typeof insertAccountsSchema>
-export type AccountsSelect = z.infer<typeof selectAccountsSchema>
+export type InsertAccount = z.infer<typeof insertAccountsSchema>
+export type Account = z.infer<typeof selectAccountsSchema>
 
 export const accountsRelations = relations(accounts, ({one}) => ({
   user: one(users, {fields: [accounts.userId], references: [users.id]}),
@@ -83,8 +83,8 @@ export const sessions = pgTable(
 
 const insertSessionsSchema = createInsertSchema(sessions)
 const selectSessionsSchema = createSelectSchema(sessions)
-export type SessionsInsert = z.infer<typeof insertSessionsSchema>
-export type SessionsSelect = z.infer<typeof selectSessionsSchema>
+export type InsertSession = z.infer<typeof insertSessionsSchema>
+export type Session = z.infer<typeof selectSessionsSchema>
 
 export const sessionsRelations = relations(sessions, ({one}) => ({
   user: one(users, {fields: [sessions.userId], references: [users.id]}),
@@ -104,9 +104,7 @@ export const verificationTokens = pgTable(
 
 const insertVerificationTokensSchema = createInsertSchema(verificationTokens)
 const selectVerificationTokensSchema = createSelectSchema(verificationTokens)
-export type VerificationTokensInsert = z.infer<
+export type InsertVerificationToken = z.infer<
   typeof insertVerificationTokensSchema
 >
-export type VerificationTokensSelect = z.infer<
-  typeof selectVerificationTokensSchema
->
+export type VerificationToken = z.infer<typeof selectVerificationTokensSchema>
