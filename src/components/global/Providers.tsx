@@ -1,11 +1,21 @@
 'use client'
 
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import {MeshProvider} from '@meshsdk/react'
+import {
+  MutationCache,
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 import {SessionProvider} from 'next-auth/react'
 import {ReactNode} from 'react'
 
 type ProvidersProps = {
   children: ReactNode
+}
+
+const handleError = (error: unknown) => {
+  console.error(error)
 }
 
 const makeQueryClient = () => {
@@ -17,6 +27,12 @@ const makeQueryClient = () => {
         staleTime: 60 * 1000,
       },
     },
+    queryCache: new QueryCache({
+      onError: handleError,
+    }),
+    mutationCache: new MutationCache({
+      onError: handleError,
+    }),
   })
 }
 
@@ -43,7 +59,9 @@ const Providers: React.FC<ProvidersProps> = ({children}) => {
 
   return (
     <SessionProvider>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <MeshProvider>{children}</MeshProvider>
+      </QueryClientProvider>
     </SessionProvider>
   )
 }
