@@ -1,0 +1,12 @@
+diff --git a/node_modules/@meshsdk/core/dist/wallet/browser.service.d.ts b/node_modules/@meshsdk/core/dist/wallet/browser.service.d.ts
+index 4e7e784..ccf0b74 100644
+--- a/node_modules/@meshsdk/core/dist/wallet/browser.service.d.ts
++++ b/node_modules/@meshsdk/core/dist/wallet/browser.service.d.ts
+@@ -1,6 +1,6 @@
+ import { IInitiator, ISigner, ISubmitter } from '@mesh/common/contracts';
+ import type { Address, TransactionUnspentOutput } from '@mesh/core';
+-import type { Asset, AssetExtended, DataSignature, UTxO, Wallet } from '@mesh/common/types';
++import type { Asset, AssetExtended, DataSignature, UTxO, Wallet } from '../common/types';
+ export declare class BrowserWallet implements IInitiator, ISigner, ISubmitter {
+     private readonly _walletInstance;
+     private constructor();
