@@ -6,6 +6,8 @@ import {
 } from 'next-auth'
 import {type Adapter} from 'next-auth/adapters'
 import TwitterProvider from 'next-auth/providers/twitter'
+import GoogleProvider from 'next-auth/providers/google'
+import EmailProvider from 'next-auth/providers/email'
 
 import {env} from '@/env'
 import {db} from '@/server/db'
@@ -42,9 +44,18 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: DrizzleAdapter(db) as Adapter,
   providers: [
+    EmailProvider({
+      server: env.EMAIL_SERVER,
+      from: env.EMAIL_FROM,
+      // maxAge: 24 * 60 * 60, // How long email links are valid for (default 24h)
+    }),
     TwitterProvider({
       clientId: env.TWITTER_CLIENT_ID,
       clientSecret: env.TWITTER_CLIENT_SECRET,
+    }),
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
   ],
 }
