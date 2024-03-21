@@ -33,6 +33,9 @@ declare module 'next-auth' {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
+  pages: {
+    newUser: '/profile/connect-wallet',
+  },
   callbacks: {
     session: ({session, user}) => ({
       ...session,

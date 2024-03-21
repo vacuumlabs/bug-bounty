@@ -15,6 +15,7 @@ import {type AdapterAccount} from 'next-auth/adapters'
 export const users = pgTable('user', {
   id: varchar('id', {length: 255}).notNull().primaryKey(),
   name: varchar('name', {length: 255}),
+  walletAddress: varchar('walletAddress', {length: 255}),
   email: varchar('email', {length: 255}).notNull(),
   emailVerified: timestamp('emailVerified', {
     mode: 'date',
