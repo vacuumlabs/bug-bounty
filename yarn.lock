@@ -589,12 +589,12 @@
     typescript "^5.2.2"
     zod "3.22.2"
 
-"@meshsdk/react@github:stargazerlabs/mesh-react":
-  version "1.1.7"
-  resolved "https://codeload.github.com/stargazerlabs/mesh-react/tar.gz/6f38fdde8d5c1711bbc831e7729bc1e1b616a1bb"
+"@meshsdk/react@1.1.10-beta.3":
+  version "1.1.10-beta.3"
+  resolved "https://registry.yarnpkg.com/@meshsdk/react/-/react-1.1.10-beta.3.tgz#3c67cbf3d0452e479bf5404247e2c5cd11e8f98d"
+  integrity sha512-OdSzoHdfsFJ5X4dttr63Oe03GTxIA7BP0I7kUhS1GQB7szm+ddD77O8bFb7tmRWqcRNqd69iqQOnJyFu7fwChA==
   dependencies:
     styled-components "5.3.6"
-    typescript "^5.2.2"
 
 "@next/env@14.1.4":
   version "14.1.4"
