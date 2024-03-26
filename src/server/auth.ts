@@ -51,11 +51,13 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
     }),
     TwitterProvider({
       clientId: env.TWITTER_CLIENT_ID,
       clientSecret: env.TWITTER_CLIENT_SECRET,
       name: 'Twitter',
+      allowDangerousEmailAccountLinking: true,
     }),
     CredentialsProvider({
       name: 'Email',

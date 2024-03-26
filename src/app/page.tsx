@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 import {getServerAuthSession} from '@/server/auth'
+import {Button} from '@/components/ui/Button'
 
 const Home = async () => {
   const session = await getServerAuthSession()
@@ -13,17 +14,15 @@ const Home = async () => {
             <span>Logged in as {session.user.name ?? session.user.email}</span>
           )}
         </p>
-        <Link
-          href={session ? '/api/auth/signout' : '/api/auth/signin'}
-          className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20">
-          {session ? 'Sign out' : 'Sign in'}
-        </Link>
-        {!session && (
-          <Link
-            href={'/api/auth/signup'}
-            className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20">
-            Sign up
+        <Button asChild variant="link">
+          <Link href={session ? '/api/auth/signout' : '/api/auth/signin'}>
+            {session ? 'Sign out' : 'Sign in'}
           </Link>
+        </Button>
+        {!session && (
+          <Button asChild variant="link">
+            <Link href={'/api/auth/signup'}>Sign up</Link>
+          </Button>
         )}
       </div>
     </main>
