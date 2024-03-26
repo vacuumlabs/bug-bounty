@@ -2,7 +2,6 @@
 
 import {MeshProvider} from '@meshsdk/react'
 import {
-  MutationCache,
   QueryCache,
   QueryClient,
   QueryClientProvider,
@@ -10,12 +9,10 @@ import {
 import {SessionProvider} from 'next-auth/react'
 import {ReactNode} from 'react'
 
+import {handleGeneralError} from '@/lib/utils/error'
+
 type ProvidersProps = {
   children: ReactNode
-}
-
-const handleError = (error: unknown) => {
-  console.error(error)
 }
 
 const makeQueryClient = () => {
@@ -26,12 +23,13 @@ const makeQueryClient = () => {
         // above 0 to avoid refetching immediately on the client
         staleTime: 60 * 1000,
       },
+      mutations: {
+        // This way it's overrideable in useMutation hooks
+        onError: handleGeneralError,
+      },
     },
     queryCache: new QueryCache({
-      onError: handleError,
-    }),
-    mutationCache: new MutationCache({
-      onError: handleError,
+      onError: handleGeneralError,
     }),
   })
 }
