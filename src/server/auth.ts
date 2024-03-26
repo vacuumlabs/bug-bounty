@@ -7,6 +7,7 @@ import {
 import {type Adapter} from 'next-auth/adapters'
 import TwitterProvider from 'next-auth/providers/twitter'
 import GoogleProvider from 'next-auth/providers/google'
+import GithubProvider from 'next-auth/providers/github'
 import EmailProvider, {EmailUserConfig} from 'next-auth/providers/email'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
@@ -57,6 +58,11 @@ export const authOptions: NextAuthOptions = {
       clientId: env.TWITTER_CLIENT_ID,
       clientSecret: env.TWITTER_CLIENT_SECRET,
       name: 'Twitter',
+      allowDangerousEmailAccountLinking: true,
+    }),
+    GithubProvider({
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
       allowDangerousEmailAccountLinking: true,
     }),
     CredentialsProvider({
