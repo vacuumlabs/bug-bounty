@@ -7,7 +7,10 @@ import {
 import {type Adapter} from 'next-auth/adapters'
 import TwitterProvider from 'next-auth/providers/twitter'
 import GoogleProvider from 'next-auth/providers/google'
-import EmailProvider from 'next-auth/providers/email'
+import EmailProvider, {EmailUserConfig} from 'next-auth/providers/email'
+import CredentialsProvider from 'next-auth/providers/credentials'
+
+import {verifyCredentials} from './actions/verifyCredentials'
 
 import {env} from '@/env'
 import {db} from '@/server/db'
@@ -27,46 +30,47 @@ declare module 'next-auth' {
   }
 }
 
-/**
- * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
- *
- * @see https://next-auth.js.org/configuration/options
- */
 export const authOptions: NextAuthOptions = {
   pages: {
     newUser: '/profile/connect-wallet',
   },
   callbacks: {
-    session: ({session, user}) => ({
+    session: ({session, token}) => ({
       ...session,
       user: {
         ...session.user,
-        id: user.id,
+        id: token.sub,
       },
     }),
   },
   adapter: DrizzleAdapter(db) as Adapter,
+  session: {
+    strategy: 'jwt',
+  },
   providers: [
-    EmailProvider({
-      server: env.EMAIL_SERVER,
-      from: env.EMAIL_FROM,
-      // maxAge: 24 * 60 * 60, // How long email links are valid for (default 24h)
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
     TwitterProvider({
       clientId: env.TWITTER_CLIENT_ID,
       clientSecret: env.TWITTER_CLIENT_SECRET,
       name: 'Twitter',
     }),
-    GoogleProvider({
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    EmailProvider({
+      name: 'Magic link',
+      server: env.EMAIL_SERVER,
+      from: env.EMAIL_FROM,
+    } as EmailUserConfig),
+    CredentialsProvider({
+      name: 'Email',
+      credentials: {
+        email: {label: 'Email', type: 'email'},
+        password: {label: 'Password', type: 'password'},
+      },
+      authorize: verifyCredentials,
     }),
   ],
 }
 
-/**
- * Wrapper for `getServerSession` so that you don't need to import the `authOptions` in every file.
- *
- * @see https://next-auth.js.org/configuration/nextjs
- */
 export const getServerAuthSession = () => getServerSession(authOptions)

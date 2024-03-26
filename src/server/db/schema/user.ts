@@ -21,10 +21,12 @@ export const users = pgTable('user', {
     mode: 'date',
   }).default(sql`CURRENT_TIMESTAMP`),
   image: varchar('image', {length: 255}),
+  password: text('password'),
 })
 
 const insertUsersSchema = createInsertSchema(users)
 const selectUsersSchema = createSelectSchema(users)
+
 export type InsertUser = z.infer<typeof insertUsersSchema>
 export type User = z.infer<typeof selectUsersSchema>
 
