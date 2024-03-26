@@ -4,6 +4,7 @@ import {CardanoWallet, useWallet} from '@meshsdk/react'
 
 import {Button} from '@/components/ui/Button'
 import {useAddWalletAddress} from '@/lib/queries/addWalletAddress'
+import NoSSR from '@/components/ui/NoSsr'
 
 const VerifyWalletButton = () => {
   const {connected} = useWallet()
@@ -14,7 +15,9 @@ const VerifyWalletButton = () => {
       Verify wallet
     </Button>
   ) : (
-    <CardanoWallet />
+    <NoSSR>
+      <CardanoWallet />
+    </NoSSR>
   )
 }
 
