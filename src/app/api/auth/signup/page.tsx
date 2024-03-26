@@ -14,6 +14,9 @@ import {
 } from '@/components/ui/Form'
 import {Input} from '@/components/ui/Input'
 import {Button} from '@/components/ui/Button'
+import {useSignUp} from '@/lib/queries/signUp'
+import {UserInputError} from '@/lib/types/error'
+import {handleGeneralError} from '@/lib/utils/error'
 
 const formSchema = z
   .object({
@@ -39,11 +42,22 @@ const SignUpPage = () => {
       confirmPassword: '',
     },
   })
+  const {mutate: signUp} = useSignUp({
+    onError: (error) => {
+      if (error instanceof UserInputError) {
+        form.setError('email', {type: 'custom', message: error.message})
+      } else {
+        handleGeneralError(error)
+      }
+    },
+  })
 
-  const onSubmit = (values: FormValues) => {}
+  const onSubmit = ({confirmPassword, ...values}: FormValues) => {
+    signUp(values)
+  }
 
   return (
-    <main className="flex min-h-screen items-center justify-center">
+    <main className="flex min-h-screen items-center justify-center py-8">
       <Form {...form} onSubmit={onSubmit} className="w-[300px]">
         <FormField
           control={form.control}

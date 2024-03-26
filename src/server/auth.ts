@@ -57,11 +57,6 @@ export const authOptions: NextAuthOptions = {
       clientSecret: env.TWITTER_CLIENT_SECRET,
       name: 'Twitter',
     }),
-    EmailProvider({
-      name: 'Magic link',
-      server: env.EMAIL_SERVER,
-      from: env.EMAIL_FROM,
-    } as EmailUserConfig),
     CredentialsProvider({
       name: 'Email',
       credentials: {
@@ -70,6 +65,11 @@ export const authOptions: NextAuthOptions = {
       },
       authorize: verifyCredentials,
     }),
+    EmailProvider({
+      name: 'Magic link',
+      server: env.EMAIL_SERVER,
+      from: env.EMAIL_FROM,
+    } as EmailUserConfig),
   ],
 }
 
