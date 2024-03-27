@@ -8,6 +8,7 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core'
 import {relations, sql} from 'drizzle-orm'
+
 import {contests} from './contest'
 
 export const FINDING_SEVERITY = [
@@ -116,7 +117,6 @@ export const deduplicatedFindingRelations = relations(
       references: [contests.id],
     }),
     findings: many(findings),
-    deduplicatedFindingAttachments: many(deduplicatedFindingAttatchments),
   }),
 )
 
@@ -129,52 +129,4 @@ export type InsertDeduplicatedFinding = z.infer<
 >
 export type DeduplicatedFinding = z.infer<
   typeof selectDeduplicatedFindingsSchema
->
-
-export const deduplicatedFindingAttatchments = pgTable(
-  'deduplicatedFindingAttachment',
-  {
-    id: varchar('id', {length: 255}).notNull().primaryKey(),
-    deduplicatedFindingId: varchar('deduplicatedFindingId', {
-      length: 255,
-    }).notNull(),
-    attachmentUrl: varchar('url', {length: 255}).notNull(),
-    createdAt: timestamp('createdAt', {
-      mode: 'date',
-    }).default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: timestamp('updatedAt', {
-      mode: 'date',
-    }).default(sql`CURRENT_TIMESTAMP`),
-  },
-  (deduplicatedFindingAttachment) => ({
-    deduplicatedFindingIdAttachmentUrlIdx: uniqueIndex(
-      'deduplicatedFindingIdAttachmentUrlIdx',
-    ).on(
-      deduplicatedFindingAttachment.deduplicatedFindingId,
-      deduplicatedFindingAttachment.attachmentUrl,
-    ),
-  }),
-)
-
-export const deduplicatedFindingAttachmentRelations = relations(
-  deduplicatedFindingAttatchments,
-  ({one}) => ({
-    deduplicatedFinding: one(deduplicatedFindings, {
-      fields: [deduplicatedFindingAttatchments.deduplicatedFindingId],
-      references: [deduplicatedFindings.id],
-    }),
-  }),
-)
-
-const insertDeduplicatedFindingAttachmentsSchema = createInsertSchema(
-  deduplicatedFindingAttatchments,
-)
-const selectDeduplicatedFindingAttachmentsSchema = createSelectSchema(
-  deduplicatedFindingAttatchments,
-)
-export type InsertDeduplicatedFindingAttachment = z.infer<
-  typeof insertDeduplicatedFindingAttachmentsSchema
->
-export type DeduplicatedFindingAttachment = z.infer<
-  typeof selectDeduplicatedFindingAttachmentsSchema
 >

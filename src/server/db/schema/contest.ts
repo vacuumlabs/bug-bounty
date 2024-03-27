@@ -2,6 +2,7 @@ import type {z} from 'zod'
 import {createInsertSchema, createSelectSchema} from 'drizzle-zod'
 import {pgTable, text, timestamp, varchar} from 'drizzle-orm/pg-core'
 import {relations, sql} from 'drizzle-orm'
+
 import {deduplicatedFindings, findings} from './finding'
 
 export const CONTEST_STATUS = ['approved', 'pending', 'rejected'] as const
