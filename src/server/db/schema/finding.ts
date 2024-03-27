@@ -10,6 +10,7 @@ import {
 import {relations, sql} from 'drizzle-orm'
 
 import {contests} from './contest'
+import {users} from './user'
 
 export const FINDING_SEVERITY = [
   'info',
@@ -22,6 +23,7 @@ export type FindingSeverity = (typeof FINDING_SEVERITY)[number]
 
 export const findings = pgTable('finding', {
   id: varchar('id', {length: 255}).notNull().primaryKey(),
+  userId: varchar('userId', {length: 255}).notNull(),
   contestId: varchar('contestId', {length: 255}).notNull(),
   deduplicatedFindingId: varchar('deduplicatedFindingId', {length: 255}),
   title: varchar('name', {length: 255}).notNull(),
@@ -44,6 +46,10 @@ export const findingRelations = relations(findings, ({one, many}) => ({
   deduplicatedFinding: one(deduplicatedFindings, {
     fields: [findings.deduplicatedFindingId],
     references: [deduplicatedFindings.id],
+  }),
+  user: one(users, {
+    fields: [findings.userId],
+    references: [users.id],
   }),
   findingAttachments: many(findingAttachments),
 }))
