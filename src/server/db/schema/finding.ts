@@ -47,6 +47,11 @@ export const findingRelations = relations(findings, ({one, many}) => ({
   findingAttachments: many(findingAttachments),
 }))
 
+const insertFindingsSchema = createInsertSchema(findings)
+const selectFindingsSchema = createSelectSchema(findings)
+export type InsertFinding = z.infer<typeof insertFindingsSchema>
+export type Finding = z.infer<typeof selectFindingsSchema>
+
 export const findingAttachments = pgTable(
   'findingAttachment',
   {
@@ -78,10 +83,12 @@ export const findingAttachmentRelations = relations(
   }),
 )
 
-const insertFindingsSchema = createInsertSchema(findings)
-const selectFindingsSchema = createSelectSchema(findings)
-export type InsertFinding = z.infer<typeof insertFindingsSchema>
-export type Finding = z.infer<typeof selectFindingsSchema>
+const insertFindingAttachmentsSchema = createInsertSchema(findingAttachments)
+const selectFindingAttachmentsSchema = createSelectSchema(findingAttachments)
+export type InsertFindingAttachment = z.infer<
+  typeof insertFindingAttachmentsSchema
+>
+export type FindingAttachment = z.infer<typeof selectFindingAttachmentsSchema>
 
 export const FINDING_STATUS = ['approved', 'rejected'] as const
 export type FindingStatus = (typeof FINDING_STATUS)[number]
@@ -112,6 +119,17 @@ export const deduplicatedFindingRelations = relations(
     deduplicatedFindingAttachments: many(deduplicatedFindingAttatchments),
   }),
 )
+
+const insertDeduplicatedFindingsSchema =
+  createInsertSchema(deduplicatedFindings)
+const selectDeduplicatedFindingsSchema =
+  createSelectSchema(deduplicatedFindings)
+export type InsertDeduplicatedFinding = z.infer<
+  typeof insertDeduplicatedFindingsSchema
+>
+export type DeduplicatedFinding = z.infer<
+  typeof selectDeduplicatedFindingsSchema
+>
 
 export const deduplicatedFindingAttatchments = pgTable(
   'deduplicatedFindingAttachment',
@@ -148,13 +166,15 @@ export const deduplicatedFindingAttachmentRelations = relations(
   }),
 )
 
-const insertDeduplicatedFindingsSchema =
-  createInsertSchema(deduplicatedFindings)
-const selectDeduplicatedFindingsSchema =
-  createSelectSchema(deduplicatedFindings)
-export type InsertDeduplicatedFinding = z.infer<
-  typeof insertDeduplicatedFindingsSchema
+const insertDeduplicatedFindingAttachmentsSchema = createInsertSchema(
+  deduplicatedFindingAttatchments,
+)
+const selectDeduplicatedFindingAttachmentsSchema = createSelectSchema(
+  deduplicatedFindingAttatchments,
+)
+export type InsertDeduplicatedFindingAttachment = z.infer<
+  typeof insertDeduplicatedFindingAttachmentsSchema
 >
-export type DeduplicatedFinding = z.infer<
-  typeof selectDeduplicatedFindingsSchema
+export type DeduplicatedFindingAttachment = z.infer<
+  typeof selectDeduplicatedFindingAttachmentsSchema
 >
