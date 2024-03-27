@@ -66,10 +66,10 @@ export const findingAttachments = pgTable(
       mode: 'date',
     }).default(sql`CURRENT_TIMESTAMP`),
   },
-  (findintAttachment) => ({
+  (findingAttachment) => ({
     findingIdAttachmentUrlIdx: uniqueIndex('findingIdAttachmentUrlIdx').on(
-      findintAttachment.findingId,
-      findintAttachment.attachmentUrl,
+      findingAttachment.findingId,
+      findingAttachment.attachmentUrl,
     ),
   }),
 )
@@ -91,7 +91,7 @@ export type InsertFindingAttachment = z.infer<
 >
 export type FindingAttachment = z.infer<typeof selectFindingAttachmentsSchema>
 
-export const FINDING_STATUS = ['approved', 'rejected'] as const
+export const FINDING_STATUS = ['approved', 'pending', 'rejected'] as const
 export type FindingStatus = (typeof FINDING_STATUS)[number]
 
 export const deduplicatedFindings = pgTable('deduplicatedFinding', {
@@ -100,7 +100,9 @@ export const deduplicatedFindings = pgTable('deduplicatedFinding', {
   title: varchar('name', {length: 255}).notNull(),
   description: text('description').notNull(),
   severity: varchar('severity', {length: 8, enum: FINDING_SEVERITY}).notNull(),
-  status: varchar('status', {length: 8, enum: FINDING_STATUS}),
+  status: varchar('status', {length: 8, enum: FINDING_STATUS}).default(
+    'pending',
+  ),
   createdAt: timestamp('createdAt', {
     mode: 'date',
   }).default(sql`CURRENT_TIMESTAMP`),
