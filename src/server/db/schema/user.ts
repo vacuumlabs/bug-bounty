@@ -22,6 +22,12 @@ export const users = pgTable('user', {
   }).default(sql`CURRENT_TIMESTAMP`),
   image: varchar('image', {length: 255}),
   password: text('password'),
+  createdAt: timestamp('createdAt', {
+    mode: 'date',
+  }).default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp('updatedAt', {
+    mode: 'date',
+  }).default(sql`CURRENT_TIMESTAMP`),
 })
 
 const insertUsersSchema = createInsertSchema(users)
@@ -54,6 +60,12 @@ export const accounts = pgTable(
     scope: varchar('scope', {length: 255}),
     id_token: text('id_token'),
     session_state: varchar('session_state', {length: 255}),
+    createdAt: timestamp('createdAt', {
+      mode: 'date',
+    }).default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp('updatedAt', {
+      mode: 'date',
+    }).default(sql`CURRENT_TIMESTAMP`),
   },
   (account) => ({
     compoundKey: primaryKey({
@@ -80,6 +92,12 @@ export const sessions = pgTable(
       .notNull()
       .references(() => users.id),
     expires: timestamp('expires', {mode: 'date'}).notNull(),
+    createdAt: timestamp('createdAt', {
+      mode: 'date',
+    }).default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp('updatedAt', {
+      mode: 'date',
+    }).default(sql`CURRENT_TIMESTAMP`),
   },
   (session) => ({
     userIdIdx: index('session_userId_idx').on(session.userId),

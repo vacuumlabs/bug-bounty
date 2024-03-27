@@ -2,11 +2,15 @@ import {drizzle} from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 
 import * as user from './schema/user'
+import * as contest from './schema/contest'
+import * as finding from './schema/finding'
 
 import {env} from '@/env'
 
 export const schema = {
   ...user,
+  ...contest,
+  ...finding,
 }
 
 /**
