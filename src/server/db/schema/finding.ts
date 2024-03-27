@@ -5,6 +5,7 @@ import {
   text,
   timestamp,
   uniqueIndex,
+  uuid,
   varchar,
 } from 'drizzle-orm/pg-core'
 import {relations, sql} from 'drizzle-orm'
@@ -22,8 +23,8 @@ export const FINDING_SEVERITY = [
 export type FindingSeverity = (typeof FINDING_SEVERITY)[number]
 
 export const findings = pgTable('finding', {
-  id: varchar('id', {length: 255}).notNull().primaryKey(),
-  userId: varchar('userId', {length: 255}).notNull(),
+  id: uuid('id').defaultRandom().primaryKey(),
+  authorId: uuid('authorId').notNull(),
   contestId: varchar('contestId', {length: 255}).notNull(),
   deduplicatedFindingId: varchar('deduplicatedFindingId', {length: 255}),
   title: varchar('name', {length: 255}).notNull(),
@@ -47,8 +48,8 @@ export const findingRelations = relations(findings, ({one, many}) => ({
     fields: [findings.deduplicatedFindingId],
     references: [deduplicatedFindings.id],
   }),
-  user: one(users, {
-    fields: [findings.userId],
+  author: one(users, {
+    fields: [findings.authorId],
     references: [users.id],
   }),
   findingAttachments: many(findingAttachments),
@@ -62,8 +63,8 @@ export type Finding = z.infer<typeof selectFindingsSchema>
 export const findingAttachments = pgTable(
   'findingAttachment',
   {
-    id: varchar('id', {length: 255}).notNull().primaryKey(),
-    findingId: varchar('findingId', {length: 255}).notNull(),
+    id: uuid('id').defaultRandom().primaryKey(),
+    findingId: uuid('findingId').notNull(),
     attachmentUrl: varchar('url', {length: 255}).notNull(),
     createdAt: timestamp('createdAt', {
       mode: 'date',
@@ -101,8 +102,8 @@ export const FINDING_STATUS = ['approved', 'pending', 'rejected'] as const
 export type FindingStatus = (typeof FINDING_STATUS)[number]
 
 export const deduplicatedFindings = pgTable('deduplicatedFinding', {
-  id: varchar('id', {length: 255}).notNull().primaryKey(),
-  contestId: varchar('contestId', {length: 255}).notNull(),
+  id: uuid('id').defaultRandom().primaryKey(),
+  contestId: uuid('contestId').notNull(),
   title: varchar('name', {length: 255}).notNull(),
   description: text('description').notNull(),
   severity: varchar('severity', {length: 8, enum: FINDING_SEVERITY}).notNull(),

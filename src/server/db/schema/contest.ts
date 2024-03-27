@@ -1,6 +1,6 @@
 import type {z} from 'zod'
 import {createInsertSchema, createSelectSchema} from 'drizzle-zod'
-import {pgTable, text, timestamp, varchar} from 'drizzle-orm/pg-core'
+import {pgTable, text, timestamp, uuid, varchar} from 'drizzle-orm/pg-core'
 import {relations, sql} from 'drizzle-orm'
 
 import {deduplicatedFindings, findings} from './finding'
@@ -9,7 +9,7 @@ export const CONTEST_STATUS = ['approved', 'pending', 'rejected'] as const
 export type ContestStatus = (typeof CONTEST_STATUS)[number]
 
 export const contests = pgTable('contest', {
-  id: varchar('id', {length: 255}).notNull().primaryKey(),
+  id: uuid('id').defaultRandom().primaryKey(),
   title: varchar('name', {length: 255}).notNull(),
   repoUrl: varchar('repoUrl', {length: 255}).notNull(),
   description: text('description').notNull(),

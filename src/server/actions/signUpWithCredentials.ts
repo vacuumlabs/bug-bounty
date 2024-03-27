@@ -37,7 +37,6 @@ export const signUpWithCredentials = async ({
       emailVerified: null,
       password: hashedPassword,
       name,
-      id: crypto.randomUUID(),
     })
     .returning()
 
