@@ -45,7 +45,7 @@ export const verifyAndAddWalletAddress = async (
 
   return db
     .update(users)
-    .set({walletAddress, updatedAt: new Date()})
+    .set({walletAddress})
     .where(eq(users.id, session.user.id))
     .returning()
 }

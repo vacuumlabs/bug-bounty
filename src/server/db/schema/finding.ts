@@ -36,7 +36,9 @@ export const findings = pgTable('finding', {
   }).default(sql`CURRENT_TIMESTAMP`),
   updatedAt: timestamp('updatedAt', {
     mode: 'date',
-  }).default(sql`CURRENT_TIMESTAMP`),
+  })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .$onUpdate(() => new Date()),
 })
 
 export const findingRelations = relations(findings, ({one, many}) => ({
@@ -71,7 +73,9 @@ export const findingAttachments = pgTable(
     }).default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp('updatedAt', {
       mode: 'date',
-    }).default(sql`CURRENT_TIMESTAMP`),
+    })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .$onUpdate(() => new Date()),
   },
   (findingAttachment) => ({
     findingIdAttachmentUrlIdx: uniqueIndex('findingIdAttachmentUrlIdx').on(
@@ -116,7 +120,9 @@ export const deduplicatedFindings = pgTable('deduplicatedFinding', {
   }).default(sql`CURRENT_TIMESTAMP`),
   updatedAt: timestamp('updatedAt', {
     mode: 'date',
-  }).default(sql`CURRENT_TIMESTAMP`),
+  })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .$onUpdate(() => new Date()),
 })
 
 export const deduplicatedFindingRelations = relations(

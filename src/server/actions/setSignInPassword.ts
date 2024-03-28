@@ -19,7 +19,7 @@ export const setSignInPassword = async (password: string) => {
 
   return db
     .update(users)
-    .set({password: hashedPassword, updatedAt: new Date()})
+    .set({password: hashedPassword})
     .where(eq(users.id, id))
     .returning()
 }

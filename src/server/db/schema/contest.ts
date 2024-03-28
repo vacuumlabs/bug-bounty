@@ -26,7 +26,9 @@ export const contests = pgTable('contest', {
   }).default(sql`CURRENT_TIMESTAMP`),
   updatedAt: timestamp('updatedAt', {
     mode: 'date',
-  }).default(sql`CURRENT_TIMESTAMP`),
+  })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .$onUpdate(() => new Date()),
 })
 
 const insertContestsSchema = createInsertSchema(contests)

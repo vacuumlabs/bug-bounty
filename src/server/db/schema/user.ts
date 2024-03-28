@@ -28,7 +28,9 @@ export const users = pgTable('user', {
   }).default(sql`CURRENT_TIMESTAMP`),
   updatedAt: timestamp('updatedAt', {
     mode: 'date',
-  }).default(sql`CURRENT_TIMESTAMP`),
+  })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .$onUpdate(() => new Date()),
 })
 
 const insertUsersSchema = createInsertSchema(users)
@@ -66,7 +68,9 @@ export const accounts = pgTable(
     }).default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp('updatedAt', {
       mode: 'date',
-    }).default(sql`CURRENT_TIMESTAMP`),
+    })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .$onUpdate(() => new Date()),
   },
   (account) => ({
     compoundKey: primaryKey({
@@ -98,7 +102,9 @@ export const sessions = pgTable(
     }).default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp('updatedAt', {
       mode: 'date',
-    }).default(sql`CURRENT_TIMESTAMP`),
+    })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .$onUpdate(() => new Date()),
   },
   (session) => ({
     userIdIdx: index('session_userId_idx').on(session.userId),
