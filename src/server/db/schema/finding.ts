@@ -12,15 +12,15 @@ import {relations, sql} from 'drizzle-orm'
 
 import {contests} from './contest'
 import {users} from './user'
+import {getDrizzleEnum} from '../utils/enum'
 
-export const FINDING_SEVERITY = [
-  'info',
-  'low',
-  'medium',
-  'high',
-  'critical',
-] as const
-export type FindingSeverity = (typeof FINDING_SEVERITY)[number]
+export enum FindingSeverity {
+  INFO = 'info',
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+  CRITICAL = 'critical',
+}
 
 export const findings = pgTable('finding', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -30,7 +30,10 @@ export const findings = pgTable('finding', {
   title: varchar('name', {length: 255}).notNull(),
   description: text('description').notNull(),
   targetFileUrl: varchar('targetFileUrl', {length: 255}).notNull(),
-  severity: varchar('severity', {length: 8, enum: FINDING_SEVERITY}).notNull(),
+  severity: varchar('severity', {
+    length: 8,
+    enum: getDrizzleEnum(FindingSeverity),
+  }).notNull(),
   createdAt: timestamp('createdAt', {
     mode: 'date',
   }).default(sql`CURRENT_TIMESTAMP`),
@@ -102,8 +105,11 @@ export type InsertFindingAttachment = z.infer<
 >
 export type FindingAttachment = z.infer<typeof selectFindingAttachmentsSchema>
 
-export const FINDING_STATUS = ['approved', 'pending', 'rejected'] as const
-export type FindingStatus = (typeof FINDING_STATUS)[number]
+export enum FindingStatus {
+  APPROVED = 'approved',
+  PENDING = 'pending',
+  REJECTED = 'rejected',
+}
 
 export const deduplicatedFindings = pgTable('deduplicatedFinding', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -111,10 +117,14 @@ export const deduplicatedFindings = pgTable('deduplicatedFinding', {
   bestFinding: uuid('bestFinding'),
   title: varchar('name', {length: 255}).notNull(),
   description: text('description').notNull(),
-  severity: varchar('severity', {length: 8, enum: FINDING_SEVERITY}).notNull(),
-  status: varchar('status', {length: 8, enum: FINDING_STATUS}).default(
-    'pending',
-  ),
+  severity: varchar('severity', {
+    length: 8,
+    enum: getDrizzleEnum(FindingSeverity),
+  }).notNull(),
+  status: varchar('status', {
+    length: 8,
+    enum: getDrizzleEnum(FindingStatus),
+  }).default(FindingStatus.PENDING),
   createdAt: timestamp('createdAt', {
     mode: 'date',
   }).default(sql`CURRENT_TIMESTAMP`),

@@ -5,9 +5,13 @@ import {relations, sql} from 'drizzle-orm'
 
 import {deduplicatedFindings, findings} from './finding'
 import {users} from './user'
+import {getDrizzleEnum} from '../utils/enum'
 
-export const CONTEST_STATUS = ['approved', 'pending', 'rejected'] as const
-export type ContestStatus = (typeof CONTEST_STATUS)[number]
+export enum ContestStatus {
+  APPROVED = 'APPROVED',
+  PENDING = 'PENDING',
+  REJECTED = 'REJECTED',
+}
 
 export const contests = pgTable('contest', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -22,7 +26,10 @@ export const contests = pgTable('contest', {
   endDate: timestamp('endDate', {
     mode: 'date',
   }).notNull(),
-  status: varchar('status', {length: 8, enum: CONTEST_STATUS}).notNull(),
+  status: varchar('status', {
+    length: 8,
+    enum: getDrizzleEnum(ContestStatus),
+  }).notNull(),
   createdAt: timestamp('createdAt', {
     mode: 'date',
   }).default(sql`CURRENT_TIMESTAMP`),
