@@ -114,7 +114,7 @@ export enum FindingStatus {
 export const deduplicatedFindings = pgTable('deduplicatedFinding', {
   id: uuid('id').defaultRandom().primaryKey(),
   contestId: uuid('contestId').notNull(),
-  bestFinding: uuid('bestFinding'),
+  bestFindingId: uuid('bestFindingId'),
   title: varchar('name', {length: 255}).notNull(),
   description: text('description').notNull(),
   severity: varchar('severity', {
@@ -139,7 +139,7 @@ export const deduplicatedFindingRelations = relations(
   deduplicatedFindings,
   ({one, many}) => ({
     bestFinding: one(findings, {
-      fields: [deduplicatedFindings.bestFinding],
+      fields: [deduplicatedFindings.bestFindingId],
       references: [findings.id],
     }),
     contest: one(contests, {
