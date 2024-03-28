@@ -22,7 +22,7 @@ const Home = async () => {
         </Button>
         {!session && (
           <Button asChild variant="link">
-            <Link href={'/api/auth/signup'}>Sign up</Link>
+            <Link href={'/auth/signup'}>Sign up</Link>
           </Button>
         )}
       </div>
