@@ -37,7 +37,7 @@ type FormProps<
   TContext,
   TTransformedValues extends FieldValues | undefined,
 > = FormProviderProps<TFieldValues, TContext, TTransformedValues> & {
-  onSubmit: OnSubmit<TFieldValues, TContext, TTransformedValues>
+  onSubmit?: OnSubmit<TFieldValues, TContext, TTransformedValues>
   className?: string
 }
 
@@ -53,7 +53,7 @@ const Form = <
 }: FormProps<TFieldValues, TContext, TTransformedValues>) => (
   <FormProvider {...props}>
     <form
-      onSubmit={props.handleSubmit(onSubmit)}
+      onSubmit={onSubmit && props.handleSubmit(onSubmit)}
       className={cn('space-y-6', className)}>
       {children}
     </form>

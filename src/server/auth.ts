@@ -43,6 +43,21 @@ export const authOptions: NextAuthOptions = {
         id: token.sub,
       },
     }),
+    signIn: ({user, account}) => {
+      if (account?.provider !== 'credentials') {
+        return true
+      }
+
+      // only allow sign in with credentials if email is verified, otherwise redirect to verify email page
+      if (!('emailVerified' in user) || !user.emailVerified) {
+        const redirectUrl = user.email
+          ? `/auth/verify-email?email=${user.email}`
+          : '/auth/verify-email'
+        return redirectUrl
+      }
+
+      return true
+    },
   },
   adapter: DrizzleAdapter(db) as Adapter,
   session: {
