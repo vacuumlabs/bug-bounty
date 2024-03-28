@@ -8,12 +8,13 @@ import {
   timestamp,
   varchar,
   pgTable,
+  uuid,
 } from 'drizzle-orm/pg-core'
 import {createInsertSchema, createSelectSchema} from 'drizzle-zod'
 import {type AdapterAccount} from 'next-auth/adapters'
 
 export const users = pgTable('user', {
-  id: varchar('id', {length: 255}).notNull().primaryKey(),
+  id: uuid('id').defaultRandom().primaryKey(),
   name: varchar('name', {length: 255}),
   walletAddress: varchar('walletAddress', {length: 255}),
   email: varchar('email', {length: 255}).notNull(),
@@ -22,6 +23,14 @@ export const users = pgTable('user', {
   }).default(sql`CURRENT_TIMESTAMP`),
   image: varchar('image', {length: 255}),
   password: text('password'),
+  createdAt: timestamp('createdAt', {
+    mode: 'date',
+  }).default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp('updatedAt', {
+    mode: 'date',
+  })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .$onUpdate(() => new Date()),
 })
 
 const insertUsersSchema = createInsertSchema(users)
@@ -37,7 +46,7 @@ export const usersRelations = relations(users, ({many}) => ({
 export const accounts = pgTable(
   'account',
   {
-    userId: varchar('userId', {length: 255})
+    userId: uuid('userId')
       .notNull()
       .references(() => users.id),
     type: varchar('type', {length: 255})
@@ -54,6 +63,14 @@ export const accounts = pgTable(
     scope: varchar('scope', {length: 255}),
     id_token: text('id_token'),
     session_state: varchar('session_state', {length: 255}),
+    createdAt: timestamp('createdAt', {
+      mode: 'date',
+    }).default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp('updatedAt', {
+      mode: 'date',
+    })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .$onUpdate(() => new Date()),
   },
   (account) => ({
     compoundKey: primaryKey({
@@ -76,10 +93,18 @@ export const sessions = pgTable(
   'session',
   {
     sessionToken: varchar('sessionToken', {length: 255}).notNull().primaryKey(),
-    userId: varchar('userId', {length: 255})
+    userId: uuid('userId')
       .notNull()
       .references(() => users.id),
     expires: timestamp('expires', {mode: 'date'}).notNull(),
+    createdAt: timestamp('createdAt', {
+      mode: 'date',
+    }).default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp('updatedAt', {
+      mode: 'date',
+    })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .$onUpdate(() => new Date()),
   },
   (session) => ({
     userIdIdx: index('session_userId_idx').on(session.userId),
