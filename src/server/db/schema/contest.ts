@@ -4,12 +4,14 @@ import {pgTable, text, timestamp, uuid, varchar} from 'drizzle-orm/pg-core'
 import {relations, sql} from 'drizzle-orm'
 
 import {deduplicatedFindings, findings} from './finding'
+import {users} from './user'
 
 export const CONTEST_STATUS = ['approved', 'pending', 'rejected'] as const
 export type ContestStatus = (typeof CONTEST_STATUS)[number]
 
 export const contests = pgTable('contest', {
   id: uuid('id').defaultRandom().primaryKey(),
+  authorId: uuid('authorId').notNull(),
   title: varchar('name', {length: 255}).notNull(),
   repoUrl: varchar('repoUrl', {length: 255}).notNull(),
   description: text('description').notNull(),
@@ -36,7 +38,11 @@ const selectContestsSchema = createSelectSchema(contests)
 export type InsertContest = z.infer<typeof insertContestsSchema>
 export type Contest = z.infer<typeof selectContestsSchema>
 
-export const contestRelations = relations(contests, ({many}) => ({
+export const contestRelations = relations(contests, ({one, many}) => ({
   findings: many(findings),
   deduplicatedFindings: many(deduplicatedFindings),
+  author: one(users, {
+    fields: [contests.authorId],
+    references: [users.id],
+  }),
 }))
