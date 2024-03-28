@@ -104,6 +104,7 @@ export type FindingStatus = (typeof FINDING_STATUS)[number]
 export const deduplicatedFindings = pgTable('deduplicatedFinding', {
   id: uuid('id').defaultRandom().primaryKey(),
   contestId: uuid('contestId').notNull(),
+  bestFinding: uuid('bestFinding'),
   title: varchar('name', {length: 255}).notNull(),
   description: text('description').notNull(),
   severity: varchar('severity', {length: 8, enum: FINDING_SEVERITY}).notNull(),
@@ -121,6 +122,10 @@ export const deduplicatedFindings = pgTable('deduplicatedFinding', {
 export const deduplicatedFindingRelations = relations(
   deduplicatedFindings,
   ({one, many}) => ({
+    bestFinding: one(findings, {
+      fields: [deduplicatedFindings.bestFinding],
+      references: [findings.id],
+    }),
     contest: one(contests, {
       fields: [deduplicatedFindings.contestId],
       references: [contests.id],
