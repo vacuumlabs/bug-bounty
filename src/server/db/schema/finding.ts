@@ -13,6 +13,7 @@ import {relations, sql} from 'drizzle-orm'
 import {contests} from './contest'
 import {users} from './user'
 import {getDrizzleEnum} from '../utils/enum'
+import {rewards} from './reward'
 
 export enum FindingSeverity {
   INFO = 'info',
@@ -58,6 +59,7 @@ export const findingRelations = relations(findings, ({one, many}) => ({
     references: [users.id],
   }),
   findingAttachments: many(findingAttachments),
+  reward: one(rewards),
 }))
 
 const insertFindingsSchema = createInsertSchema(findings)
