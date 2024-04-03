@@ -94,6 +94,7 @@ export const authOptions: NextAuthOptions = {
       from: env.EMAIL_FROM,
     } as EmailUserConfig),
   ],
+  debug: env.NODE_ENV === 'development',
 }
 
 export const getServerAuthSession = () => getServerSession(authOptions)
