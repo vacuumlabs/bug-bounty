@@ -3,6 +3,7 @@ import Link from 'next/link'
 import {getServerAuthSession} from '@/server/auth'
 import {Button} from '@/components/ui/Button'
 import MarkdownEditor from '@/components/markdown/MarkdownEditor'
+import SignOutButton from '@/components/ui/SignOutButon'
 
 const Home = async () => {
   const session = await getServerAuthSession()
@@ -15,15 +16,19 @@ const Home = async () => {
             <span>Logged in as {session.user.name ?? session.user.email}</span>
           )}
         </p>
-        <Button asChild variant="link">
-          <Link href={session ? '/api/auth/signout' : '/api/auth/signin'}>
-            {session ? 'Sign out' : 'Sign in'}
-          </Link>
-        </Button>
-        {!session && (
-          <Button asChild variant="link">
-            <Link href={'/auth/signup'}>Sign up</Link>
-          </Button>
+        {session ? (
+          <SignOutButton variant="link" callbackUrl="/">
+            Sign out
+          </SignOutButton>
+        ) : (
+          <>
+            <Button asChild variant="link">
+              <Link href={'/api/auth/signin'}>Sign in</Link>
+            </Button>
+            <Button asChild variant="link">
+              <Link href={'/auth/signup'}>Sign up</Link>
+            </Button>
+          </>
         )}
       </div>
       <div className="w-full pt-10">
