@@ -12,11 +12,13 @@ const MarkdownEditor = () => {
 
   return (
     <div className="w-full">
-      <div className="pb-2">
-        <Button variant="outline" onClick={() => setIsPreview(!isPreview)}>
-          {isPreview ? 'Edit' : 'Preview'}
-        </Button>
-      </div>
+      <Button
+        className="mb-2"
+        variant="outline"
+        onClick={() => setIsPreview(!isPreview)}>
+        {isPreview ? 'Edit' : 'Preview'}
+      </Button>
+
       {isPreview ? (
         <MarkdownPreview className="min-h-[160px]" doc={doc} />
       ) : (
