@@ -6,12 +6,18 @@ import {Textarea} from '../ui/Textarea'
 import {Button} from '../ui/Button'
 import MarkdownPreview from './MarkdownPreview'
 
-const MarkdownEditor = () => {
+import {cn} from '@/lib/utils/tailwind'
+
+type MarkdownEditorProps = {
+  className?: string
+}
+
+const MarkdownEditor = ({className}: MarkdownEditorProps) => {
   const [doc, setDoc] = useState('')
   const [isPreview, setIsPreview] = useState(false)
 
   return (
-    <div className="w-full">
+    <div className={cn('w-full', className)}>
       <Button
         className="mb-2"
         variant="outline"
