@@ -1,25 +1,15 @@
-import {numeric, pgTable, timestamp, uuid, varchar} from 'drizzle-orm/pg-core'
+import {char, numeric, pgTable, timestamp, uuid} from 'drizzle-orm/pg-core'
 import {relations, sql} from 'drizzle-orm'
 
-import {getDrizzleEnum} from '../utils/enum'
 import {findings} from './finding'
 import {users} from './user'
-
-export enum RewardStatus {
-  PAID = 'paid',
-  PENDING = 'pending',
-  REJECTED = 'rejected',
-}
 
 export const rewards = pgTable('reward', {
   id: uuid('id').defaultRandom().primaryKey(),
   findingId: uuid('findingId').notNull(),
   userId: uuid('userId').notNull(),
   amount: numeric('amount').notNull(),
-  status: varchar('status', {
-    length: 8,
-    enum: getDrizzleEnum(RewardStatus),
-  }).notNull(),
+  transferTxHash: char('transferTxHash', {length: 64}),
   payoutDate: timestamp('payoutDate', {
     mode: 'date',
   }),
