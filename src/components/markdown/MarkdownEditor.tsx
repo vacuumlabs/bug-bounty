@@ -2,7 +2,7 @@
 
 import {useState} from 'react'
 
-import {Textarea} from '../ui/textarea'
+import {Textarea} from '../ui/Textarea'
 import {Button} from '../ui/Button'
 import MarkdownPreview from './MarkdownPreview'
 
