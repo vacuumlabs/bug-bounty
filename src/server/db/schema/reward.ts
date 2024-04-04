@@ -10,7 +10,7 @@ export const rewards = pgTable('reward', {
   id: uuid('id').defaultRandom().primaryKey(),
   findingId: uuid('findingId').notNull(),
   userId: uuid('userId').notNull(),
-  amount: numeric('amount').notNull(),
+  amount: numeric('amount', {precision: 20}).notNull(),
   transferTxHash: char('transferTxHash', {length: 64}),
   payoutDate: timestamp('payoutDate', {
     mode: 'date',
