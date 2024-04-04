@@ -32,7 +32,7 @@ const MarkdownPreview = ({doc, className}: MarkdownPreviewProps) => {
                 PreTag="div"
                 language={match[1]}
                 style={oneDark}>
-                {String(children).replace(/\n$/, '')}
+                {String(children).trim()}
               </SyntaxHighlighter>
             ) : (
               <code {...rest} className={className}>
