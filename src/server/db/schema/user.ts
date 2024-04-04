@@ -13,6 +13,10 @@ import {
 import {createInsertSchema, createSelectSchema} from 'drizzle-zod'
 import {type AdapterAccount} from 'next-auth/adapters'
 
+import {rewards} from './reward'
+import {findings} from './finding'
+import {contests} from './contest'
+
 export const users = pgTable('user', {
   id: uuid('id').defaultRandom().primaryKey(),
   name: varchar('name', {length: 255}),
@@ -41,6 +45,9 @@ export type User = z.infer<typeof selectUsersSchema>
 
 export const usersRelations = relations(users, ({many}) => ({
   accounts: many(accounts),
+  findings: many(findings),
+  contests: many(contests),
+  rewards: many(rewards),
 }))
 
 export const accounts = pgTable(

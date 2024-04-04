@@ -4,6 +4,7 @@ import postgres from 'postgres'
 import * as user from './schema/user'
 import * as contest from './schema/contest'
 import * as finding from './schema/finding'
+import * as reward from './schema/reward'
 
 import {env} from '@/env'
 
@@ -11,6 +12,7 @@ export const schema = {
   ...user,
   ...contest,
   ...finding,
+  ...reward,
 }
 
 /**

@@ -13,6 +13,7 @@ import {relations, sql} from 'drizzle-orm'
 import {contests} from './contest'
 import {users} from './user'
 import {getDrizzleEnum} from '../utils/enum'
+import {rewards} from './reward'
 
 export enum FindingSeverity {
   INFO = 'info',
@@ -24,9 +25,15 @@ export enum FindingSeverity {
 
 export const findings = pgTable('finding', {
   id: uuid('id').defaultRandom().primaryKey(),
-  authorId: uuid('authorId').notNull(),
-  contestId: varchar('contestId', {length: 255}).notNull(),
-  deduplicatedFindingId: varchar('deduplicatedFindingId', {length: 255}),
+  authorId: uuid('authorId')
+    .notNull()
+    .references(() => users.id),
+  contestId: varchar('contestId', {length: 255})
+    .notNull()
+    .references(() => contests.id),
+  deduplicatedFindingId: varchar('deduplicatedFindingId', {
+    length: 255,
+  }).references(() => deduplicatedFindings.id),
   title: varchar('name', {length: 255}).notNull(),
   description: text('description').notNull(),
   targetFileUrl: varchar('targetFileUrl', {length: 255}).notNull(),
@@ -58,6 +65,7 @@ export const findingRelations = relations(findings, ({one, many}) => ({
     references: [users.id],
   }),
   findingAttachments: many(findingAttachments),
+  reward: one(rewards),
 }))
 
 const insertFindingsSchema = createInsertSchema(findings)
@@ -69,7 +77,9 @@ export const findingAttachments = pgTable(
   'findingAttachment',
   {
     id: uuid('id').defaultRandom().primaryKey(),
-    findingId: uuid('findingId').notNull(),
+    findingId: uuid('findingId')
+      .notNull()
+      .references(() => findings.id),
     attachmentUrl: varchar('url', {length: 255}).notNull(),
     createdAt: timestamp('createdAt', {
       mode: 'date',
@@ -113,7 +123,9 @@ export enum FindingStatus {
 
 export const deduplicatedFindings = pgTable('deduplicatedFinding', {
   id: uuid('id').defaultRandom().primaryKey(),
-  contestId: uuid('contestId').notNull(),
+  contestId: uuid('contestId')
+    .notNull()
+    .references(() => contests.id),
   bestFindingId: uuid('bestFindingId'),
   title: varchar('name', {length: 255}).notNull(),
   description: text('description').notNull(),
