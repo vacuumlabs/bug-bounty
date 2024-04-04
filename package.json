@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "format": "prettier -w .",
+    "format:check": "prettier -c .",
+    "check-all": "yarn lint; yarn tsc; yarn format:check",
+    "fix-all": "yarn lint:fix; yarn format; yarn tsc",
     "db:push": "drizzle-kit push:pg",
     "db:studio": "drizzle-kit studio",
     "postinstall": "patch-package"
