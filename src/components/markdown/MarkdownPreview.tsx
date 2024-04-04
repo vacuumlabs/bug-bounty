@@ -26,18 +26,14 @@ const MarkdownPreview = ({doc, className}: MarkdownPreviewProps) => {
           code: (props) => {
             const {children, className, node, ...rest} = props
             const match = /language-(\w+)/.exec(className ?? '')
-            return match ? (
+            return (
               <SyntaxHighlighter
                 {...(rest as SyntaxHighlighterProps)}
                 PreTag="div"
-                language={match[1]}
+                language={match ? match[1] : ''}
                 style={oneDark}>
                 {String(children).trim()}
               </SyntaxHighlighter>
-            ) : (
-              <code {...rest} className={className}>
-                {children}
-              </code>
             )
           },
         }}>
