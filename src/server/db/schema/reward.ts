@@ -1,5 +1,7 @@
 import {char, numeric, pgTable, timestamp, uuid} from 'drizzle-orm/pg-core'
 import {relations, sql} from 'drizzle-orm'
+import {createInsertSchema, createSelectSchema} from 'drizzle-zod'
+import type {z} from 'zod'
 
 import {findings} from './finding'
 import {users} from './user'
@@ -33,3 +35,8 @@ export const rewardRelations = relations(rewards, ({one}) => ({
     references: [users.id],
   }),
 }))
+
+const insertRewardsSchema = createInsertSchema(rewards)
+const selectRewardsSchema = createSelectSchema(rewards)
+export type InsertReward = z.infer<typeof insertRewardsSchema>
+export type Reward = z.infer<typeof selectRewardsSchema>
