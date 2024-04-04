@@ -15,7 +15,9 @@ export enum ContestStatus {
 
 export const contests = pgTable('contest', {
   id: uuid('id').defaultRandom().primaryKey(),
-  authorId: uuid('authorId').notNull(),
+  authorId: uuid('authorId')
+    .notNull()
+    .references(() => users.id),
   title: varchar('name', {length: 255}).notNull(),
   repoUrl: varchar('repoUrl', {length: 255}).notNull(),
   description: text('description').notNull(),

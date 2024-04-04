@@ -8,8 +8,12 @@ import {users} from './user'
 
 export const rewards = pgTable('reward', {
   id: uuid('id').defaultRandom().primaryKey(),
-  findingId: uuid('findingId').notNull(),
-  userId: uuid('userId').notNull(),
+  findingId: uuid('findingId')
+    .notNull()
+    .references(() => findings.id),
+  userId: uuid('userId')
+    .notNull()
+    .references(() => users.id),
   amount: numeric('amount', {precision: 20}).notNull(),
   transferTxHash: char('transferTxHash', {length: 64}),
   payoutDate: timestamp('payoutDate', {
