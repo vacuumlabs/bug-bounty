@@ -6,8 +6,8 @@ import {eq} from 'drizzle-orm'
 import {cookies} from 'next/headers'
 
 import {db} from '../db'
-import {getServerAuthSession} from '../auth'
 import {users} from '../db/schema/user'
+import {requireServerSession} from '../utils/auth'
 
 import {formatWalletSignMessage} from '@/lib/utils/auth'
 
@@ -15,11 +15,7 @@ export const verifyAndAddWalletAddress = async (
   signature: DataSignature,
   walletAddress: string,
 ) => {
-  const session = await getServerAuthSession()
-
-  if (!session) {
-    throw new Error('Not authenticated')
-  }
+  const session = await requireServerSession()
 
   const nonce = await getCsrfToken({
     req: {

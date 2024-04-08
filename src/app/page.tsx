@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import {getServerAuthSession} from '@/server/auth'
+import {getServerAuthSession} from '@/server/utils/auth'
 import {Button} from '@/components/ui/Button'
 import MarkdownEditor from '@/components/markdown/MarkdownEditor'
 import SignOutButton from '@/components/ui/SignOutButon'
