@@ -1,9 +1,5 @@
 import {DrizzleAdapter} from '@auth/drizzle-adapter'
-import {
-  getServerSession,
-  type DefaultSession,
-  type NextAuthOptions,
-} from 'next-auth'
+import {type DefaultSession, type NextAuthOptions} from 'next-auth'
 import {type Adapter} from 'next-auth/adapters'
 import TwitterProvider from 'next-auth/providers/twitter'
 import GoogleProvider from 'next-auth/providers/google'
@@ -97,5 +93,3 @@ export const authOptions: NextAuthOptions = {
   ],
   debug: env.NODE_ENV === 'development',
 }
-
-export const getServerAuthSession = () => getServerSession(authOptions)

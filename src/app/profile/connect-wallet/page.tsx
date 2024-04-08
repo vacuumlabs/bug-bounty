@@ -1,17 +1,12 @@
-import {redirect} from 'next/navigation'
 import Link from 'next/link'
 
 import VerifyWalletButton from '@/components/sections/profile/VerifyWalletButton'
-import {getServerAuthSession} from '@/server/auth'
 import {getUser} from '@/server/actions/getUser'
 import {Button} from '@/components/ui/Button'
+import {requirePageSession} from '@/server/utils/auth'
 
 const ConnectWalletPage = async () => {
-  const session = await getServerAuthSession()
-
-  if (!session) {
-    redirect('/api/auth/error?error=AccessDenied')
-  }
+  await requirePageSession()
 
   const user = await getUser()
 

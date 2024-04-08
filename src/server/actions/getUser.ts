@@ -1,14 +1,10 @@
 'use server'
 
-import {getServerAuthSession} from '../auth'
 import {db} from '../db'
+import {requireServerSession} from '../utils/auth'
 
 export const getUser = async () => {
-  const session = await getServerAuthSession()
-
-  if (!session) {
-    throw new Error('Not authenticated')
-  }
+  const session = await requireServerSession()
 
   const user = await db.query.users.findFirst({
     where: (users, {eq}) => eq(users.id, session.user.id),
