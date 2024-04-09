@@ -64,6 +64,7 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
   providers: [
+    // OAuth providers don't work in Vercel previews due to dynamic domain URL
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,

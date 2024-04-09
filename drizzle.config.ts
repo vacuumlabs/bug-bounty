@@ -4,6 +4,7 @@ import {type Config} from 'drizzle-kit'
 
 loadEnvConfig(cwd())
 
+// Config for drizzle-kit
 export default {
   schema: './src/server/db/schema',
   driver: 'pg',
