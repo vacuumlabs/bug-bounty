@@ -1,0 +1,16 @@
+version: '3'
+services:
+  db:
+    image: postgres:latest
+    container_name: bug-bounty-postgres
+    ports:
+      - '5433:5432'
+    environment:
+      POSTGRES_DB: bug-bounty
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - my_dbdata:/var/lib/postgresql/data
+
+volumes:
+  my_dbdata:
