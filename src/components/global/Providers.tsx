@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-query'
 import {SessionProvider} from 'next-auth/react'
 import {ReactNode} from 'react'
+import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
 
 import {handleGeneralError} from '@/lib/utils/error'
 
@@ -58,7 +59,10 @@ const Providers: React.FC<ProvidersProps> = ({children}) => {
   return (
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
-        <MeshProvider>{children}</MeshProvider>
+        <MeshProvider>
+          {children}
+          <ReactQueryDevtools initialIsOpen={false} />
+        </MeshProvider>
       </QueryClientProvider>
     </SessionProvider>
   )
