@@ -38,17 +38,10 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+## Tech stack and design decisions
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- DrizzleOrm - new popular ORM library, good Typesript support, can be used both as a query builder and ORM
+- Next.js Server actions - removes a ton of boilerplate (request handling), we would otherwise have to write when using API Route handlers
+- React Query - good for handling mutations - pending state, onSuccess and onError callbacks, integrates well with server actions, great for combined actions like `addWalletAddress`, that have both client-side and server-side parts
+- Data fetching - deciding between querying the data in async server components (the Next.js way) or wrapping it with React Query. Querying the data in server components makes it difficult to revalidate due to Next.js heavy use of caching. The `revalidateTag` only works with `fetch` (Route handlers) and not when querying the DB directly in the server actions. Using `revalidatePath` doesn't seem like a good long-term solution as we'd have to keep track of all the screens where certain data is used. Wrap data fetching functions with `unstable_cache` would allow assigning revalidation tags to them, however it's still experimental and it's unclear, how composed revalidation tags / keys would work. On the other hand, React Query provides granular control over data revalidation although it adds some overhead - need to split components into server and client parts and wrap the client part with `HydrationBoundary`.
+- Shadcn - collection of accessible component templates, can be copied into our codebase with the CLI, good compromise between writing our own custom components and using some black-box component library
