@@ -28,12 +28,12 @@ export const findings = pgTable('finding', {
   authorId: uuid('authorId')
     .notNull()
     .references(() => users.id),
-  contestId: varchar('contestId', {length: 255})
+  contestId: uuid('contestId')
     .notNull()
     .references(() => contests.id),
-  deduplicatedFindingId: varchar('deduplicatedFindingId', {
-    length: 255,
-  }).references(() => deduplicatedFindings.id),
+  deduplicatedFindingId: uuid('deduplicatedFindingId').references(
+    () => deduplicatedFindings.id,
+  ),
   title: varchar('name', {length: 255}).notNull(),
   description: text('description').notNull(),
   targetFileUrl: varchar('targetFileUrl', {length: 255}).notNull(),

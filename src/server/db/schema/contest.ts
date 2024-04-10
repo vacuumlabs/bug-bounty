@@ -54,4 +54,35 @@ export const contestRelations = relations(contests, ({one, many}) => ({
     fields: [contests.authorId],
     references: [users.id],
   }),
+  knownIssues: many(knownIssues),
+}))
+
+export const knownIssues = pgTable('knownIssue', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  contestId: uuid('contestId')
+    .notNull()
+    .references(() => contests.id),
+  title: varchar('title', {length: 255}).notNull(),
+  description: text('description').notNull(),
+  fileUrl: varchar('fileUrl', {length: 255}).notNull(),
+  createdAt: timestamp('createdAt', {
+    mode: 'date',
+  }).default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp('updatedAt', {
+    mode: 'date',
+  })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .$onUpdate(() => new Date()),
+})
+
+const insertKnownIssuesSchema = createInsertSchema(knownIssues)
+const selectKnownIssuesSchema = createSelectSchema(knownIssues)
+export type InsertKnownIssue = z.infer<typeof insertKnownIssuesSchema>
+export type KnownIssue = z.infer<typeof selectKnownIssuesSchema>
+
+export const knownIssueRelations = relations(knownIssues, ({one}) => ({
+  contest: one(contests, {
+    fields: [knownIssues.contestId],
+    references: [contests.id],
+  }),
 }))
