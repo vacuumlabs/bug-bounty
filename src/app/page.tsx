@@ -17,9 +17,14 @@ const Home = async () => {
           )}
         </p>
         {session ? (
-          <SignOutButton variant="link" callbackUrl="/">
-            Sign out
-          </SignOutButton>
+          <>
+            <Button asChild variant="link">
+              <Link href={'/profile'}>My profile</Link>
+            </Button>
+            <SignOutButton variant="link" callbackUrl="/">
+              Sign out
+            </SignOutButton>
+          </>
         ) : (
           <>
             <Button asChild variant="link">
