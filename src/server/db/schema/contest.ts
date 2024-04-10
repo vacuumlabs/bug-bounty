@@ -57,7 +57,7 @@ export const contestRelations = relations(contests, ({one, many}) => ({
   knownIssues: many(knownIssues),
 }))
 
-export const knownIssues = pgTable('known_issue', {
+export const knownIssues = pgTable('knownIssue', {
   id: uuid('id').defaultRandom().primaryKey(),
   contestId: uuid('contestId')
     .notNull()
