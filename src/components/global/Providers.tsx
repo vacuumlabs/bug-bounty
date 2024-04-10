@@ -9,11 +9,13 @@ import {
 import {SessionProvider} from 'next-auth/react'
 import {ReactNode} from 'react'
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
+import {Session} from 'next-auth'
 
 import {handleGeneralError} from '@/lib/utils/error'
 
 type ProvidersProps = {
   children: ReactNode
+  session: Session | null
 }
 
 const makeQueryClient = () => {
@@ -53,11 +55,11 @@ const getQueryClient = () => {
   }
 }
 
-const Providers: React.FC<ProvidersProps> = ({children}) => {
+const Providers: React.FC<ProvidersProps> = ({children, session}) => {
   const queryClient = getQueryClient()
 
   return (
-    <SessionProvider>
+    <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
         <MeshProvider>
           {children}
