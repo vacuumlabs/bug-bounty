@@ -2,11 +2,11 @@
 
 import {BrowserWallet} from '@meshsdk/core'
 import {useWallet} from '@meshsdk/react'
-import {useMutation} from '@tanstack/react-query'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {getCsrfToken} from 'next-auth/react'
-import {useRouter} from 'next/navigation'
 
 import {formatWalletSignMessage} from '../utils/auth'
+import {queryKeys} from './keys'
 
 import {verifyAndAddWalletAddress} from '@/server/actions/verifyAndAddWalletAddress'
 
@@ -34,10 +34,14 @@ const addWalletAddress = async (wallet: BrowserWallet) => {
 
 export const useAddWalletAddress = () => {
   const {wallet} = useWallet()
-  const router = useRouter()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: () => addWalletAddress(wallet),
-    onSuccess: () => router.replace('/'),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.users.detail._def,
+      })
+    },
   })
 }

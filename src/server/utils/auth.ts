@@ -5,6 +5,11 @@ import {authOptions} from '../authOptions'
 
 export const getServerAuthSession = () => getServerSession(authOptions)
 
+export const getUserId = async () => {
+  const session = await getServerAuthSession()
+  return session?.user.id
+}
+
 export const requireServerSession = async () => {
   const session = await getServerAuthSession()
 
