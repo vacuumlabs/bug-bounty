@@ -1,6 +1,7 @@
 import type {z} from 'zod'
 import {createInsertSchema, createSelectSchema} from 'drizzle-zod'
 import {
+  index,
   pgTable,
   text,
   timestamp,
@@ -23,33 +24,44 @@ export enum FindingSeverity {
   CRITICAL = 'critical',
 }
 
-export const findings = pgTable('finding', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  authorId: uuid('authorId')
-    .notNull()
-    .references(() => users.id),
-  contestId: uuid('contestId')
-    .notNull()
-    .references(() => contests.id),
-  deduplicatedFindingId: uuid('deduplicatedFindingId').references(
-    () => deduplicatedFindings.id,
-  ),
-  title: varchar('name', {length: 255}).notNull(),
-  description: text('description').notNull(),
-  targetFileUrl: varchar('targetFileUrl', {length: 255}).notNull(),
-  severity: varchar('severity', {
-    length: 8,
-    enum: getDrizzleEnum(FindingSeverity),
-  }).notNull(),
-  createdAt: timestamp('createdAt', {
-    mode: 'date',
-  }).default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: timestamp('updatedAt', {
-    mode: 'date',
-  })
-    .default(sql`CURRENT_TIMESTAMP`)
-    .$onUpdate(() => new Date()),
-})
+export const findings = pgTable(
+  'finding',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    authorId: uuid('authorId')
+      .notNull()
+      .references(() => users.id),
+    contestId: uuid('contestId')
+      .notNull()
+      .references(() => contests.id),
+    deduplicatedFindingId: uuid('deduplicatedFindingId').references(
+      () => deduplicatedFindings.id,
+    ),
+    title: varchar('name', {length: 255}).notNull(),
+    description: text('description').notNull(),
+    targetFileUrl: varchar('targetFileUrl', {length: 255}).notNull(),
+    severity: varchar('severity', {
+      length: 8,
+      enum: getDrizzleEnum(FindingSeverity),
+    }).notNull(),
+    createdAt: timestamp('createdAt', {
+      mode: 'date',
+    }).default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp('updatedAt', {
+      mode: 'date',
+    })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    authorIdIdx: index('finding_authorId_idx').on(table.authorId),
+    contestIdIdx: index('finding_contestId_idx').on(table.contestId),
+    deduplicatedFindingIdIdx: index('finding_deduplicatedFindingId_idx').on(
+      table.deduplicatedFindingId,
+    ),
+    severityIdx: index('finding_severity_idx').on(table.severity),
+  }),
+)
 
 export const findingRelations = relations(findings, ({one, many}) => ({
   contest: one(contests, {
@@ -121,31 +133,44 @@ export enum FindingStatus {
   REJECTED = 'rejected',
 }
 
-export const deduplicatedFindings = pgTable('deduplicatedFinding', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  contestId: uuid('contestId')
-    .notNull()
-    .references(() => contests.id),
-  bestFindingId: uuid('bestFindingId'),
-  title: varchar('name', {length: 255}).notNull(),
-  description: text('description').notNull(),
-  severity: varchar('severity', {
-    length: 8,
-    enum: getDrizzleEnum(FindingSeverity),
-  }).notNull(),
-  status: varchar('status', {
-    length: 8,
-    enum: getDrizzleEnum(FindingStatus),
-  }).default(FindingStatus.PENDING),
-  createdAt: timestamp('createdAt', {
-    mode: 'date',
-  }).default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: timestamp('updatedAt', {
-    mode: 'date',
-  })
-    .default(sql`CURRENT_TIMESTAMP`)
-    .$onUpdate(() => new Date()),
-})
+export const deduplicatedFindings = pgTable(
+  'deduplicatedFinding',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    contestId: uuid('contestId')
+      .notNull()
+      .references(() => contests.id),
+    bestFindingId: uuid('bestFindingId'),
+    title: varchar('name', {length: 255}).notNull(),
+    description: text('description').notNull(),
+    severity: varchar('severity', {
+      length: 8,
+      enum: getDrizzleEnum(FindingSeverity),
+    }).notNull(),
+    status: varchar('status', {
+      length: 8,
+      enum: getDrizzleEnum(FindingStatus),
+    }).default(FindingStatus.PENDING),
+    createdAt: timestamp('createdAt', {
+      mode: 'date',
+    }).default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp('updatedAt', {
+      mode: 'date',
+    })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    contestIdIdx: index('deduplicatedFinding_contestId_idx').on(
+      table.contestId,
+    ),
+    bestFindingIdIdx: index('deduplicatedFinding_bestFindingId_idx').on(
+      table.bestFindingId,
+    ),
+    severityIdx: index('deduplicatedFinding_severity_idx').on(table.severity),
+    statusIdx: index('deduplicatedFinding_status_idx').on(table.status),
+  }),
+)
 
 export const deduplicatedFindingRelations = relations(
   deduplicatedFindings,

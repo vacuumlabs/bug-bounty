@@ -1,6 +1,13 @@
 import type {z} from 'zod'
 import {createInsertSchema, createSelectSchema} from 'drizzle-zod'
-import {pgTable, text, timestamp, uuid, varchar} from 'drizzle-orm/pg-core'
+import {
+  index,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+  varchar,
+} from 'drizzle-orm/pg-core'
 import {relations, sql} from 'drizzle-orm'
 
 import {deduplicatedFindings, findings} from './finding'
@@ -13,34 +20,43 @@ export enum ContestStatus {
   REJECTED = 'REJECTED',
 }
 
-export const contests = pgTable('contest', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  authorId: uuid('authorId')
-    .notNull()
-    .references(() => users.id),
-  title: varchar('name', {length: 255}).notNull(),
-  repoUrl: varchar('repoUrl', {length: 255}).notNull(),
-  description: text('description').notNull(),
-  setupSteps: text('setupSteps').notNull(),
-  startDate: timestamp('startDate', {
-    mode: 'date',
-  }).notNull(),
-  endDate: timestamp('endDate', {
-    mode: 'date',
-  }).notNull(),
-  status: varchar('status', {
-    length: 8,
-    enum: getDrizzleEnum(ContestStatus),
-  }).notNull(),
-  createdAt: timestamp('createdAt', {
-    mode: 'date',
-  }).default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: timestamp('updatedAt', {
-    mode: 'date',
-  })
-    .default(sql`CURRENT_TIMESTAMP`)
-    .$onUpdate(() => new Date()),
-})
+export const contests = pgTable(
+  'contest',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    authorId: uuid('authorId')
+      .notNull()
+      .references(() => users.id),
+    title: varchar('name', {length: 255}).notNull(),
+    repoUrl: varchar('repoUrl', {length: 255}).notNull(),
+    description: text('description').notNull(),
+    setupSteps: text('setupSteps').notNull(),
+    startDate: timestamp('startDate', {
+      mode: 'date',
+    }).notNull(),
+    endDate: timestamp('endDate', {
+      mode: 'date',
+    }).notNull(),
+    status: varchar('status', {
+      length: 8,
+      enum: getDrizzleEnum(ContestStatus),
+    }).notNull(),
+    createdAt: timestamp('createdAt', {
+      mode: 'date',
+    }).default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp('updatedAt', {
+      mode: 'date',
+    })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    authorIdIdx: index('contest_authordId_idx').on(table.authorId),
+    statusIdx: index('contest_status_idx').on(table.status),
+    startDateIdx: index('contest_startDate_idx').on(table.startDate),
+    endDateIdx: index('contest_endDate_idx').on(table.endDate),
+  }),
+)
 
 const insertContestsSchema = createInsertSchema(contests)
 const selectContestsSchema = createSelectSchema(contests)
@@ -57,23 +73,29 @@ export const contestRelations = relations(contests, ({one, many}) => ({
   knownIssues: many(knownIssues),
 }))
 
-export const knownIssues = pgTable('knownIssue', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  contestId: uuid('contestId')
-    .notNull()
-    .references(() => contests.id),
-  title: varchar('title', {length: 255}).notNull(),
-  description: text('description').notNull(),
-  fileUrl: varchar('fileUrl', {length: 255}).notNull(),
-  createdAt: timestamp('createdAt', {
-    mode: 'date',
-  }).default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: timestamp('updatedAt', {
-    mode: 'date',
-  })
-    .default(sql`CURRENT_TIMESTAMP`)
-    .$onUpdate(() => new Date()),
-})
+export const knownIssues = pgTable(
+  'knownIssue',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    contestId: uuid('contestId')
+      .notNull()
+      .references(() => contests.id),
+    title: varchar('title', {length: 255}).notNull(),
+    description: text('description').notNull(),
+    fileUrl: varchar('fileUrl', {length: 255}).notNull(),
+    createdAt: timestamp('createdAt', {
+      mode: 'date',
+    }).default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp('updatedAt', {
+      mode: 'date',
+    })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    contestIdIdx: index('knownIssue_contestId_idx').on(table.contestId),
+  }),
+)
 
 const insertKnownIssuesSchema = createInsertSchema(knownIssues)
 const selectKnownIssuesSchema = createSelectSchema(knownIssues)
