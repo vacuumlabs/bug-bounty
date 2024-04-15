@@ -16,10 +16,22 @@ import {type AdapterAccount} from 'next-auth/adapters'
 import {rewards} from './reward'
 import {findings} from './finding'
 import {contests} from './contest'
+import {getDrizzleEnum} from '../utils/enum'
+
+export enum UserRole {
+  JUDGE = 'judge',
+  AUDITOR = 'auditor',
+}
 
 export const users = pgTable('user', {
   id: uuid('id').defaultRandom().primaryKey(),
   name: varchar('name', {length: 255}),
+  role: varchar('role', {
+    length: 8,
+    enum: getDrizzleEnum(UserRole),
+  })
+    .notNull()
+    .default(UserRole.AUDITOR),
   walletAddress: varchar('walletAddress', {length: 255}),
   email: varchar('email', {length: 255}).notNull(),
   emailVerified: timestamp('emailVerified', {
