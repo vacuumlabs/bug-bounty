@@ -18,7 +18,7 @@ import {findings} from './finding'
 import {contests} from './contest'
 import {getDrizzleEnum} from '../utils/enum'
 
-export enum UserRoles {
+export enum UserRole {
   JUDGE = 'judge',
   AUDITOR = 'auditor',
 }
@@ -28,10 +28,10 @@ export const users = pgTable('user', {
   name: varchar('name', {length: 255}),
   role: varchar('role', {
     length: 8,
-    enum: getDrizzleEnum(UserRoles),
+    enum: getDrizzleEnum(UserRole),
   })
     .notNull()
-    .default(UserRoles.AUDITOR),
+    .default(UserRole.AUDITOR),
   walletAddress: varchar('walletAddress', {length: 255}),
   email: varchar('email', {length: 255}).notNull(),
   emailVerified: timestamp('emailVerified', {
