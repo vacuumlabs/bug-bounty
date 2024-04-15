@@ -63,6 +63,10 @@
         "destructuredArrayIgnorePattern": "^_"
       }
     ],
+    "@typescript-eslint/restrict-template-expressions": [
+      "error",
+      {"allowNumber": true}
+    ],
     "react/function-component-definition": [
       2,
       {
