@@ -1,11 +1,12 @@
 'use client'
 
-import {CardanoWallet, useWallet} from '@meshsdk/react'
+import {useWallet} from '@meshsdk/react'
 import {useRouter} from 'next/navigation'
+
+import ConnectWallet from './ConnectWallet'
 
 import {Button} from '@/components/ui/Button'
 import {useAddWalletAddress} from '@/lib/queries/addWalletAddress'
-import NoSSR from '@/components/helpers/NoSsr'
 
 const VerifyWalletButton = () => {
   const {connected} = useWallet()
@@ -24,9 +25,7 @@ const VerifyWalletButton = () => {
       Verify wallet
     </Button>
   ) : (
-    <NoSSR>
-      <CardanoWallet />
-    </NoSSR>
+    <ConnectWallet />
   )
 }
 
