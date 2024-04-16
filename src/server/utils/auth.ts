@@ -1,7 +1,8 @@
 import {redirect} from 'next/navigation'
-import {getServerSession} from 'next-auth'
+import {Session, getServerSession} from 'next-auth'
 
 import {authOptions} from '../authOptions'
+import {UserRole} from '../db/schema/user'
 
 export const getServerAuthSession = () => getServerSession(authOptions)
 
@@ -29,3 +30,16 @@ export const requirePageSession = async () => {
 
   return session
 }
+
+export const requireJudgeAuth = async () => {
+  const session = await getServerAuthSession()
+
+  if (!session || session.user.role !== UserRole.JUDGE) {
+    throw new Error('Not authorized - JUDGE role is required.')
+  }
+
+  return session
+}
+
+export const isJudge = (session: Session | null) =>
+  session?.user.role === UserRole.JUDGE
