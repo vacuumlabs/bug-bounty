@@ -16,7 +16,7 @@ import {Input} from '@/components/ui/Input'
 import {Button} from '@/components/ui/Button'
 import {useSignUp} from '@/lib/queries/signUp'
 import {UserInputError} from '@/lib/types/error'
-import {handleGeneralError} from '@/lib/utils/error'
+import {handleGeneralError} from '@/lib/utils/client/error'
 
 const formSchema = z
   .object({

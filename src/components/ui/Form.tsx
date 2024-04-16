@@ -21,7 +21,7 @@ import {
   useId,
 } from 'react'
 
-import {cn} from '@/lib/utils/tailwind'
+import {cn} from '@/lib/utils/client/tailwind'
 import {Label} from '@/components/ui/Label'
 
 type OnSubmit<

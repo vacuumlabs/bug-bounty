@@ -1,4 +1,4 @@
-import {ellipsizeText} from './format'
+import {ellipsizeText} from '../common/format'
 
 import {toast} from '@/components/ui/Toast'
 

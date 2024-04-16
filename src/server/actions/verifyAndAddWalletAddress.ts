@@ -9,7 +9,7 @@ import {db} from '../db'
 import {users} from '../db/schema/user'
 import {requireServerSession} from '../utils/auth'
 
-import {formatWalletSignMessage} from '@/lib/utils/auth'
+import {formatWalletSignMessage} from '@/lib/utils/common/wallet'
 
 export const verifyAndAddWalletAddress = async (
   signature: DataSignature,

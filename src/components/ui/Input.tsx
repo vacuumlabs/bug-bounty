@@ -1,6 +1,6 @@
 import {InputHTMLAttributes, forwardRef} from 'react'
 
-import {cn} from '@/lib/utils/tailwind'
+import {cn} from '@/lib/utils/client/tailwind'
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement>
 

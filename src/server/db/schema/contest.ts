@@ -12,7 +12,8 @@ import {relations, sql} from 'drizzle-orm'
 
 import {deduplicatedFindings, findings} from './finding'
 import {users} from './user'
-import {getDrizzleEnum} from '../utils/enum'
+
+import {getDrizzleEnum} from '@/server/utils/enum'
 
 export enum ContestStatus {
   APPROVED = 'APPROVED',

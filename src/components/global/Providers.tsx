@@ -11,7 +11,7 @@ import {ReactNode} from 'react'
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
 import {Session} from 'next-auth'
 
-import {handleGeneralError} from '@/lib/utils/error'
+import {handleGeneralError} from '@/lib/utils/client/error'
 
 type ProvidersProps = {
   children: ReactNode

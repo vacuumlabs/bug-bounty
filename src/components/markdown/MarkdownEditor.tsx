@@ -6,7 +6,7 @@ import {Textarea} from '../ui/Textarea'
 import {Button} from '../ui/Button'
 import MarkdownPreview from './MarkdownPreview'
 
-import {cn} from '@/lib/utils/tailwind'
+import {cn} from '@/lib/utils/client/tailwind'
 
 type MarkdownEditorProps = {
   className?: string

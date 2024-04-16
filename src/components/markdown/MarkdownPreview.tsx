@@ -6,7 +6,7 @@ import {
 } from 'react-syntax-highlighter'
 import {oneDark} from 'react-syntax-highlighter/dist/cjs/styles/prism'
 
-import {cn} from '@/lib/utils/tailwind'
+import {cn} from '@/lib/utils/client/tailwind'
 
 type MarkdownPreviewProps = {
   doc: string
