@@ -75,8 +75,18 @@
       }
     ],
     "no-empty": ["error", {"allowEmptyCatch": true}],
-    "drizzle/enforce-delete-with-where": "error",
-    "drizzle/enforce-update-with-where": "error",
+    "drizzle/enforce-delete-with-where": [
+      "error",
+      {
+        "drizzleObjectName": "db"
+      }
+    ],
+    "drizzle/enforce-update-with-where": [
+      "error",
+      {
+        "drizzleObjectName": "db"
+      }
+    ],
     "prefer-arrow-functions/prefer-arrow-functions": "warn"
   },
   "parser": "@typescript-eslint/parser",
