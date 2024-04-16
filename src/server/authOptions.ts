@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import {DrizzleAdapter} from '@auth/drizzle-adapter'
 import {type DefaultSession, type NextAuthOptions} from 'next-auth'
 import {type Adapter} from 'next-auth/adapters'
@@ -6,24 +7,26 @@ import GoogleProvider from 'next-auth/providers/google'
 import GithubProvider from 'next-auth/providers/github'
 import EmailProvider, {EmailUserConfig} from 'next-auth/providers/email'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import {DefaultJWT} from 'next-auth/jwt'
 
 import {verifyCredentials} from './actions/verifyCredentials'
+import {UserRole} from './db/schema/user'
 
 import {env} from '@/env'
 import {db} from '@/server/db'
 
-/**
- * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
- * object and keep type safety.
- *
- * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
- */
 declare module 'next-auth' {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface Session extends DefaultSession {
     user: {
       id: string
+      role: UserRole
     } & DefaultSession['user']
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT extends DefaultJWT {
+    role: UserRole
   }
 }
 
@@ -32,10 +35,30 @@ export const authOptions: NextAuthOptions = {
     newUser: '/profile/connect-wallet',
   },
   callbacks: {
+    jwt: async ({token, user, trigger}) => {
+      if (trigger !== 'signIn' && trigger !== 'signUp') {
+        return token
+      }
+
+      const userData = await db.query.users.findFirst({
+        where: (users, {eq}) => eq(users.id, user.id),
+        columns: {
+          role: true,
+        },
+      })
+
+      if (!userData) {
+        throw new Error('User not found')
+      }
+
+      token.role = userData.role
+      return token
+    },
     session: ({session, token}) => ({
       ...session,
       user: {
         ...session.user,
+        role: token.role,
         id: token.sub,
       },
     }),
