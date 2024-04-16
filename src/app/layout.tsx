@@ -2,9 +2,11 @@ import type {Metadata} from 'next'
 import {Inter} from 'next/font/google'
 
 import './globals.css'
+
 import Providers from '@/components/global/Providers'
 import {Toaster} from '@/components/ui/Toast'
 import {getServerAuthSession} from '@/server/utils/auth'
+import ConnectWallet from '@/components/sections/profile/ConnectWallet'
 
 const inter = Inter({subsets: ['latin']})
 
@@ -23,7 +25,12 @@ const RootLayout = async ({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Providers session={session}>{children}</Providers>
+        <Providers session={session}>
+          <nav className="fixed flex h-[90px] w-full items-center justify-end bg-slate-500 p-4">
+            <ConnectWallet />
+          </nav>
+          {children}
+        </Providers>
         <Toaster />
       </body>
     </html>

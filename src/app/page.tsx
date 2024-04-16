@@ -1,15 +1,18 @@
 import Link from 'next/link'
 
-import {getServerAuthSession} from '@/server/utils/auth'
+import {getServerAuthSession, isJudge} from '@/server/utils/auth'
 import {Button} from '@/components/ui/Button'
-import MarkdownEditor from '@/components/markdown/MarkdownEditor'
 import SignOutButton from '@/components/ui/SignOutButon'
+import JudgeRewardsList from '@/components/sections/judge/JudgeRewardsList'
+import {prefetchGetRewards} from '@/lib/queries/getRewards'
+import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 
 const Home = async () => {
   const session = await getServerAuthSession()
+  await prefetchGetRewards({limit: 20})
 
   return (
-    <main className="flex flex-col items-center justify-between p-24">
+    <main className="flex flex-col items-center justify-between p-32">
       <div className="flex flex-col items-center justify-center gap-4">
         <p className="text-center text-2xl text-black">
           {session && (
@@ -36,9 +39,11 @@ const Home = async () => {
           </>
         )}
       </div>
-      <div className="w-full pt-10">
-        <MarkdownEditor />
-      </div>
+      {isJudge(session) && (
+        <HydrationBoundary>
+          <JudgeRewardsList />
+        </HydrationBoundary>
+      )}
     </main>
   )
 }
