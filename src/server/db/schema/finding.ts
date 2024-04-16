@@ -13,8 +13,9 @@ import {relations, sql} from 'drizzle-orm'
 
 import {contests} from './contest'
 import {users} from './user'
-import {getDrizzleEnum} from '../utils/enum'
 import {rewards} from './reward'
+
+import {getDrizzleEnum} from '@/server/utils/enum'
 
 export enum FindingSeverity {
   INFO = 'info',

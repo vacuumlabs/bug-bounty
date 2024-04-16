@@ -5,10 +5,10 @@ import {useWallet} from '@meshsdk/react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {getCsrfToken} from 'next-auth/react'
 
-import {formatWalletSignMessage} from '../utils/auth'
 import {queryKeys} from './keys'
 
 import {verifyAndAddWalletAddress} from '@/server/actions/verifyAndAddWalletAddress'
+import {formatWalletSignMessage} from '@/lib/utils/common/wallet'
 
 const addWalletAddress = async (wallet: BrowserWallet) => {
   const nonce = await getCsrfToken()

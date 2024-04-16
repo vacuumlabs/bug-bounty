@@ -10,7 +10,7 @@ import {
   ReactElement,
 } from 'react'
 
-import {cn} from '@/lib/utils/tailwind'
+import {cn} from '@/lib/utils/client/tailwind'
 
 const ToastProvider = ToastPrimitives.Provider
 

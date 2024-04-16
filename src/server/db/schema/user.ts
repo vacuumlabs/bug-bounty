@@ -16,7 +16,8 @@ import {type AdapterAccount} from 'next-auth/adapters'
 import {rewards} from './reward'
 import {findings} from './finding'
 import {contests} from './contest'
-import {getDrizzleEnum} from '../utils/enum'
+
+import {getDrizzleEnum} from '@/server/utils/enum'
 
 export enum UserRole {
   JUDGE = 'judge',
