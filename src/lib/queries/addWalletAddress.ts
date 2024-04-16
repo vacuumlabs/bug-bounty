@@ -6,11 +6,14 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {getCsrfToken} from 'next-auth/react'
 
 import {queryKeys} from './keys'
+import {requireConnectedWallet} from '../utils/client/wallet'
 
 import {verifyAndAddWalletAddress} from '@/server/actions/verifyAndAddWalletAddress'
 import {formatWalletSignMessage} from '@/lib/utils/common/wallet'
 
-const addWalletAddress = async (wallet: BrowserWallet) => {
+const addWalletAddress = async (browserWallet: BrowserWallet) => {
+  const wallet = await requireConnectedWallet(browserWallet)
+
   const nonce = await getCsrfToken()
 
   if (!nonce) {
