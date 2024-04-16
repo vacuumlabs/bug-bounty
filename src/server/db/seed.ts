@@ -1,6 +1,7 @@
 /* eslint-disable unicorn/no-process-exit */
 import {faker} from '@faker-js/faker'
 import bcrypt from 'bcryptjs'
+import {sql} from 'drizzle-orm'
 
 import {InsertUser, UserRole, users as usersTable} from './schema/user'
 import {env} from '../../env.js'
@@ -22,28 +23,25 @@ import {InsertReward, rewards as rewardsTable} from './schema/reward'
 
 import {db} from './index'
 
+const USERS_TO_GENERATE = 3 // minimum 2
+const FINDINGS_PER_CONTEST = 10
+const KNOWN_ISSUES_PER_CONTEST = 3
+
 const TEST_PASSWORD = 'Passpass'
 
 const hashedPassword = bcrypt.hashSync(TEST_PASSWORD, 10)
 const walletAddress = env.SEED_WALLET_ADDRESS
 
 const usersToInsert: InsertUser[] = [
-  {
+  ...Array.from({length: USERS_TO_GENERATE}).map(() => ({
     name: faker.person.fullName(),
     email: faker.internet.email(),
     password: hashedPassword,
     image: faker.image.avatar(),
     walletAddress,
-  },
+  })),
   {
-    name: faker.person.fullName(),
-    email: faker.internet.email(),
-    password: hashedPassword,
-    image: faker.image.avatar(),
-    walletAddress,
-  },
-  {
-    name: faker.person.fullName(),
+    name: 'Admin',
     email: 'admin@test.com',
     password: hashedPassword,
     image: faker.image.avatar(),
@@ -96,7 +94,7 @@ const getContestsToInsert = (projectOwnerUserId: string): InsertContest[] => [
 ]
 
 const getKnownIssuesToInsert = ({id}: Contest): InsertKnownIssue[] =>
-  Array.from({length: 3}).map((_, index) => ({
+  Array.from({length: KNOWN_ISSUES_PER_CONTEST}).map((_, index) => ({
     contestId: id,
     title: `Known issue #${index + 1}`,
     description: faker.lorem.paragraph(),
@@ -107,7 +105,7 @@ const getFindingsToInsert = (
   contestId: string,
   auditorUserId: string,
 ): InsertFinding[] =>
-  Array.from({length: 10}).map((_, index) => ({
+  Array.from({length: FINDINGS_PER_CONTEST}).map((_, index) => ({
     authorId: auditorUserId,
     contestId,
     title: `Bug #${index + 1}`,
@@ -120,14 +118,26 @@ const getRewardToInsert = (finding: Finding): InsertReward => ({
   findingId: finding.id,
   userId: finding.authorId,
   amount: faker.finance.amount({
-    min: 10_000,
-    max: 1_000_000,
+    min: 1_000_000,
+    max: 5_000_000,
     dec: 0,
   }),
 })
 
 const seed = async () => {
+  const schema = db._.schema
+
   await db.transaction(async (tx) => {
+    if (schema) {
+      const tableNames = Object.values(schema)
+        .map((table) => `"${table.dbName}"`)
+        .join(', ')
+
+      await tx.execute(sql.raw(`truncate table ${tableNames};`))
+
+      console.log('Truncated all DB tables')
+    }
+
     const users = await tx.insert(usersTable).values(usersToInsert).returning()
 
     const projectOwnerUserId = users[0]?.id
@@ -149,22 +159,35 @@ const seed = async () => {
       throw new Error('Failed to generate contests')
     }
 
-    await tx
+    const knownIssues = await tx
       .insert(knownIssuesTable)
       .values(contests.flatMap(getKnownIssuesToInsert))
+      .returning()
 
     const pastContestFindings = await tx
       .insert(findingsTable)
       .values(getFindingsToInsert(pastContestId, auditorUserId))
       .returning()
 
-    await tx
+    const currentContestFindings = await tx
       .insert(findingsTable)
       .values(getFindingsToInsert(currentContestId, auditorUserId))
+      .returning()
 
     const rewardsToInsert = pastContestFindings.map(getRewardToInsert)
 
-    await tx.insert(rewardsTable).values(rewardsToInsert)
+    const rewards = await tx
+      .insert(rewardsTable)
+      .values(rewardsToInsert)
+      .returning()
+
+    console.log(`Inserted ${users.length} users`)
+    console.log(`Inserted ${contests.length} contests`)
+    console.log(`Inserted ${knownIssues.length} known issues`)
+    console.log(
+      `Inserted ${pastContestFindings.length + currentContestFindings.length} findings`,
+    )
+    console.log(`Inserted ${rewards.length} rewards`)
   })
 
   process.exit()
