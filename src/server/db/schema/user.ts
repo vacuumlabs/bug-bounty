@@ -28,6 +28,7 @@ export enum UserRole {
 export const users = pgTable('user', {
   id: uuid('id').defaultRandom().primaryKey(),
   name: varchar('name', {length: 255}),
+  alias: varchar('alias', {length: 255}).unique(),
   role: varchar('role', {
     length: 8,
     enum: getDrizzleEnum(UserRole),

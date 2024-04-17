@@ -73,6 +73,7 @@ export const getRewards = async ({
       user: {
         columns: {
           name: true,
+          alias: true,
           image: true,
           walletAddress: true,
         },
