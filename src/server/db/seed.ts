@@ -32,14 +32,24 @@ const TEST_PASSWORD = 'Passpass'
 const hashedPassword = bcrypt.hashSync(TEST_PASSWORD, 10)
 const walletAddress = env.SEED_WALLET_ADDRESS
 
-const usersToInsert: InsertUser[] = [
-  ...Array.from({length: USERS_TO_GENERATE}).map(() => ({
-    name: faker.person.fullName(),
-    email: faker.internet.email(),
+const getUserToInsert = (): InsertUser => {
+  const nameOptions = {
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
+  }
+
+  return {
+    name: faker.person.fullName(nameOptions),
+    alias: faker.helpers.unique(() => faker.internet.userName(nameOptions)),
+    email: faker.internet.email(nameOptions),
     password: hashedPassword,
     image: faker.image.avatar(),
     walletAddress,
-  })),
+  }
+}
+
+const usersToInsert: InsertUser[] = [
+  ...Array.from({length: USERS_TO_GENERATE}).map(getUserToInsert),
   {
     name: 'Admin',
     email: 'admin@test.com',
