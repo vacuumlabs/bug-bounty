@@ -1,6 +1,10 @@
 'use server'
 
-import {type DataSignature, checkSignature} from '@meshsdk/core'
+import {
+  type DataSignature,
+  checkSignature,
+  resolveRewardAddress,
+} from '@meshsdk/core'
 import {getCsrfToken} from 'next-auth/react'
 import {eq} from 'drizzle-orm'
 import {cookies} from 'next/headers'
@@ -31,12 +35,12 @@ export const verifyAndAddWalletAddress = async (
 
   const isVerified = checkSignature(
     formatWalletSignMessage(walletAddress, nonce),
-    walletAddress,
+    resolveRewardAddress(walletAddress),
     signature,
   )
 
   if (!isVerified) {
-    throw new Error('Invalid signature')
+    throw new Error('Invalid signature.')
   }
 
   return db

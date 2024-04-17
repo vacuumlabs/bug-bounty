@@ -20,15 +20,23 @@ const addWalletAddress = async (browserWallet: BrowserWallet) => {
     throw new Error('Missing CSRF token. Are you logged in?')
   }
 
-  const addresses = await wallet.getRewardAddresses()
-  const walletAddress = addresses[0]
+  const rewardAddresses = await wallet.getRewardAddresses()
+  const usedAddresses = await wallet.getUsedAddresses()
+  const unusedAddresses = await wallet.getUnusedAddresses()
+  const walletAddress = usedAddresses[0] ?? unusedAddresses[0]
+  const rewardAddress = rewardAddresses[0]
 
   if (!walletAddress) {
     throw new Error('No wallet address')
   }
+  if (!rewardAddress) {
+    throw new Error('No reward address')
+  }
 
+  // verifying payment address signatures doesn't work for some reason, so we're signing with stake address instead
+  // and on server we check, whether the stake address belongs to the payment address
   const signature = await wallet.signData(
-    walletAddress,
+    rewardAddress,
     formatWalletSignMessage(walletAddress, nonce),
   )
 
