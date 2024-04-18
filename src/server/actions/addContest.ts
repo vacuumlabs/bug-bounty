@@ -88,13 +88,10 @@ export const addKnownIssues = async ({
     throw new Error('Only contest authors can add known issues')
   }
 
-  return db
-    .insert(schema.knownIssues)
-    .values(
-      knownIssues.map((knownIssue) => ({
-        ...knownIssue,
-        contestId,
-      })),
-    )
-    .returning()
+  const knownIssuesToInsert = knownIssues.map((knownIssue) => ({
+    ...knownIssue,
+    contestId,
+  }))
+
+  return db.insert(schema.knownIssues).values(knownIssuesToInsert).returning()
 }
