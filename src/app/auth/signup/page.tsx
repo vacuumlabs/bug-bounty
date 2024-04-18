@@ -15,8 +15,7 @@ import {
 import {Input} from '@/components/ui/Input'
 import {Button} from '@/components/ui/Button'
 import {useSignUp} from '@/lib/queries/auth/signUp'
-import {UserInputError} from '@/lib/types/error'
-import {handleGeneralError} from '@/lib/utils/client/error'
+import {FormError} from '@/lib/types/error'
 
 const formSchema = z
   .object({
@@ -44,10 +43,8 @@ const SignUpPage = () => {
   })
   const {mutate: signUp} = useSignUp({
     onError: (error) => {
-      if (error instanceof UserInputError) {
+      if (error instanceof FormError) {
         form.setError('email', {type: 'custom', message: error.message})
-      } else {
-        handleGeneralError(error)
       }
     },
   })

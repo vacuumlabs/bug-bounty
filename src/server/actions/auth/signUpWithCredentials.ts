@@ -6,6 +6,7 @@ import {db} from '../../db'
 import {users} from '../../db/schema/user'
 
 import {Credentials} from '@/lib/types/auth'
+import {getApiFormError} from '@/lib/utils/common/error'
 
 export type SignUpProps = Credentials & {
   name: string
@@ -24,10 +25,7 @@ export const signUpWithCredentials = async ({
 
   if (user) {
     // Server actions don't support throwing custom error types, so we have to use error object and handle it on client
-    return {
-      type: 'error',
-      message: 'User already exists',
-    } as const
+    return getApiFormError('User already exists')
   }
 
   const data = await db
@@ -40,8 +38,5 @@ export const signUpWithCredentials = async ({
     })
     .returning()
 
-  return {
-    type: 'success',
-    data,
-  } as const
+  return data
 }

@@ -1,8 +1,7 @@
 import {MutateOptions, useMutation} from '@tanstack/react-query'
 import {signIn} from 'next-auth/react'
 
-import {UserInputError} from '../../types/error'
-
+import {handlePossibleFormError} from '@/lib/utils/common/error'
 import {
   SignUpProps,
   signUpWithCredentials,
@@ -14,9 +13,7 @@ export const useSignUp = (options?: MutateOptions<void, Error, SignUpProps>) =>
     mutationFn: async (values: SignUpProps) => {
       const result = await signUpWithCredentials(values)
 
-      if (result.type === 'error') {
-        throw new UserInputError(result.message)
-      }
+      handlePossibleFormError(result)
 
       await signIn('email', {
         email: values.email,
