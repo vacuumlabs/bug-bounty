@@ -1,6 +1,10 @@
-export class UserInputError extends Error {
-  constructor(message: string) {
+export type FormErrorData = Record<string, unknown> | undefined
+
+export class FormError<T extends FormErrorData> extends Error {
+  public data: T | undefined
+  constructor(message: string, data?: T) {
     super(message)
-    this.name = 'UserInputError'
+    this.name = 'FormError'
+    this.data = data
   }
 }
