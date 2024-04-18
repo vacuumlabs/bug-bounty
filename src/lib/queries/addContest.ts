@@ -16,6 +16,7 @@ export const useAddContest = (
   return useMutation({
     ...options,
     mutationFn: addContest,
+    // TODO: invalidate relevant GET queries
   })
 }
 
@@ -25,6 +26,7 @@ export const useConfirmOrRejectContest = (
   return useMutation({
     ...options,
     mutationFn: confirmOrRejectContest,
+    // TODO: invalidate relevant GET queries
   })
 }
 
@@ -34,5 +36,6 @@ export const useAddKnownIssues = (
   return useMutation({
     ...options,
     mutationFn: addKnownIssues,
+    // TODO: invalidate relevant GET queries
   })
 }
