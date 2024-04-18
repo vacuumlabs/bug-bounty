@@ -9,7 +9,7 @@ export type AddFinding = Omit<
   'deduplicatedFindingId' | 'authorId'
 >
 
-export type AddFindingProps = {
+export type AddFindingParams = {
   finding: AddFinding
   findingAttachmentUrls: string[]
 }
@@ -19,7 +19,7 @@ export type AddFindingResponse = Awaited<ReturnType<typeof addFinding>>
 export const addFinding = async ({
   finding,
   findingAttachmentUrls,
-}: AddFindingProps) => {
+}: AddFindingParams) => {
   const session = await requireServerSession()
 
   if (isJudge(session)) {

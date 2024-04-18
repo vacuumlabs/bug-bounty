@@ -3,8 +3,8 @@ import {MutateOptions, useMutation} from '@tanstack/react-query'
 import {Contest, KnownIssue} from '@/server/db/schema/contest'
 import {
   AddContest,
-  AddKnownIssuesProps,
-  ConfirmOrRejectContestProps,
+  AddKnownIssuesParams,
+  ConfirmOrRejectContestParams,
   addContest,
   addKnownIssues,
   confirmOrRejectContest,
@@ -20,7 +20,7 @@ export const useAddContest = (
 }
 
 export const useConfirmOrRejectContest = (
-  options?: MutateOptions<Contest[], Error, ConfirmOrRejectContestProps>,
+  options?: MutateOptions<Contest[], Error, ConfirmOrRejectContestParams>,
 ) => {
   return useMutation({
     ...options,
@@ -29,7 +29,7 @@ export const useConfirmOrRejectContest = (
 }
 
 export const useAddKnownIssues = (
-  options?: MutateOptions<KnownIssue[], Error, AddKnownIssuesProps>,
+  options?: MutateOptions<KnownIssue[], Error, AddKnownIssuesParams>,
 ) => {
   return useMutation({
     ...options,
