@@ -14,10 +14,7 @@ import {
 } from '@/server/db/schema/contest'
 import {db, schema} from '@/server/db'
 
-export type AddContest = Omit<
-  InsertContest,
-  'authorId' | 'status' | 'createdAt' | 'updatedAt' | 'id'
->
+export type AddContest = Omit<InsertContest, 'authorId' | 'status'>
 
 export const addContest = async (contest: AddContest) => {
   const session = await requireServerSession()
@@ -63,10 +60,7 @@ export const confirmOrRejectContest = async ({
     .returning()
 }
 
-export type AddKnownIssue = Omit<
-  InsertKnownIssue,
-  'contestId' | 'createdAt' | 'updatedAt' | 'id'
->
+export type AddKnownIssue = Omit<InsertKnownIssue, 'contestId'>
 
 export type AddKnownIssuesProps = {
   contestId: string
