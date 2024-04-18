@@ -6,6 +6,7 @@ import {prefetchGetUser} from '@/lib/queries/user/getUser'
 import Profile from '@/components/sections/profile/Profile'
 import {Button} from '@/components/ui/Button'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
+import {Separator} from '@/components/ui/Separator'
 
 const ProfilePage = async () => {
   const session = await requirePageSession()
@@ -18,6 +19,7 @@ const ProfilePage = async () => {
       <HydrationBoundary>
         <Profile />
       </HydrationBoundary>
+      <Separator className="mt-10" />
       <Button asChild variant="link">
         <Link href="/">Home</Link>
       </Button>
