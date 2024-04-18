@@ -16,7 +16,9 @@ import {
 } from '@/server/db/schema/contest'
 import {db, schema} from '@/server/db'
 
-export type AddContest = Omit<InsertContest, 'authorId' | 'status'>
+export type AddContest = Omit<InsertContest, 'authorId'> & {
+  status: ContestStatus.PENDING | ContestStatus.DRAFT
+}
 
 export const addContest = async (contest: AddContest) => {
   const session = await requireServerSession()
@@ -44,7 +46,6 @@ export const addContest = async (contest: AddContest) => {
     .values({
       ...contest,
       authorId: session.user.id,
-      status: ContestStatus.PENDING,
     })
     .returning()
 }
