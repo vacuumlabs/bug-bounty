@@ -8,7 +8,7 @@ import {
   addContest,
   addKnownIssues,
   confirmOrRejectContest,
-} from '@/server/actions/addContest'
+} from '@/server/actions/contest/addContest'
 
 export const useAddContest = (
   options?: MutateOptions<Contest[], Error, AddContest>,

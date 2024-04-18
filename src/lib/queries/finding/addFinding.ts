@@ -4,7 +4,7 @@ import {
   AddFindingParams,
   AddFindingResponse,
   addFinding,
-} from '@/server/actions/addFinding'
+} from '@/server/actions/finding/addFinding'
 
 export const useAddFinding = (
   options?: MutateOptions<AddFindingResponse, Error, AddFindingParams>,

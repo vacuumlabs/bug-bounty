@@ -2,9 +2,9 @@
 
 import {isAfter, isBefore} from 'date-fns'
 
-import {db, schema} from '../db'
-import {InsertFinding} from '../db/schema/finding'
-import {isJudge, requireServerSession} from '../utils/auth'
+import {db, schema} from '../../db'
+import {InsertFinding} from '../../db/schema/finding'
+import {isJudge, requireServerSession} from '../../utils/auth'
 
 export type AddFinding = Omit<
   InsertFinding,
