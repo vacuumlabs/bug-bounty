@@ -6,7 +6,7 @@ import {insertFindingAttachmentSchema} from '@/server/db/schema/findingAttachmen
 import {insertFindingSchema} from '@/server/db/schema/finding'
 import {insertContestSeverityWeightSchema} from '@/server/db/schema/contestSeverityWeights'
 
-// Schemas can be exported from server action files, so if we want to reuse them, we have to define them here.
+// Schemas can't be exported from server action files, so if we want to reuse them, we have to define them here.
 
 export const signUpSchema = z.object({
   name: z.string().min(3),
