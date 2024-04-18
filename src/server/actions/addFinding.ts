@@ -1,3 +1,5 @@
+'use server'
+
 import {isAfter, isBefore} from 'date-fns'
 
 import {db, schema} from '../db'
