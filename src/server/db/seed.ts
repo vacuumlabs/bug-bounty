@@ -16,6 +16,7 @@ import {
 import {
   Finding,
   FindingSeverity,
+  FindingStatus,
   InsertFinding,
   findings as findingsTable,
 } from './schema/finding'
@@ -122,6 +123,7 @@ const getFindingsToInsert = (
     description: faker.lorem.paragraph(),
     targetFileUrl: faker.internet.url(),
     severity: faker.helpers.enumValue(FindingSeverity),
+    status: faker.helpers.enumValue(FindingStatus),
   }))
 
 const getRewardToInsert = (finding: Finding): InsertReward => ({

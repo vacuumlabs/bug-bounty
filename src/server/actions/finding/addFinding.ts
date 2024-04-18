@@ -3,13 +3,17 @@
 import {isAfter, isBefore} from 'date-fns'
 
 import {db, schema} from '../../db'
-import {InsertFinding} from '../../db/schema/finding'
+import {FindingStatus, InsertFinding} from '../../db/schema/finding'
 import {isJudge, requireServerSession} from '../../utils/auth'
+
+import {ContestStatus} from '@/server/db/schema/contest'
 
 export type AddFinding = Omit<
   InsertFinding,
   'deduplicatedFindingId' | 'authorId'
->
+> & {
+  status: FindingStatus.PENDING | FindingStatus.DRAFT
+}
 
 export type AddFindingParams = {
   finding: AddFinding
@@ -46,6 +50,10 @@ export const addFinding = async ({
 
   if (isBefore(contest.startDate, new Date())) {
     throw new Error('Contest has not started yet.')
+  }
+
+  if (contest.status !== ContestStatus.APPROVED) {
+    throw new Error('Contest is not approved.')
   }
 
   const findings = await db
