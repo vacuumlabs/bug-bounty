@@ -1,4 +1,5 @@
 import {isAfter, isBefore} from 'date-fns'
+
 import {db, schema} from '../db'
 import {InsertFinding} from '../db/schema/finding'
 import {isJudge, requireServerSession} from '../utils/auth'
@@ -13,7 +14,7 @@ export type AddFindingProps = {
   findingAttachmentUrls: string[]
 }
 
-export type AddFindingReturn = Awaited<ReturnType<typeof addFinding>>
+export type AddFindingResponse = Awaited<ReturnType<typeof addFinding>>
 
 export const addFinding = async ({
   finding,
