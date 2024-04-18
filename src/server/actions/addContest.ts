@@ -49,7 +49,11 @@ export const confirmOrRejectContest = async ({
     where: (contests, {eq}) => eq(contests.id, contestId),
   })
 
-  if (contest?.status !== ContestStatus.PENDING) {
+  if (!contest) {
+    throw new Error('Contest not found')
+  }
+
+  if (contest.status !== ContestStatus.PENDING) {
     throw new Error('Only pending contests can be confirmed/rejected')
   }
 
