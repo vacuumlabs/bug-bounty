@@ -1,6 +1,8 @@
 'use server'
 
 import {eq} from 'drizzle-orm'
+import {isAfter} from 'date-fns'
+import {z} from 'zod'
 
 import {
   isJudge,
@@ -21,6 +23,16 @@ export const addContest = async (contest: AddContest) => {
 
   if (isJudge(session)) {
     throw new Error("Judges can't create contests.")
+  }
+
+  if (isAfter(contest.startDate, contest.endDate)) {
+    throw new Error('Contest start date must be before end date.')
+  }
+
+  const checkRepoUrl = z.string().url().safeParse(contest.repoUrl)
+
+  if (!checkRepoUrl.success) {
+    throw new Error('Invalid repository URL.')
   }
 
   return db
