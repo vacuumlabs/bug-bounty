@@ -2,7 +2,10 @@ import {db, schema} from '../db'
 import {InsertFinding} from '../db/schema/finding'
 import {isJudge, requireServerSession} from '../utils/auth'
 
-export type AddFinding = Omit<InsertFinding, 'deduplicatedFindingId'>
+export type AddFinding = Omit<
+  InsertFinding,
+  'deduplicatedFindingId' | 'authorId'
+>
 
 export type AddFindingProps = {
   finding: AddFinding
@@ -21,7 +24,10 @@ export const addFinding = async ({
     throw new Error("Judges can't create findings.")
   }
 
-  const findings = await db.insert(schema.findings).values(finding).returning()
+  const findings = await db
+    .insert(schema.findings)
+    .values({...finding, authorId: session.user.id})
+    .returning()
 
   if (!findings[0]) {
     throw new Error('Failed to create finding.')
