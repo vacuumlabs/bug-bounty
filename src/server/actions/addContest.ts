@@ -45,7 +45,7 @@ export const addContest = async (contest: AddContest) => {
     .returning()
 }
 
-export type ConfirmOrRejectContestProps = {
+export type ConfirmOrRejectContestParams = {
   contestId: string
   newStatus: ContestStatus.APPROVED | ContestStatus.REJECTED
 }
@@ -53,7 +53,7 @@ export type ConfirmOrRejectContestProps = {
 export const confirmOrRejectContest = async ({
   contestId,
   newStatus,
-}: ConfirmOrRejectContestProps) => {
+}: ConfirmOrRejectContestParams) => {
   await requireJudgeAuth()
 
   const contest = await db.query.contests.findFirst({
@@ -78,7 +78,7 @@ export const confirmOrRejectContest = async ({
 
 export type AddKnownIssue = Omit<InsertKnownIssue, 'contestId'>
 
-export type AddKnownIssuesProps = {
+export type AddKnownIssuesParams = {
   contestId: string
   knownIssues: AddKnownIssue[]
 }
@@ -86,7 +86,7 @@ export type AddKnownIssuesProps = {
 export const addKnownIssues = async ({
   contestId,
   knownIssues,
-}: AddKnownIssuesProps) => {
+}: AddKnownIssuesParams) => {
   const session = await requireServerSession()
 
   const contest = await db.query.contests.findFirst({
