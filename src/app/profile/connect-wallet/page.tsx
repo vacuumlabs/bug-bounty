@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 import {Button} from '@/components/ui/Button'
 import {requirePageSession} from '@/server/utils/auth'
-import {prefetchGetUser} from '@/lib/queries/getUser'
+import {prefetchGetUser} from '@/lib/queries/user/getUser'
 import RegisterWalletAddress from '@/components/sections/profile/RegisterWalletAddress'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 

@@ -9,7 +9,7 @@ import EmailProvider, {EmailUserConfig} from 'next-auth/providers/email'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import {DefaultJWT} from 'next-auth/jwt'
 
-import {verifyCredentials} from './actions/verifyCredentials'
+import {verifyCredentials} from './actions/auth/verifyCredentials'
 import {UserRole} from './db/schema/user'
 
 import {env} from '@/env'

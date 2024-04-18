@@ -3,7 +3,7 @@
 import Link from 'next/link'
 
 import {Button} from '@/components/ui/Button'
-import {useGetUser} from '@/lib/queries/getUser'
+import {useGetUser} from '@/lib/queries/user/getUser'
 
 const Profile = () => {
   const {data: user} = useGetUser()

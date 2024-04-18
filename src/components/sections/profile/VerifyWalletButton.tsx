@@ -6,7 +6,7 @@ import {useRouter} from 'next/navigation'
 import ConnectWallet from './ConnectWallet'
 
 import {Button} from '@/components/ui/Button'
-import {useAddWalletAddress} from '@/lib/queries/addWalletAddress'
+import {useAddWalletAddress} from '@/lib/queries/user/addWalletAddress'
 
 const VerifyWalletButton = () => {
   const {connected} = useWallet()

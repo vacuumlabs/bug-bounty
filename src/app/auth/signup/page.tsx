@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/Form'
 import {Input} from '@/components/ui/Input'
 import {Button} from '@/components/ui/Button'
-import {useSignUp} from '@/lib/queries/signUp'
+import {useSignUp} from '@/lib/queries/auth/signUp'
 import {UserInputError} from '@/lib/types/error'
 import {handleGeneralError} from '@/lib/utils/client/error'
 

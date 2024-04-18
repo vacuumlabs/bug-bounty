@@ -2,7 +2,7 @@
 
 import bcrypt from 'bcryptjs'
 
-import {db} from '../db'
+import {db} from '../../db'
 
 import type {Credentials} from '@/lib/types/auth'
 

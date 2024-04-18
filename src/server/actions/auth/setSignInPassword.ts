@@ -3,9 +3,9 @@
 import bcrypt from 'bcryptjs'
 import {eq} from 'drizzle-orm'
 
-import {db} from '../db'
-import {users} from '../db/schema/user'
-import {requireServerSession} from '../utils/auth'
+import {db} from '../../db'
+import {users} from '../../db/schema/user'
+import {requireServerSession} from '../../utils/auth'
 
 export const setSignInPassword = async (password: string) => {
   const session = await requireServerSession()

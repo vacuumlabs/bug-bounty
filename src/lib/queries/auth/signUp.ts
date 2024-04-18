@@ -1,12 +1,12 @@
 import {MutateOptions, useMutation} from '@tanstack/react-query'
 import {signIn} from 'next-auth/react'
 
-import {UserInputError} from '../types/error'
+import {UserInputError} from '../../types/error'
 
 import {
   SignUpProps,
   signUpWithCredentials,
-} from '@/server/actions/signUpWithCredentials'
+} from '@/server/actions/auth/signUpWithCredentials'
 
 export const useSignUp = (options?: MutateOptions<void, Error, SignUpProps>) =>
   useMutation({

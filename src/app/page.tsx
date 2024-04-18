@@ -4,7 +4,7 @@ import {getServerAuthSession, isJudge} from '@/server/utils/auth'
 import {Button} from '@/components/ui/Button'
 import SignOutButton from '@/components/ui/SignOutButon'
 import JudgeRewardsList from '@/components/sections/judge/JudgeRewardsList'
-import {prefetchGetRewards} from '@/lib/queries/getRewards'
+import {prefetchGetRewards} from '@/lib/queries/reward/getRewards'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 
 const Home = async () => {

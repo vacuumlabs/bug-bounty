@@ -1,9 +1,9 @@
 import {useQuery} from '@tanstack/react-query'
 
-import {queryKeys} from './keys'
-import {useUserId} from '../hooks/useUserId'
+import {queryKeys} from '../keys'
+import {useUserId} from '../../hooks/useUserId'
 
-import {getUser} from '@/server/actions/getUser'
+import {getUser} from '@/server/actions/user/getUser'
 import getServerQueryClient from '@/server/utils/queryClient'
 
 const getQueryOptions = (userId: string | undefined) => ({

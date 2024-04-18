@@ -9,9 +9,9 @@ import {getCsrfToken} from 'next-auth/react'
 import {eq} from 'drizzle-orm'
 import {cookies} from 'next/headers'
 
-import {db} from '../db'
-import {users} from '../db/schema/user'
-import {requireServerSession} from '../utils/auth'
+import {db} from '../../db'
+import {users} from '../../db/schema/user'
+import {requireServerSession} from '../../utils/auth'
 
 import {formatWalletSignMessage} from '@/lib/utils/common/wallet'
 

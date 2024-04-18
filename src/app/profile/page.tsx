@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 import SignOutButton from '@/components/ui/SignOutButon'
 import {requirePageSession} from '@/server/utils/auth'
-import {prefetchGetUser} from '@/lib/queries/getUser'
+import {prefetchGetUser} from '@/lib/queries/user/getUser'
 import Profile from '@/components/sections/profile/Profile'
 import {Button} from '@/components/ui/Button'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
