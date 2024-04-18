@@ -1,7 +1,8 @@
 import {MutateOptions, useMutation} from '@tanstack/react-query'
 
-import {Contest, InsertContest, KnownIssue} from '@/server/db/schema/contest'
+import {Contest, KnownIssue} from '@/server/db/schema/contest'
 import {
+  AddContestParam,
   AddKnownIssuesProps,
   ConfirmOrRejectContestProps,
   addContest,
@@ -10,11 +11,7 @@ import {
 } from '@/server/actions/addContest'
 
 export const useAddContest = (
-  options?: MutateOptions<
-    Contest[],
-    Error,
-    Omit<InsertContest, 'authorId' | 'status'>
-  >,
+  options?: MutateOptions<Contest[], Error, AddContestParam>,
 ) => {
   return useMutation({
     ...options,
