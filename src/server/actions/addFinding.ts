@@ -12,6 +12,8 @@ export type AddFindingProps = {
   findingAttachmentUrls: string[]
 }
 
+export type AddFindingReturn = Awaited<ReturnType<typeof addFinding>>
+
 export const addFinding = async ({
   finding,
   findingAttachmentUrls,
@@ -42,6 +44,6 @@ export const addFinding = async ({
 
   return {
     ...findings[0],
-    attachments: findingAttachments,
+    findingAttachments,
   }
 }
