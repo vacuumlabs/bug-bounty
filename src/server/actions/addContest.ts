@@ -7,7 +7,11 @@ import {
   requireJudgeAuth,
   requireServerSession,
 } from '@/server/utils/auth'
-import {ContestStatus, InsertContest} from '@/server/db/schema/contest'
+import {
+  ContestStatus,
+  InsertContest,
+  InsertKnownIssue,
+} from '@/server/db/schema/contest'
 import {db, schema} from '@/server/db'
 
 export const addContest = async (
@@ -53,5 +57,36 @@ export const confirmOrRejectContest = async ({
     .update(schema.contests)
     .set({status: newStatus})
     .where(eq(schema.contests.id, contestId))
+    .returning()
+}
+
+export type AddKnownIssuesProps = {
+  contestId: string
+  knownIssues: Omit<InsertKnownIssue, 'contestId'>[]
+}
+
+export const addKnownIssues = async ({
+  contestId,
+  knownIssues,
+}: AddKnownIssuesProps) => {
+  const session = await requireServerSession()
+
+  const contest = await db.query.contests.findFirst({
+    columns: {authorId: true},
+    where: (contests, {eq}) => eq(contests.id, contestId),
+  })
+
+  if (contest?.authorId !== session.user.id) {
+    throw new Error('Only contest authors can add known issues')
+  }
+
+  return db
+    .insert(schema.knownIssues)
+    .values(
+      knownIssues.map((knownIssue) => ({
+        ...knownIssue,
+        contestId,
+      })),
+    )
     .returning()
 }
