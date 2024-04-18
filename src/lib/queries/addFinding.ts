@@ -12,5 +12,6 @@ export const useAddFinding = (
   return useMutation({
     ...options,
     mutationFn: addFinding,
+    // TODO: invalidate relevant GET queries
   })
 }
