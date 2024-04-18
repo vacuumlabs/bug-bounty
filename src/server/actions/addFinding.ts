@@ -1,3 +1,4 @@
+import {isAfter, isBefore} from 'date-fns'
 import {db, schema} from '../db'
 import {InsertFinding} from '../db/schema/finding'
 import {isJudge, requireServerSession} from '../utils/auth'
@@ -22,6 +23,26 @@ export const addFinding = async ({
 
   if (isJudge(session)) {
     throw new Error("Judges can't create findings.")
+  }
+
+  const contest = await db.query.contests.findFirst({
+    where: (contests, {eq}) => eq(contests.id, finding.contestId),
+  })
+
+  if (!contest) {
+    throw new Error('Contest not found.')
+  }
+
+  if (contest.authorId === session.user.id) {
+    throw new Error("Contest author can't create findings.")
+  }
+
+  if (isAfter(contest.endDate, new Date())) {
+    throw new Error('Contest has ended.')
+  }
+
+  if (isBefore(contest.startDate, new Date())) {
+    throw new Error('Contest has not started yet.')
   }
 
   const findings = await db
