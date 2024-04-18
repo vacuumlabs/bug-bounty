@@ -35,7 +35,13 @@ export const addFinding = async ({
     attachmentUrl: url,
   }))
 
-  await db.insert(schema.findingAttachments).values(findingAttachmentsToInsert)
+  const findingAttachments = await db
+    .insert(schema.findingAttachments)
+    .values(findingAttachmentsToInsert)
+    .returning()
 
-  return findings[0]
+  return {
+    ...findings[0],
+    attachments: findingAttachments,
+  }
 }
