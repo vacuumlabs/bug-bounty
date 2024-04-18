@@ -20,7 +20,7 @@ export const addContest = async (contest: AddContest) => {
   const session = await requireServerSession()
 
   if (isJudge(session)) {
-    throw new Error("Judges can't create contests")
+    throw new Error("Judges can't create contests.")
   }
 
   return db
@@ -50,11 +50,11 @@ export const confirmOrRejectContest = async ({
   })
 
   if (!contest) {
-    throw new Error('Contest not found')
+    throw new Error('Contest not found.')
   }
 
   if (contest.status !== ContestStatus.PENDING) {
-    throw new Error('Only pending contests can be confirmed/rejected')
+    throw new Error('Only pending contests can be confirmed/rejected.')
   }
 
   return db
@@ -83,7 +83,7 @@ export const addKnownIssues = async ({
   })
 
   if (contest?.authorId !== session.user.id) {
-    throw new Error('Only contest authors can add known issues')
+    throw new Error('Only contest authors can add known issues.')
   }
 
   const knownIssuesToInsert = knownIssues.map((knownIssue) => ({

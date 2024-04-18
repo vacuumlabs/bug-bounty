@@ -18,13 +18,13 @@ export const addFinding = async ({
   const session = await requireServerSession()
 
   if (isJudge(session)) {
-    throw new Error("Judges can't create findings")
+    throw new Error("Judges can't create findings.")
   }
 
   const findings = await db.insert(schema.findings).values(finding).returning()
 
   if (!findings[0]) {
-    throw new Error('Failed to create finding')
+    throw new Error('Failed to create finding.')
   }
 
   const findingId = findings[0].id
