@@ -2,13 +2,13 @@ import {db, schema} from '../db'
 import {InsertFinding} from '../db/schema/finding'
 import {isJudge, requireServerSession} from '../utils/auth'
 
-type AddFindingParam = Omit<
+export type AddFinding = Omit<
   InsertFinding,
   'id' | 'createdAt' | 'updatedAt' | 'deduplicatedFindingId'
 >
 
 export type AddFindingProps = {
-  finding: AddFindingParam
+  finding: AddFinding
   findingAttachmentUrls: string[]
 }
 

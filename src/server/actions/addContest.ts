@@ -14,12 +14,12 @@ import {
 } from '@/server/db/schema/contest'
 import {db, schema} from '@/server/db'
 
-export type AddContestParam = Omit<
+export type AddContest = Omit<
   InsertContest,
   'authorId' | 'status' | 'createdAt' | 'updatedAt' | 'id'
 >
 
-export const addContest = async (contest: AddContestParam) => {
+export const addContest = async (contest: AddContest) => {
   const session = await requireServerSession()
 
   if (isJudge(session)) {
@@ -63,14 +63,14 @@ export const confirmOrRejectContest = async ({
     .returning()
 }
 
-type AddKnownIssueParam = Omit<
+export type AddKnownIssue = Omit<
   InsertKnownIssue,
   'contestId' | 'createdAt' | 'updatedAt' | 'id'
 >
 
 export type AddKnownIssuesProps = {
   contestId: string
-  knownIssues: AddKnownIssueParam[]
+  knownIssues: AddKnownIssue[]
 }
 
 export const addKnownIssues = async ({
