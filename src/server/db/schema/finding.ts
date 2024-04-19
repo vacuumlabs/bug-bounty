@@ -95,7 +95,7 @@ export const findingAttachments = pgTable(
     id: uuid('id').defaultRandom().primaryKey(),
     findingId: uuid('findingId')
       .notNull()
-      .references(() => findings.id),
+      .references(() => findings.id, {onDelete: 'cascade'}),
     attachmentUrl: varchar('url', {length: 255}).notNull(),
     createdAt: timestamp('createdAt', {
       mode: 'date',
