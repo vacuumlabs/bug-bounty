@@ -4,12 +4,9 @@ import {isAfter} from 'date-fns'
 import {z} from 'zod'
 
 import {isJudge, requireServerSession} from '@/server/utils/auth'
-import {
-  ContestStatus,
-  InsertContest,
-  InsertKnownIssue,
-} from '@/server/db/schema/contest'
+import {ContestStatus, InsertContest} from '@/server/db/schema/contest'
 import {db, schema} from '@/server/db'
+import {InsertKnownIssue} from '@/server/db/schema/knownIssue'
 
 export type AddContest = Omit<InsertContest, 'authorId'> & {
   status: ContestStatus.PENDING | ContestStatus.DRAFT

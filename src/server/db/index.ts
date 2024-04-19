@@ -1,18 +1,30 @@
 import {drizzle} from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 
-import * as user from './schema/user'
+import * as account from './schema/account'
 import * as contest from './schema/contest'
+import * as deduplicatedFinding from './schema/deduplicatedFinding'
 import * as finding from './schema/finding'
+import * as findingAttachment from './schema/findingAttachment'
+import * as knownIssue from './schema/knownIssue'
 import * as reward from './schema/reward'
+import * as session from './schema/session'
+import * as user from './schema/user'
+import * as verificationToken from './schema/verificationToken'
 
 import {env} from '@/env'
 
 export const schema = {
-  ...user,
+  ...account,
   ...contest,
+  ...deduplicatedFinding,
   ...finding,
+  ...findingAttachment,
+  ...knownIssue,
   ...reward,
+  ...session,
+  ...user,
+  ...verificationToken,
 }
 
 /**
