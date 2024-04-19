@@ -83,7 +83,7 @@ export const knownIssues = pgTable(
     id: uuid('id').defaultRandom().primaryKey(),
     contestId: uuid('contestId')
       .notNull()
-      .references(() => contests.id),
+      .references(() => contests.id, {onDelete: 'cascade'}),
     title: varchar('title', {length: 255}).notNull(),
     description: text('description').notNull(),
     fileUrl: varchar('fileUrl', {length: 255}).notNull(),

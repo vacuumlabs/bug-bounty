@@ -26,13 +26,7 @@ export const deleteContest = async (contestId: string) => {
     throw new Error('Contest has started.')
   }
 
-  await db.transaction(async (tx) => {
-    await tx.delete(schema.contests).where(eq(schema.contests.id, contestId))
-
-    await tx
-      .delete(schema.knownIssues)
-      .where(eq(schema.knownIssues.contestId, contestId))
-  })
+  await db.delete(schema.contests).where(eq(schema.contests.id, contestId))
 }
 
 export const deleteKnownIssue = async (knownIssueId: string) => {
