@@ -1,6 +1,6 @@
 import {createQueryKeyStore} from '@lukemorales/query-key-factory'
 
-import {GetRewardsParams} from '@/server/actions/getReward'
+import {GetRewardsParams} from '@/server/actions/reward/getReward'
 
 export const queryKeys = createQueryKeyStore({
   users: {

@@ -2,9 +2,9 @@
 
 import {eq} from 'drizzle-orm'
 
-import {db} from '../db'
-import {rewards} from '../db/schema/reward'
-import {requireJudgeAuth} from '../utils/auth'
+import {db} from '../../db'
+import {rewards} from '../../db/schema/reward'
+import {requireJudgeAuth} from '../../utils/auth'
 
 export const storeRewardTxHash = async ({
   rewardId,

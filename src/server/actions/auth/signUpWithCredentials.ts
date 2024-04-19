@@ -2,8 +2,8 @@
 
 import bcrypt from 'bcryptjs'
 
-import {db} from '../db'
-import {users} from '../db/schema/user'
+import {db} from '../../db'
+import {users} from '../../db/schema/user'
 
 import {Credentials} from '@/lib/types/auth'
 

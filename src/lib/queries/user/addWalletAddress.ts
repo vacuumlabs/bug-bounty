@@ -5,10 +5,10 @@ import {useWallet} from '@meshsdk/react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {getCsrfToken} from 'next-auth/react'
 
-import {queryKeys} from './keys'
-import {requireConnectedWallet} from '../utils/client/wallet'
+import {queryKeys} from '../keys'
+import {requireConnectedWallet} from '../../utils/client/wallet'
 
-import {verifyAndAddWalletAddress} from '@/server/actions/verifyAndAddWalletAddress'
+import {verifyAndAddWalletAddress} from '@/server/actions/user/verifyAndAddWalletAddress'
 import {formatWalletSignMessage} from '@/lib/utils/common/wallet'
 
 const addWalletAddress = async (browserWallet: BrowserWallet) => {

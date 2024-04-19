@@ -2,7 +2,7 @@
 
 import VerifyWalletButton from './VerifyWalletButton'
 
-import {useGetUser} from '@/lib/queries/getUser'
+import {useGetUser} from '@/lib/queries/user/getUser'
 
 const RegisterWalletAddress = () => {
   const {data: user} = useGetUser()

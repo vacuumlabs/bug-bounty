@@ -1,6 +1,6 @@
 'use server'
 
-import {db} from '../db'
+import {db} from '../../db'
 
 export const getReward = async (id: string) => {
   const reward = await db.query.rewards.findFirst({

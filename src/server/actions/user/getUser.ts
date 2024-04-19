@@ -1,7 +1,7 @@
 'use server'
 
-import {db} from '../db'
-import {requireServerSession} from '../utils/auth'
+import {db} from '../../db'
+import {requireServerSession} from '../../utils/auth'
 
 export const getUser = async () => {
   const session = await requireServerSession()

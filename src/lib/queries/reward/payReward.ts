@@ -2,11 +2,11 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {BrowserWallet, Transaction} from '@meshsdk/core'
 import {useWallet} from '@meshsdk/react'
 
-import {requireConnectedWallet} from '../utils/client/wallet'
-import {queryKeys} from './keys'
+import {requireConnectedWallet} from '../../utils/client/wallet'
+import {queryKeys} from '../keys'
 
-import {storeRewardTxHash} from '@/server/actions/storeRewardTxHash'
-import {getRewardPaymentDetails} from '@/server/actions/getReward'
+import {storeRewardTxHash} from '@/server/actions/reward/storeRewardTxHash'
+import {getRewardPaymentDetails} from '@/server/actions/reward/getReward'
 
 const payReward = async (browserWallet: BrowserWallet, rewardId: string) => {
   const wallet = await requireConnectedWallet(browserWallet)

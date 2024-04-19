@@ -1,10 +1,10 @@
 'use client'
 
 import {Button} from '@/components/ui/Button'
-import {useGetRewards} from '@/lib/queries/getRewards'
-import {usePayReward} from '@/lib/queries/payReward'
+import {useGetRewards} from '@/lib/queries/reward/getRewards'
+import {usePayReward} from '@/lib/queries/reward/payReward'
 import {formatAda} from '@/lib/utils/common/format'
-import type {RewardWithUser} from '@/server/actions/getReward'
+import type {RewardWithUser} from '@/server/actions/reward/getReward'
 
 type JudgeRewardsListRowProps = {
   reward: RewardWithUser
