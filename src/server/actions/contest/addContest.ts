@@ -1,14 +1,9 @@
 'use server'
 
-import {eq} from 'drizzle-orm'
 import {isAfter} from 'date-fns'
 import {z} from 'zod'
 
-import {
-  isJudge,
-  requireJudgeAuth,
-  requireServerSession,
-} from '@/server/utils/auth'
+import {isJudge, requireServerSession} from '@/server/utils/auth'
 import {
   ContestStatus,
   InsertContest,
@@ -50,37 +45,6 @@ export const addContest = async (contest: AddContest) => {
     .returning()
 }
 
-export type ConfirmOrRejectContestParams = {
-  contestId: string
-  newStatus: ContestStatus.APPROVED | ContestStatus.REJECTED
-}
-
-export const confirmOrRejectContest = async ({
-  contestId,
-  newStatus,
-}: ConfirmOrRejectContestParams) => {
-  await requireJudgeAuth()
-
-  const contest = await db.query.contests.findFirst({
-    columns: {status: true},
-    where: (contests, {eq}) => eq(contests.id, contestId),
-  })
-
-  if (!contest) {
-    throw new Error('Contest not found.')
-  }
-
-  if (contest.status !== ContestStatus.PENDING) {
-    throw new Error('Only pending contests can be confirmed/rejected.')
-  }
-
-  return db
-    .update(schema.contests)
-    .set({status: newStatus})
-    .where(eq(schema.contests.id, contestId))
-    .returning()
-}
-
 export type AddKnownIssue = Omit<InsertKnownIssue, 'contestId'>
 
 export type AddKnownIssuesParams = {
@@ -99,7 +63,11 @@ export const addKnownIssues = async ({
     where: (contests, {eq}) => eq(contests.id, contestId),
   })
 
-  if (contest?.authorId !== session.user.id) {
+  if (!contest) {
+    throw new Error('Contest not found.')
+  }
+
+  if (contest.authorId !== session.user.id) {
     throw new Error('Only contest authors can add known issues.')
   }
 
