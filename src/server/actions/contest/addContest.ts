@@ -25,6 +25,10 @@ export const addContest = async (contest: AddContest) => {
     throw new Error("Judges can't create contests.")
   }
 
+  if (isAfter(new Date(), contest.startDate)) {
+    throw new Error('Contest start date must be in the future.')
+  }
+
   if (isAfter(contest.startDate, contest.endDate)) {
     throw new Error('Contest start date must be before end date.')
   }
