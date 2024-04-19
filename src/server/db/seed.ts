@@ -5,24 +5,17 @@ import {sql} from 'drizzle-orm'
 
 import {InsertUser, UserRole, users as usersTable} from './schema/user'
 import {env} from '../../env.js'
-import {
-  Contest,
-  ContestStatus,
-  InsertContest,
-  InsertKnownIssue,
-  contests as contestsTable,
-  knownIssues as knownIssuesTable,
-} from './schema/contest'
+import {Contest, ContestStatus, InsertContest} from './schema/contest'
 import {
   Finding,
   FindingSeverity,
   FindingStatus,
   InsertFinding,
-  findings as findingsTable,
 } from './schema/finding'
 import {InsertReward, rewards as rewardsTable} from './schema/reward'
+import {InsertKnownIssue} from './schema/knownIssue'
 
-import {db} from './index'
+import {db, schema} from './index'
 
 const USERS_TO_GENERATE = 3 // minimum 2
 const FINDINGS_PER_CONTEST = 10
@@ -137,11 +130,11 @@ const getRewardToInsert = (finding: Finding): InsertReward => ({
 })
 
 const seed = async () => {
-  const schema = db._.schema
+  const dbSchema = db._.schema
 
   await db.transaction(async (tx) => {
-    if (schema) {
-      const tableNames = Object.values(schema)
+    if (dbSchema) {
+      const tableNames = Object.values(dbSchema)
         .map((table) => `"${table.dbName}"`)
         .join(', ')
 
@@ -160,7 +153,7 @@ const seed = async () => {
     }
 
     const contests = await tx
-      .insert(contestsTable)
+      .insert(schema.contests)
       .values(getContestsToInsert(projectOwnerUserId))
       .returning()
 
@@ -172,17 +165,17 @@ const seed = async () => {
     }
 
     const knownIssues = await tx
-      .insert(knownIssuesTable)
+      .insert(schema.knownIssues)
       .values(contests.flatMap(getKnownIssuesToInsert))
       .returning()
 
     const pastContestFindings = await tx
-      .insert(findingsTable)
+      .insert(schema.findings)
       .values(getFindingsToInsert(pastContestId, auditorUserId))
       .returning()
 
     const currentContestFindings = await tx
-      .insert(findingsTable)
+      .insert(schema.findings)
       .values(getFindingsToInsert(currentContestId, auditorUserId))
       .returning()
 
