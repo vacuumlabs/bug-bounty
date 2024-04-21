@@ -1,36 +1,36 @@
 'use server'
 
-import {isAfter} from 'date-fns'
+import {isAfter, isPast} from 'date-fns'
 import {z} from 'zod'
 
+import {ContestStatus, insertContestSchema} from '@/server/db/schema/contest'
 import {isJudge, requireServerSession} from '@/server/utils/auth'
-import {ContestStatus, InsertContest} from '@/server/db/schema/contest'
 import {db, schema} from '@/server/db'
-import {InsertKnownIssue} from '@/server/db/schema/knownIssue'
 
-export type AddContest = Omit<InsertContest, 'authorId'> & {
-  status: ContestStatus.PENDING | ContestStatus.DRAFT
-}
+export const addContestSchema = insertContestSchema
+  .omit({authorId: true})
+  .extend({
+    status: z.enum([ContestStatus.PENDING, ContestStatus.DRAFT]),
+  })
+  .strict()
 
-export const addContest = async (contest: AddContest) => {
+export type AddContest = z.infer<typeof addContestSchema>
+
+export const addContest = async (request: AddContest) => {
   const session = await requireServerSession()
 
   if (isJudge(session)) {
     throw new Error("Judges can't create contests.")
   }
 
-  if (isAfter(new Date(), contest.startDate)) {
+  const contest = addContestSchema.parse(request)
+
+  if (isPast(contest.startDate)) {
     throw new Error('Contest start date must be in the future.')
   }
 
   if (isAfter(contest.startDate, contest.endDate)) {
     throw new Error('Contest start date must be before end date.')
-  }
-
-  const checkRepoUrl = z.string().url().safeParse(contest.repoUrl)
-
-  if (!checkRepoUrl.success) {
-    throw new Error('Invalid repository URL.')
   }
 
   return db
@@ -40,38 +40,4 @@ export const addContest = async (contest: AddContest) => {
       authorId: session.user.id,
     })
     .returning()
-}
-
-export type AddKnownIssue = Omit<InsertKnownIssue, 'contestId'>
-
-export type AddKnownIssuesParams = {
-  contestId: string
-  knownIssues: AddKnownIssue[]
-}
-
-export const addKnownIssues = async ({
-  contestId,
-  knownIssues,
-}: AddKnownIssuesParams) => {
-  const session = await requireServerSession()
-
-  const contest = await db.query.contests.findFirst({
-    columns: {authorId: true},
-    where: (contests, {eq}) => eq(contests.id, contestId),
-  })
-
-  if (!contest) {
-    throw new Error('Contest not found.')
-  }
-
-  if (contest.authorId !== session.user.id) {
-    throw new Error('Only contest authors can add known issues.')
-  }
-
-  const knownIssuesToInsert = knownIssues.map((knownIssue) => ({
-    ...knownIssue,
-    contestId,
-  }))
-
-  return db.insert(schema.knownIssues).values(knownIssuesToInsert).returning()
 }

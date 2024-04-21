@@ -1,38 +1,36 @@
 'use server'
 
 import {eq} from 'drizzle-orm'
+import {z} from 'zod'
+import {isAfter, isPast} from 'date-fns'
+
+import {addContestSchema} from './addContest'
 
 import {db, schema} from '@/server/db'
-import {ContestStatus} from '@/server/db/schema/contest'
-import {requireJudgeAuth} from '@/server/utils/auth'
+import {requireEditableContest} from '@/server/utils/validations/contest'
 
-export type ConfirmOrRejectContestParams = {
-  contestId: string
-  newStatus: ContestStatus.APPROVED | ContestStatus.REJECTED
-}
+const editContestSchema = addContestSchema.partial().required({id: true})
 
-export const confirmOrRejectContest = async ({
-  contestId,
-  newStatus,
-}: ConfirmOrRejectContestParams) => {
-  await requireJudgeAuth()
+export type EditContest = z.infer<typeof editContestSchema>
 
-  const contest = await db.query.contests.findFirst({
-    columns: {status: true},
-    where: (contests, {eq}) => eq(contests.id, contestId),
-  })
+export const editContest = async (request: EditContest) => {
+  const updatedContest = editContestSchema.parse(request)
+  const existingContest = await requireEditableContest(updatedContest.id)
 
-  if (!contest) {
-    throw new Error('Contest not found.')
+  const updatedStartDate = updatedContest.startDate ?? existingContest.startDate
+  const updatedEndDate = updatedContest.endDate ?? existingContest.endDate
+
+  if (isPast(updatedStartDate)) {
+    throw new Error('Contest start date must be in the future.')
   }
 
-  if (contest.status !== ContestStatus.PENDING) {
-    throw new Error('Only pending contests can be confirmed/rejected.')
+  if (isAfter(updatedStartDate, updatedEndDate)) {
+    throw new Error('Contest start date must be before end date.')
   }
 
   return db
     .update(schema.contests)
-    .set({status: newStatus})
-    .where(eq(schema.contests.id, contestId))
+    .set(updatedContest)
+    .where(eq(schema.contests.id, updatedContest.id))
     .returning()
 }

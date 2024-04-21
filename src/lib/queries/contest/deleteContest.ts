@@ -1,9 +1,7 @@
 import {MutateOptions, useMutation} from '@tanstack/react-query'
 
-import {
-  deleteContest,
-  deleteKnownIssue,
-} from '@/server/actions/contest/deleteContest'
+import {deleteContest} from '@/server/actions/contest/deleteContest'
+import {deleteKnownIssue} from '@/server/actions/contest/deleteKnownIssue'
 
 export const useDeleteContest = (
   options?: MutateOptions<void, Error, string>,
