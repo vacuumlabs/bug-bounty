@@ -14,15 +14,9 @@ import {findings} from './finding'
 import {users} from './user'
 import {knownIssues} from './knownIssue'
 import {deduplicatedFindings} from './deduplicatedFinding'
+import {ContestStatus} from '../models/enums'
 
 import {getDrizzleEnum} from '@/server/utils/enum'
-
-export enum ContestStatus {
-  DRAFT = 'DRAFT',
-  APPROVED = 'APPROVED',
-  PENDING = 'PENDING',
-  REJECTED = 'REJECTED',
-}
 
 export const contests = pgTable(
   'contest',

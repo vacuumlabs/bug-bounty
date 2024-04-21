@@ -1,7 +1,7 @@
 import {requireServerSession} from '../auth'
 
 import {db} from '@/server/db'
-import {ContestStatus} from '@/server/db/schema/contest'
+import {ContestStatus} from '@/server/db/models'
 
 export const requireEditableContest = async (contestId: string) => {
   const session = await requireServerSession()

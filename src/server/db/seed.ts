@@ -5,15 +5,11 @@ import {sql} from 'drizzle-orm'
 
 import {InsertUser, UserRole, users as usersTable} from './schema/user'
 import {env} from '../../env.js'
-import {Contest, ContestStatus, InsertContest} from './schema/contest'
-import {
-  Finding,
-  FindingSeverity,
-  FindingStatus,
-  InsertFinding,
-} from './schema/finding'
+import {Contest, InsertContest} from './schema/contest'
+import {Finding, InsertFinding} from './schema/finding'
 import {InsertReward, rewards as rewardsTable} from './schema/reward'
 import {InsertKnownIssue} from './schema/knownIssue'
+import {ContestStatus, FindingSeverity, FindingStatus} from './models/enums'
 
 import {db, schema} from './index'
 

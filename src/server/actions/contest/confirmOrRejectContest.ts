@@ -4,7 +4,7 @@ import {eq} from 'drizzle-orm'
 import {z} from 'zod'
 
 import {db, schema} from '@/server/db'
-import {ContestStatus} from '@/server/db/schema/contest'
+import {ContestStatus} from '@/server/db/models'
 import {requireJudgeAuth} from '@/server/utils/auth'
 
 const confirmOrRejectContestSchema = z

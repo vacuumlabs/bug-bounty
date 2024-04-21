@@ -3,9 +3,10 @@
 import {isAfter, isPast} from 'date-fns'
 import {z} from 'zod'
 
-import {ContestStatus, insertContestSchema} from '@/server/db/schema/contest'
+import {insertContestSchema} from '@/server/db/schema/contest'
 import {isJudge, requireServerSession} from '@/server/utils/auth'
 import {db, schema} from '@/server/db'
+import {ContestStatus} from '@/server/db/models'
 
 export const addContestSchema = insertContestSchema
   .omit({authorId: true})
