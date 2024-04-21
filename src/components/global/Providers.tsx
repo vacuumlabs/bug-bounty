@@ -63,7 +63,10 @@ const Providers: React.FC<ProvidersProps> = ({children, session}) => {
       <QueryClientProvider client={queryClient}>
         <MeshProvider>
           {children}
-          <ReactQueryDevtools initialIsOpen={false} />
+          <ReactQueryDevtools
+            buttonPosition="bottom-left"
+            initialIsOpen={false}
+          />
         </MeshProvider>
       </QueryClientProvider>
     </SessionProvider>
