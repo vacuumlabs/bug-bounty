@@ -66,10 +66,13 @@ export const deduplicatedFindingRelations = relations(
 
 export const insertDeduplicatedFindingSchema = createInsertSchema(
   deduplicatedFindings,
-).omit({
-  createdAt: true,
-  updatedAt: true,
-})
+)
+  .omit({
+    createdAt: true,
+    updatedAt: true,
+  })
+  .strict()
+
 export const selectDeduplicatedFindingSchema =
   createSelectSchema(deduplicatedFindings)
 

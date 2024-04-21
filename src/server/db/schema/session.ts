@@ -31,10 +31,13 @@ export const sessionsRelations = relations(sessions, ({one}) => ({
   user: one(users, {fields: [sessions.userId], references: [users.id]}),
 }))
 
-export const insertSessionSchema = createInsertSchema(sessions).omit({
-  createdAt: true,
-  updatedAt: true,
-})
+export const insertSessionSchema = createInsertSchema(sessions)
+  .omit({
+    createdAt: true,
+    updatedAt: true,
+  })
+  .strict()
+
 export const selectSessionSchema = createSelectSchema(sessions)
 export type InsertSession = z.infer<typeof insertSessionSchema>
 export type Session = z.infer<typeof selectSessionSchema>

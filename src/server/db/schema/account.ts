@@ -56,10 +56,13 @@ export const accountsRelations = relations(accounts, ({one}) => ({
   user: one(users, {fields: [accounts.userId], references: [users.id]}),
 }))
 
-export const insertAccountSchema = createInsertSchema(accounts).omit({
-  createdAt: true,
-  updatedAt: true,
-})
+export const insertAccountSchema = createInsertSchema(accounts)
+  .omit({
+    createdAt: true,
+    updatedAt: true,
+  })
+  .strict()
+
 export const selectAccountSchema = createSelectSchema(accounts)
 export type InsertAccount = z.infer<typeof insertAccountSchema>
 export type Account = z.infer<typeof selectAccountSchema>

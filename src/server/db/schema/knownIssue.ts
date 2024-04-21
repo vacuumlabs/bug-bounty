@@ -43,10 +43,15 @@ export const knownIssueRelations = relations(knownIssues, ({one}) => ({
   }),
 }))
 
-export const insertKnownIssueSchema = createInsertSchema(knownIssues).omit({
-  createdAt: true,
-  updatedAt: true,
+export const insertKnownIssueSchema = createInsertSchema(knownIssues, {
+  fileUrl: (schema) => schema.fileUrl.url('Invalid file URL.'),
 })
+  .omit({
+    createdAt: true,
+    updatedAt: true,
+  })
+  .strict()
+
 export const selectKnownIssueSchema = createSelectSchema(knownIssues)
 
 export type InsertKnownIssue = z.infer<typeof insertKnownIssueSchema>

@@ -72,10 +72,15 @@ export const contestRelations = relations(contests, ({one, many}) => ({
   knownIssues: many(knownIssues),
 }))
 
-export const insertContestSchema = createInsertSchema(contests).omit({
-  createdAt: true,
-  updatedAt: true,
+export const insertContestSchema = createInsertSchema(contests, {
+  repoUrl: (schema) => schema.repoUrl.url('Invalid repository URL.'),
 })
+  .omit({
+    createdAt: true,
+    updatedAt: true,
+  })
+  .strict()
+
 export const selectContestSchema = createSelectSchema(contests)
 
 export type InsertContest = z.infer<typeof insertContestSchema>
