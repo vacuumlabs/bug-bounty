@@ -1,36 +1,51 @@
 'use server'
 
-import {isAfter, isBefore} from 'date-fns'
+import {z} from 'zod'
+import {isFuture, isPast} from 'date-fns'
 
 import {db, schema} from '../../db'
-import {FindingStatus, InsertFinding} from '../../db/schema/finding'
+import {FindingStatus, insertFindingSchema} from '../../db/schema/finding'
 import {isJudge, requireServerSession} from '../../utils/auth'
 
 import {ContestStatus} from '@/server/db/schema/contest'
+import {insertFindingAttachmentSchema} from '@/server/db/schema/findingAttachment'
 
-export type AddFinding = Omit<
-  InsertFinding,
-  'deduplicatedFindingId' | 'authorId'
-> & {
-  status: FindingStatus.PENDING | FindingStatus.DRAFT
-}
+export const addFindingSchema = insertFindingSchema
+  .omit({
+    deduplicatedFindingId: true,
+    authorId: true,
+  })
+  .extend({
+    status: z.enum([FindingStatus.PENDING, FindingStatus.DRAFT]),
+  })
+  .strict()
+
+export const addFindingAttachmentSchema = insertFindingAttachmentSchema.omit({
+  findingId: true,
+  id: true,
+})
+
+export type AddFinding = z.infer<typeof addFindingSchema>
+export type AddFindingAttachment = z.infer<typeof addFindingAttachmentSchema>
 
 export type AddFindingParams = {
   finding: AddFinding
-  findingAttachmentUrls: string[]
+  attachments: AddFindingAttachment[]
 }
 
 export type AddFindingResponse = Awaited<ReturnType<typeof addFinding>>
 
-export const addFinding = async ({
-  finding,
-  findingAttachmentUrls,
-}: AddFindingParams) => {
+export const addFinding = async (params: AddFindingParams) => {
   const session = await requireServerSession()
 
   if (isJudge(session)) {
     throw new Error("Judges can't create findings.")
   }
+
+  const finding = addFindingSchema.parse(params.finding)
+  const attachments = addFindingAttachmentSchema
+    .array()
+    .parse(params.attachments)
 
   const contest = await db.query.contests.findFirst({
     where: (contests, {eq}) => eq(contests.id, finding.contestId),
@@ -44,11 +59,11 @@ export const addFinding = async ({
     throw new Error("Contest author can't create findings.")
   }
 
-  if (isAfter(contest.endDate, new Date())) {
+  if (isPast(contest.endDate)) {
     throw new Error('Contest has ended.')
   }
 
-  if (isBefore(contest.startDate, new Date())) {
+  if (isFuture(contest.startDate)) {
     throw new Error('Contest has not started yet.')
   }
 
@@ -67,18 +82,18 @@ export const addFinding = async ({
 
   const findingId = findings[0].id
 
-  const findingAttachmentsToInsert = findingAttachmentUrls.map((url) => ({
+  const attachmentsToInsert = attachments.map((attachment) => ({
+    ...attachment,
     findingId,
-    attachmentUrl: url,
   }))
 
-  const findingAttachments = await db
+  const insertedAttachments = await db
     .insert(schema.findingAttachments)
-    .values(findingAttachmentsToInsert)
+    .values(attachmentsToInsert)
     .returning()
 
   return {
     ...findings[0],
-    findingAttachments,
+    insertedAttachments,
   }
 }

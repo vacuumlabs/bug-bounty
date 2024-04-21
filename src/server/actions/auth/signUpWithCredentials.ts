@@ -1,22 +1,24 @@
 'use server'
 
 import bcrypt from 'bcryptjs'
+import {z} from 'zod'
 
 import {db} from '../../db'
 import {users} from '../../db/schema/user'
 
-import {Credentials} from '@/lib/types/auth'
 import {getApiFormError} from '@/lib/utils/common/error'
 
-export type SignUpProps = Credentials & {
-  name: string
-}
+export const signUpSchema = z.object({
+  name: z.string().min(3),
+  email: z.string().email(),
+  password: z.string().min(8),
+})
 
-export const signUpWithCredentials = async ({
-  email,
-  password,
-  name,
-}: SignUpProps) => {
+export type SignUpParams = z.infer<typeof signUpSchema>
+
+export const signUpWithCredentials = async (params: SignUpParams) => {
+  const {email, password, name} = signUpSchema.parse(params)
+
   const hashedPassword = await bcrypt.hash(password, 10)
 
   const user = await db.query.users.findFirst({
