@@ -19,6 +19,7 @@ export const findingAttachments = pgTable(
       .notNull()
       .references(() => findings.id, {onDelete: 'cascade'}),
     attachmentUrl: varchar('url', {length: 255}).notNull(),
+    mimeType: varchar('mimeType', {length: 255}).notNull(),
     createdAt: timestamp('createdAt', {
       mode: 'date',
     }).default(sql`CURRENT_TIMESTAMP`),
@@ -48,10 +49,17 @@ export const findingAttachmentRelations = relations(
 
 export const insertFindingAttachmentSchema = createInsertSchema(
   findingAttachments,
-).omit({
-  createdAt: true,
-  updatedAt: true,
-})
+  {
+    attachmentUrl: (schema) =>
+      schema.attachmentUrl.url('Invalid attachment URL.'),
+  },
+)
+  .omit({
+    createdAt: true,
+    updatedAt: true,
+  })
+  .strict()
+
 export const selectFindingAttachmentSchema =
   createSelectSchema(findingAttachments)
 

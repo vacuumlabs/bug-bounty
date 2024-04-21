@@ -49,10 +49,16 @@ export const usersRelations = relations(users, ({many}) => ({
   rewards: many(rewards),
 }))
 
-export const insertUserSchema = createInsertSchema(users).omit({
-  createdAt: true,
-  updatedAt: true,
+export const insertUserSchema = createInsertSchema(users, {
+  email: (schema) => schema.email.email(),
+  image: (schema) => schema.image.url(),
 })
+  .omit({
+    createdAt: true,
+    updatedAt: true,
+  })
+  .strict()
+
 export const selectUserSchema = createSelectSchema(users)
 
 export type InsertUser = z.infer<typeof insertUserSchema>

@@ -54,10 +54,19 @@ export const rewardRelations = relations(rewards, ({one}) => ({
   }),
 }))
 
-export const insertRewardSchema = createInsertSchema(rewards).omit({
-  createdAt: true,
-  updatedAt: true,
+export const insertRewardSchema = createInsertSchema(rewards, {
+  amount: (schema) =>
+    schema.amount.refine(
+      (value) => !/^\d+$/.test(value),
+      'Amount is not a number.',
+    ),
 })
+  .omit({
+    createdAt: true,
+    updatedAt: true,
+  })
+  .strict()
+
 export const selectRewardSchema = createSelectSchema(rewards)
 
 export type InsertReward = z.infer<typeof insertRewardSchema>

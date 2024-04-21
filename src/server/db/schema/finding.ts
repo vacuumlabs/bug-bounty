@@ -94,10 +94,16 @@ export const findingRelations = relations(findings, ({one, many}) => ({
   reward: one(rewards),
 }))
 
-export const insertFindingSchema = createInsertSchema(findings).omit({
-  createdAt: true,
-  updatedAt: true,
+export const insertFindingSchema = createInsertSchema(findings, {
+  targetFileUrl: (schema) =>
+    schema.targetFileUrl.url('Invalid target file URL.'),
 })
+  .omit({
+    createdAt: true,
+    updatedAt: true,
+  })
+  .strict()
+
 export const selectFindingSchema = createSelectSchema(findings)
 
 export type InsertFinding = z.infer<typeof insertFindingSchema>
