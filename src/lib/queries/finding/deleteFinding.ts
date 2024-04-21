@@ -1,13 +1,17 @@
 import {MutateOptions, useMutation} from '@tanstack/react-query'
 
-import {deleteFinding} from '@/server/actions/finding/deleteFinding'
+import {
+  DeleteFindingResponse,
+  deleteFinding,
+} from '@/server/actions/finding/deleteFinding'
+import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 export const useDeleteFinding = (
-  options?: MutateOptions<void, Error, string>,
+  options?: MutateOptions<DeleteFindingResponse, Error, string>,
 ) => {
   return useMutation({
     ...options,
-    mutationFn: deleteFinding,
+    mutationFn: withApiErrorHandler(deleteFinding),
     // TODO: invalidate relevant GET queries
   })
 }

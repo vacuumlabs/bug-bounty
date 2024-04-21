@@ -6,13 +6,14 @@ import {
 } from '@/server/actions/contest/confirmOrRejectContest'
 import {Contest} from '@/server/db/schema/contest'
 import {EditContest, editContest} from '@/server/actions/contest/editContest'
+import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 export const useConfirmOrRejectContest = (
   options?: MutateOptions<Contest[], Error, ConfirmOrRejectContestParams>,
 ) => {
   return useMutation({
     ...options,
-    mutationFn: confirmOrRejectContest,
+    mutationFn: withApiErrorHandler(confirmOrRejectContest),
     // TODO: invalidate relevant GET queries
   })
 }
@@ -22,7 +23,7 @@ export const useEditContest = (
 ) => {
   return useMutation({
     ...options,
-    mutationFn: editContest,
+    mutationFn: withApiErrorHandler(editContest),
     // TODO: invalidate relevant GET queries
   })
 }

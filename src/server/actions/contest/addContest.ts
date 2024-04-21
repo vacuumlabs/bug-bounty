@@ -7,6 +7,7 @@ import {insertContestSchema} from '@/server/db/schema/contest'
 import {isJudge, requireServerSession} from '@/server/utils/auth'
 import {db, schema} from '@/server/db'
 import {ContestStatus} from '@/server/db/models'
+import {getApiZodError} from '@/lib/utils/common/error'
 
 export const addContestSchema = insertContestSchema
   .omit({authorId: true})
@@ -24,7 +25,13 @@ export const addContest = async (request: AddContest) => {
     throw new Error("Judges can't create contests.")
   }
 
-  const contest = addContestSchema.parse(request)
+  const result = addContestSchema.safeParse(request)
+
+  if (!result.success) {
+    return getApiZodError(result.error)
+  }
+
+  const contest = result.data
 
   if (isPast(contest.startDate)) {
     throw new Error('Contest start date must be in the future.')

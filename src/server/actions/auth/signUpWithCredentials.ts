@@ -6,7 +6,7 @@ import {z} from 'zod'
 import {db} from '../../db'
 import {users} from '../../db/schema/user'
 
-import {getApiFormError} from '@/lib/utils/common/error'
+import {getApiFormError, getApiZodError} from '@/lib/utils/common/error'
 
 export const signUpSchema = z.object({
   name: z.string().min(3),
@@ -17,7 +17,13 @@ export const signUpSchema = z.object({
 export type SignUpParams = z.infer<typeof signUpSchema>
 
 export const signUpWithCredentials = async (params: SignUpParams) => {
-  const {email, password, name} = signUpSchema.parse(params)
+  const result = signUpSchema.safeParse(params)
+
+  if (!result.success) {
+    return getApiZodError(result.error)
+  }
+
+  const {email, password, name} = result.data
 
   const hashedPassword = await bcrypt.hash(password, 10)
 

@@ -40,7 +40,7 @@ const addWalletAddress = async (browserWallet: BrowserWallet) => {
     formatWalletSignMessage(walletAddress, nonce),
   )
 
-  await verifyAndAddWalletAddress(signature, walletAddress)
+  return verifyAndAddWalletAddress(signature, walletAddress)
 }
 
 export const useAddWalletAddress = () => {

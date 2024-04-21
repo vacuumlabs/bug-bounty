@@ -7,13 +7,14 @@ import {
   AddKnownIssuesParams,
   addKnownIssues,
 } from '@/server/actions/contest/addKnownIssues'
+import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 export const useAddContest = (
   options?: MutateOptions<Contest[], Error, AddContest>,
 ) => {
   return useMutation({
     ...options,
-    mutationFn: addContest,
+    mutationFn: withApiErrorHandler(addContest),
     // TODO: invalidate relevant GET queries
   })
 }
@@ -23,7 +24,7 @@ export const useAddKnownIssues = (
 ) => {
   return useMutation({
     ...options,
-    mutationFn: addKnownIssues,
+    mutationFn: withApiErrorHandler(addKnownIssues),
     // TODO: invalidate relevant GET queries
   })
 }

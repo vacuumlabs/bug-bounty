@@ -6,6 +6,10 @@ import {eq} from 'drizzle-orm'
 import {db, schema} from '@/server/db'
 import {requireServerSession} from '@/server/utils/auth'
 
+export type DeleteKnownIssueResponse = Awaited<
+  ReturnType<typeof deleteKnownIssue>
+>
+
 export const deleteKnownIssue = async (knownIssueId: string) => {
   const session = await requireServerSession()
 
@@ -30,7 +34,8 @@ export const deleteKnownIssue = async (knownIssueId: string) => {
     throw new Error('Contest has started.')
   }
 
-  await db
+  return db
     .delete(schema.knownIssues)
     .where(eq(schema.knownIssues.id, knownIssueId))
+    .returning()
 }

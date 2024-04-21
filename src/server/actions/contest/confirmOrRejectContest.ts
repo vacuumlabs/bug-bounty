@@ -6,6 +6,7 @@ import {z} from 'zod'
 import {db, schema} from '@/server/db'
 import {ContestStatus} from '@/server/db/models'
 import {requireJudgeAuth} from '@/server/utils/auth'
+import {getApiZodError} from '@/lib/utils/common/error'
 
 const confirmOrRejectContestSchema = z
   .object({
@@ -23,7 +24,13 @@ export const confirmOrRejectContest = async (
 ) => {
   await requireJudgeAuth()
 
-  const {contestId, newStatus} = confirmOrRejectContestSchema.parse(params)
+  const result = confirmOrRejectContestSchema.safeParse(params)
+
+  if (!result.success) {
+    return getApiZodError(result.error)
+  }
+
+  const {contestId, newStatus} = result.data
 
   const contest = await db.query.contests.findFirst({
     columns: {status: true},

@@ -5,13 +5,14 @@ import {
   editFinding,
 } from '@/server/actions/finding/editFinding'
 import {Finding} from '@/server/db/schema/finding'
+import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 export const useEditFinding = (
   options?: MutateOptions<Finding[], Error, EditFindingParams>,
 ) => {
   return useMutation({
     ...options,
-    mutationFn: editFinding,
+    mutationFn: withApiErrorHandler(editFinding),
     // TODO: invalidate relevant GET queries
   })
 }
