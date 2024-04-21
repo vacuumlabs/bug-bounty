@@ -9,6 +9,7 @@ import {isJudge, requireServerSession} from '../../utils/auth'
 
 import {insertFindingAttachmentSchema} from '@/server/db/schema/findingAttachment'
 import {ContestStatus, FindingStatus} from '@/server/db/models'
+import {ApiZodError, getApiZodError} from '@/lib/utils/common/error'
 
 export const addFindingSchema = insertFindingSchema
   .omit({
@@ -25,6 +26,11 @@ export const addFindingAttachmentSchema = insertFindingAttachmentSchema.omit({
   id: true,
 })
 
+const requestSchema = z.object({
+  finding: addFindingSchema,
+  attachments: z.array(addFindingAttachmentSchema),
+})
+
 export type AddFinding = z.infer<typeof addFindingSchema>
 export type AddFindingAttachment = z.infer<typeof addFindingAttachmentSchema>
 
@@ -33,7 +39,10 @@ export type AddFindingParams = {
   attachments: AddFindingAttachment[]
 }
 
-export type AddFindingResponse = Awaited<ReturnType<typeof addFinding>>
+export type AddFindingResponse = Exclude<
+  Awaited<ReturnType<typeof addFinding>>,
+  ApiZodError
+>
 
 export const addFinding = async (params: AddFindingParams) => {
   const session = await requireServerSession()
@@ -42,10 +51,13 @@ export const addFinding = async (params: AddFindingParams) => {
     throw new Error("Judges can't create findings.")
   }
 
-  const finding = addFindingSchema.parse(params.finding)
-  const attachments = addFindingAttachmentSchema
-    .array()
-    .parse(params.attachments)
+  const result = requestSchema.safeParse(params)
+
+  if (!result.success) {
+    return getApiZodError(result.error)
+  }
+
+  const {finding, attachments} = result.data
 
   const contest = await db.query.contests.findFirst({
     where: (contests, {eq}) => eq(contests.id, finding.contestId),

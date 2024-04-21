@@ -5,6 +5,7 @@ import {z} from 'zod'
 import {db, schema} from '@/server/db'
 import {insertKnownIssueSchema} from '@/server/db/schema/knownIssue'
 import {requireServerSession} from '@/server/utils/auth'
+import {getApiZodError} from '@/lib/utils/common/error'
 
 const addKnownIssueSchema = insertKnownIssueSchema
   .omit({contestId: true})
@@ -21,7 +22,13 @@ export type AddKnownIssuesParams = z.infer<typeof addKnownIssuesSchema>
 export const addKnownIssues = async (params: AddKnownIssuesParams) => {
   const session = await requireServerSession()
 
-  const {contestId, knownIssues} = addKnownIssuesSchema.parse(params)
+  const result = addKnownIssuesSchema.safeParse(params)
+
+  if (!result.success) {
+    return getApiZodError(result.error)
+  }
+
+  const {contestId, knownIssues} = result.data
 
   const contest = await db.query.contests.findFirst({
     columns: {authorId: true},

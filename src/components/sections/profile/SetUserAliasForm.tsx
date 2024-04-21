@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from '@/components/ui/Form'
 import {Button} from '@/components/ui/Button'
-import {useSetUserAlias} from '@/lib/queries/setUserAlias'
+import {useSetUserAlias} from '@/lib/queries/user/setUserAlias'
 import {FormError} from '@/lib/types/error'
 
 const formSchema = z.object({

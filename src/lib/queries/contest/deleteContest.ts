@@ -1,24 +1,31 @@
 import {MutateOptions, useMutation} from '@tanstack/react-query'
 
-import {deleteContest} from '@/server/actions/contest/deleteContest'
-import {deleteKnownIssue} from '@/server/actions/contest/deleteKnownIssue'
+import {
+  DeleteContestResponse,
+  deleteContest,
+} from '@/server/actions/contest/deleteContest'
+import {
+  DeleteKnownIssueResponse,
+  deleteKnownIssue,
+} from '@/server/actions/contest/deleteKnownIssue'
+import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 export const useDeleteContest = (
-  options?: MutateOptions<void, Error, string>,
+  options?: MutateOptions<DeleteContestResponse, Error, string>,
 ) => {
   return useMutation({
     ...options,
-    mutationFn: deleteContest,
+    mutationFn: withApiErrorHandler(deleteContest),
     // TODO: invalidate relevant GET queries
   })
 }
 
 export const useDeleteKnownIssue = (
-  options?: MutateOptions<void, Error, string>,
+  options?: MutateOptions<DeleteKnownIssueResponse, Error, string>,
 ) => {
   return useMutation({
     ...options,
-    mutationFn: deleteKnownIssue,
+    mutationFn: withApiErrorHandler(deleteKnownIssue),
     // TODO: invalidate relevant GET queries
   })
 }

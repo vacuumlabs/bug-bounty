@@ -5,13 +5,14 @@ import {
   AddFindingResponse,
   addFinding,
 } from '@/server/actions/finding/addFinding'
+import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 export const useAddFinding = (
   options?: MutateOptions<AddFindingResponse, Error, AddFindingParams>,
 ) => {
   return useMutation({
     ...options,
-    mutationFn: addFinding,
+    mutationFn: withApiErrorHandler(addFinding),
     // TODO: invalidate relevant GET queries
   })
 }

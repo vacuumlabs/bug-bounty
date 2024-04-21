@@ -7,6 +7,7 @@ import {queryKeys} from '../keys'
 
 import {storeRewardTxHash} from '@/server/actions/reward/storeRewardTxHash'
 import {getRewardPaymentDetails} from '@/server/actions/reward/getReward'
+import {handleApiErrors} from '@/lib/utils/common/error'
 
 const payReward = async (browserWallet: BrowserWallet, rewardId: string) => {
   const wallet = await requireConnectedWallet(browserWallet)
@@ -32,7 +33,8 @@ const payReward = async (browserWallet: BrowserWallet, rewardId: string) => {
   const signedTx = await wallet.signTx(unsignedTx)
   const txHash = await wallet.submitTx(signedTx)
 
-  return storeRewardTxHash({rewardId, txHash})
+  const result = await storeRewardTxHash({rewardId, txHash})
+  return handleApiErrors(result)
 }
 
 export const usePayReward = () => {

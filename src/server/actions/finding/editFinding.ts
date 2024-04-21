@@ -7,6 +7,7 @@ import {addFindingSchema} from './addFinding'
 
 import {db, schema} from '@/server/db'
 import {requireEditableFinding} from '@/server/utils/validations/finding'
+import {getApiZodError} from '@/lib/utils/common/error'
 
 const editFindingSchema = addFindingSchema
   .omit({contestId: true})
@@ -22,7 +23,13 @@ export type EditFindingParams = {
 
 // TODO: Edit finding attachments
 export const editFinding = async (params: EditFindingParams) => {
-  const updatedFinding = editFindingSchema.parse(params.finding)
+  const result = editFindingSchema.safeParse(params.finding)
+
+  if (!result.success) {
+    return getApiZodError(result.error)
+  }
+
+  const updatedFinding = result.data
 
   await requireEditableFinding(updatedFinding.id)
 

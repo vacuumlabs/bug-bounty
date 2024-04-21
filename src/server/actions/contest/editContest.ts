@@ -8,13 +8,20 @@ import {addContestSchema} from './addContest'
 
 import {db, schema} from '@/server/db'
 import {requireEditableContest} from '@/server/utils/validations/contest'
+import {getApiZodError} from '@/lib/utils/common/error'
 
 const editContestSchema = addContestSchema.partial().required({id: true})
 
 export type EditContest = z.infer<typeof editContestSchema>
 
 export const editContest = async (request: EditContest) => {
-  const updatedContest = editContestSchema.parse(request)
+  const result = editContestSchema.safeParse(request)
+
+  if (!result.success) {
+    return getApiZodError(result.error)
+  }
+
+  const updatedContest = result.data
   const existingContest = await requireEditableContest(updatedContest.id)
 
   const updatedStartDate = updatedContest.startDate ?? existingContest.startDate
