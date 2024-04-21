@@ -11,7 +11,8 @@ import {createInsertSchema, createSelectSchema} from 'drizzle-zod'
 import {z} from 'zod'
 
 import {contests} from './contest'
-import {FindingSeverity, findings} from './finding'
+import {findings} from './finding'
+import {FindingSeverity} from '../models/enums'
 
 import {getDrizzleEnum} from '@/server/utils/enum'
 

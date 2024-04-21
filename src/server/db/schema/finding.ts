@@ -15,23 +15,9 @@ import {users} from './user'
 import {rewards} from './reward'
 import {deduplicatedFindings} from './deduplicatedFinding'
 import {findingAttachments} from './findingAttachment'
+import {FindingSeverity, FindingStatus} from '../models/enums'
 
 import {getDrizzleEnum} from '@/server/utils/enum'
-
-export enum FindingSeverity {
-  INFO = 'info',
-  LOW = 'low',
-  MEDIUM = 'medium',
-  HIGH = 'high',
-  CRITICAL = 'critical',
-}
-
-export enum FindingStatus {
-  DRAFT = 'draft',
-  APPROVED = 'approved',
-  PENDING = 'pending',
-  REJECTED = 'rejected',
-}
 
 export const findings = pgTable(
   'finding',

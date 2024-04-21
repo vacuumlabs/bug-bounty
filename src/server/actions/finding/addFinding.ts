@@ -4,11 +4,11 @@ import {z} from 'zod'
 import {isFuture, isPast} from 'date-fns'
 
 import {db, schema} from '../../db'
-import {FindingStatus, insertFindingSchema} from '../../db/schema/finding'
+import {insertFindingSchema} from '../../db/schema/finding'
 import {isJudge, requireServerSession} from '../../utils/auth'
 
-import {ContestStatus} from '@/server/db/schema/contest'
 import {insertFindingAttachmentSchema} from '@/server/db/schema/findingAttachment'
+import {ContestStatus, FindingStatus} from '@/server/db/models'
 
 export const addFindingSchema = insertFindingSchema
   .omit({

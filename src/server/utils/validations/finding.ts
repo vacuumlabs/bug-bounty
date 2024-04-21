@@ -3,7 +3,7 @@ import {isPast} from 'date-fns'
 import {requireServerSession} from '../auth'
 
 import {db} from '@/server/db'
-import {FindingStatus} from '@/server/db/schema/finding'
+import {FindingStatus} from '@/server/db/models'
 
 export const requireEditableFinding = async (findingId: string) => {
   const session = await requireServerSession()
