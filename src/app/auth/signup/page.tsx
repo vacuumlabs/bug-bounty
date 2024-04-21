@@ -41,16 +41,16 @@ const SignUpPage = () => {
       confirmPassword: '',
     },
   })
-  const {mutate: signUp} = useSignUp({
-    onError: (error) => {
-      if (error instanceof FormError) {
-        form.setError('email', {type: 'custom', message: error.message})
-      }
-    },
-  })
+  const {mutate: signUp} = useSignUp()
 
   const onSubmit = ({confirmPassword, ...values}: FormValues) => {
-    signUp(values)
+    signUp(values, {
+      onError: (error) => {
+        if (error instanceof FormError) {
+          form.setError('email', {type: 'custom', message: error.message})
+        }
+      },
+    })
   }
 
   return (
