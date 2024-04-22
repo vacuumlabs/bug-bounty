@@ -8,18 +8,41 @@ import {
 import {getCsrfToken} from 'next-auth/react'
 import {eq} from 'drizzle-orm'
 import {cookies} from 'next/headers'
+import {z} from 'zod'
 
 import {db} from '../../db'
 import {users} from '../../db/schema/user'
 import {requireServerSession} from '../../utils/auth'
 
 import {formatWalletSignMessage} from '@/lib/utils/common/wallet'
+import {getApiZodError} from '@/lib/utils/common/error'
+import {ZodOutput} from '@/lib/types/zod'
+
+const dataSignatureSchema = z.object({
+  signature: z.string(),
+  key: z.string(),
+}) satisfies ZodOutput<DataSignature>
+
+const verifyAndAddWalletAddressSchema = z.object({
+  signature: dataSignatureSchema,
+  walletAddress: z.string(),
+})
+
+type VerifyAndAddWalletAddressParams = z.infer<
+  typeof verifyAndAddWalletAddressSchema
+>
 
 export const verifyAndAddWalletAddress = async (
-  signature: DataSignature,
-  walletAddress: string,
+  params: VerifyAndAddWalletAddressParams,
 ) => {
   const session = await requireServerSession()
+  const result = verifyAndAddWalletAddressSchema.safeParse(params)
+
+  if (!result.success) {
+    return getApiZodError(result.error)
+  }
+
+  const {signature, walletAddress} = result.data
 
   const nonce = await getCsrfToken({
     req: {

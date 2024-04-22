@@ -4,7 +4,10 @@ import bcrypt from 'bcryptjs'
 
 import {db} from '../../db'
 
-import type {Credentials} from '@/lib/types/auth'
+type Credentials = {
+  email: string
+  password: string
+}
 
 export const verifyCredentials = async (
   credentials: Credentials | undefined,
