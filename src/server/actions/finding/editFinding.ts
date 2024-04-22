@@ -3,11 +3,10 @@
 import {eq} from 'drizzle-orm'
 import {z} from 'zod'
 
-import {addFindingSchema} from './addFinding'
-
 import {db, schema} from '@/server/db'
 import {requireEditableFinding} from '@/server/utils/validations/finding'
 import {getApiZodError} from '@/lib/utils/common/error'
+import {addFindingSchema} from '@/server/utils/validations/schemas'
 
 const editFindingSchema = addFindingSchema
   .omit({contestId: true})
