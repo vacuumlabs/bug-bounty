@@ -1,6 +1,6 @@
 import {ZodError, ZodIssue} from 'zod'
 
-import {FormError, FormErrorData} from '@/lib/types/error'
+import {FormError, FormErrorData, ZodFormError} from '@/lib/types/error'
 
 export const API_FORM_ERROR_FLAG = 'api-form-error'
 export const API_ZOD_ERROR_FLAG = 'api-zod-error'
@@ -48,6 +48,7 @@ const isApiZodError = (obj: unknown): obj is ApiZodError =>
  * Function to parse server action return data and throw an error if it's an error object.
  *
  * @param result - Data returned from a server action call
+ * @param shouldFormHandleZodErrors - Disables the general error handling (error toast) in case Zod errors should be handled inside a form
  * @returns Same data as passed in or throws an error
  */
 export const handleApiErrors = <
@@ -55,13 +56,16 @@ export const handleApiErrors = <
   ErrorData extends FormErrorData,
 >(
   result: Result | ApiFormError<ErrorData> | ApiZodError,
+  shouldFormHandleZodErrors?: boolean,
 ): Result => {
   if (isApiFormError(result)) {
     throw new FormError(result.message, result.data)
   }
 
   if (isApiZodError(result)) {
-    throw new ZodError(result.issues)
+    throw shouldFormHandleZodErrors
+      ? new ZodFormError(result.issues)
+      : new ZodError(result.issues)
   }
 
   return result
@@ -71,6 +75,7 @@ export const handleApiErrors = <
  * Convenience function to wrap a server action callback and handle any errors that are returned.
  *
  * @param action - Server action or a function that calls one
+ * @param shouldFormHandleZodErrors - Disables the general error handling (error toast) in case Zod errors should be handled inside a form
  * @returns Result of the action callback
  */
 export const withApiErrorHandler =
@@ -82,9 +87,10 @@ export const withApiErrorHandler =
     action: (
       ...args: Args
     ) => Promise<Result | ApiFormError<ErrorData> | ApiZodError>,
+    shouldFormHandleZodErrors?: boolean,
   ) =>
   async (...args: Args) => {
     const result = await action(...args)
 
-    return handleApiErrors(result)
+    return handleApiErrors(result, shouldFormHandleZodErrors)
   }
