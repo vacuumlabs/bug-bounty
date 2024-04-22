@@ -3,18 +3,10 @@
 import {isAfter, isPast} from 'date-fns'
 import {z} from 'zod'
 
-import {insertContestSchema} from '@/server/db/schema/contest'
 import {isJudge, requireServerSession} from '@/server/utils/auth'
 import {db, schema} from '@/server/db'
-import {ContestStatus} from '@/server/db/models'
 import {getApiZodError} from '@/lib/utils/common/error'
-
-export const addContestSchema = insertContestSchema
-  .omit({authorId: true})
-  .extend({
-    status: z.enum([ContestStatus.PENDING, ContestStatus.DRAFT]),
-  })
-  .strict()
+import {addContestSchema} from '@/server/utils/validations/schemas'
 
 export type AddContest = z.infer<typeof addContestSchema>
 

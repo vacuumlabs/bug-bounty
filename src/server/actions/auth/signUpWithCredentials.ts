@@ -7,12 +7,7 @@ import {db} from '../../db'
 import {users} from '../../db/schema/user'
 
 import {getApiFormError, getApiZodError} from '@/lib/utils/common/error'
-
-export const signUpSchema = z.object({
-  name: z.string().min(3),
-  email: z.string().email(),
-  password: z.string().min(8),
-})
+import {signUpSchema} from '@/server/utils/validations/schemas'
 
 export type SignUpParams = z.infer<typeof signUpSchema>
 

@@ -4,27 +4,14 @@ import {z} from 'zod'
 import {isFuture, isPast} from 'date-fns'
 
 import {db, schema} from '../../db'
-import {insertFindingSchema} from '../../db/schema/finding'
 import {isJudge, requireServerSession} from '../../utils/auth'
 
-import {insertFindingAttachmentSchema} from '@/server/db/schema/findingAttachment'
-import {ContestStatus, FindingStatus} from '@/server/db/models'
+import {ContestStatus} from '@/server/db/models'
 import {ApiZodError, getApiZodError} from '@/lib/utils/common/error'
-
-export const addFindingSchema = insertFindingSchema
-  .omit({
-    deduplicatedFindingId: true,
-    authorId: true,
-  })
-  .extend({
-    status: z.enum([FindingStatus.PENDING, FindingStatus.DRAFT]),
-  })
-  .strict()
-
-export const addFindingAttachmentSchema = insertFindingAttachmentSchema.omit({
-  findingId: true,
-  id: true,
-})
+import {
+  addFindingAttachmentSchema,
+  addFindingSchema,
+} from '@/server/utils/validations/schemas'
 
 const requestSchema = z.object({
   finding: addFindingSchema,

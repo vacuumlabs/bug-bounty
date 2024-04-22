@@ -4,11 +4,10 @@ import {eq} from 'drizzle-orm'
 import {z} from 'zod'
 import {isAfter, isPast} from 'date-fns'
 
-import {addContestSchema} from './addContest'
-
 import {db, schema} from '@/server/db'
 import {requireEditableContest} from '@/server/utils/validations/contest'
 import {getApiZodError} from '@/lib/utils/common/error'
+import {addContestSchema} from '@/server/utils/validations/schemas'
 
 const editContestSchema = addContestSchema.partial().required({id: true})
 

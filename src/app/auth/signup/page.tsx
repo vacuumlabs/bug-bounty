@@ -16,12 +16,10 @@ import {Input} from '@/components/ui/Input'
 import {Button} from '@/components/ui/Button'
 import {useSignUp} from '@/lib/queries/auth/signUp'
 import {FormError} from '@/lib/types/error'
+import {signUpSchema} from '@/server/utils/validations/schemas'
 
-const formSchema = z
-  .object({
-    name: z.string().min(3),
-    email: z.string().email(),
-    password: z.string().min(8),
+const formSchema = signUpSchema
+  .extend({
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
