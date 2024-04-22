@@ -3,7 +3,7 @@ import {ZodError} from 'zod'
 
 import {ellipsizeText} from '../common/format'
 
-import {FormError} from '@/lib/types/error'
+import {FormError, ZodFormError} from '@/lib/types/error'
 import {toast} from '@/components/ui/Toast'
 
 const getToastErrorMessage = (error: Error | undefined) => {
@@ -17,7 +17,7 @@ const getToastErrorMessage = (error: Error | undefined) => {
 export const handleGeneralError = (error: Error | undefined) => {
   console.error(error)
 
-  if (error instanceof FormError) {
+  if (error instanceof FormError || error instanceof ZodFormError) {
     // Should be handled by the form
     return
   }
