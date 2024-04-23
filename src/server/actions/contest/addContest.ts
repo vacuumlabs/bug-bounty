@@ -48,22 +48,24 @@ export const addContest = async (request: AddContestRequest) => {
     throw new Error('Contest start date must be before end date.')
   }
 
-  const insertedContest = await db
-    .insert(schema.contests)
-    .values({
-      ...contest,
-      authorId: session.user.id,
+  return db.transaction(async (tx) => {
+    const insertedContest = await tx
+      .insert(schema.contests)
+      .values({
+        ...contest,
+        authorId: session.user.id,
+      })
+      .returning()
+
+    if (!insertedContest[0]) {
+      throw new Error('Failed to create contest')
+    }
+
+    await tx.insert(schema.contestSeverityWeights).values({
+      contestId: insertedContest[0].id,
+      ...customWeightSchema,
     })
-    .returning()
 
-  if (!insertedContest[0]) {
-    throw new Error('Failed to create contest')
-  }
-
-  await db.insert(schema.contestSeverityWeights).values({
-    contestId: insertedContest[0].id,
-    ...customWeightSchema,
+    return insertedContest
   })
-
-  return insertedContest
 }
