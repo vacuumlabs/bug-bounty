@@ -11,7 +11,7 @@ import {
   addContestSeverityWeightSchema,
 } from '@/server/utils/validations/schemas'
 
-export type AddContest = {
+export type AddContestRequest = {
   contest: z.infer<typeof addContestSchema>
   customWeights: z.infer<typeof addContestSeverityWeightSchema>
 }
