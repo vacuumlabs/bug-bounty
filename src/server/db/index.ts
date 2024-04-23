@@ -11,12 +11,14 @@ import * as reward from './schema/reward'
 import * as session from './schema/session'
 import * as user from './schema/user'
 import * as verificationToken from './schema/verificationToken'
+import * as contestSeverityWeights from './schema/contestSeverityWeights'
 
 import {env} from '@/env'
 
 export const schema = {
   ...account,
   ...contest,
+  ...contestSeverityWeights,
   ...deduplicatedFinding,
   ...finding,
   ...findingAttachment,

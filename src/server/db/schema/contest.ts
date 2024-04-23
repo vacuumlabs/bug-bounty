@@ -15,6 +15,7 @@ import {users} from './user'
 import {knownIssues} from './knownIssue'
 import {deduplicatedFindings} from './deduplicatedFinding'
 import {ContestStatus} from '../models/enums'
+import {contestSeverityWeights} from './contestSeverityWeights'
 
 import {getDrizzleEnum} from '@/server/utils/enum'
 
@@ -64,6 +65,7 @@ export const contestRelations = relations(contests, ({one, many}) => ({
     references: [users.id],
   }),
   knownIssues: many(knownIssues),
+  contestSeverityWeights: one(contestSeverityWeights),
 }))
 
 export const insertContestSchema = createInsertSchema(contests, {

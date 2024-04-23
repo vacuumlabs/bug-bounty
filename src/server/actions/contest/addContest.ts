@@ -6,9 +6,17 @@ import {z} from 'zod'
 import {isJudge, requireServerSession} from '@/server/utils/auth'
 import {db, schema} from '@/server/db'
 import {getApiZodError} from '@/lib/utils/common/error'
-import {addContestSchema} from '@/server/utils/validations/schemas'
+import {
+  addContestSchema,
+  addContestSeverityWeightSchema,
+} from '@/server/utils/validations/schemas'
 
-export type AddContestRequest = z.infer<typeof addContestSchema>
+const addContestRequestSchema = z.object({
+  contest: addContestSchema,
+  customWeights: addContestSeverityWeightSchema,
+})
+
+export type AddContestRequest = z.infer<typeof addContestRequestSchema>
 
 export const addContest = async (request: AddContestRequest) => {
   const session = await requireServerSession()
@@ -17,13 +25,13 @@ export const addContest = async (request: AddContestRequest) => {
     throw new Error("Judges can't create contests.")
   }
 
-  const result = addContestSchema.safeParse(request)
+  const result = addContestRequestSchema.safeParse(request)
 
   if (!result.success) {
     return getApiZodError(result.error)
   }
 
-  const contest = result.data
+  const {contest, customWeights} = result.data
 
   if (isPast(contest.startDate)) {
     throw new Error('Contest start date must be in the future.')
@@ -33,11 +41,24 @@ export const addContest = async (request: AddContestRequest) => {
     throw new Error('Contest start date must be before end date.')
   }
 
-  return db
-    .insert(schema.contests)
-    .values({
-      ...contest,
-      authorId: session.user.id,
+  return db.transaction(async (tx) => {
+    const insertedContest = await tx
+      .insert(schema.contests)
+      .values({
+        ...contest,
+        authorId: session.user.id,
+      })
+      .returning()
+
+    if (!insertedContest[0]) {
+      throw new Error('Failed to create contest')
+    }
+
+    await tx.insert(schema.contestSeverityWeights).values({
+      contestId: insertedContest[0].id,
+      ...customWeights,
     })
-    .returning()
+
+    return insertedContest
+  })
 }
