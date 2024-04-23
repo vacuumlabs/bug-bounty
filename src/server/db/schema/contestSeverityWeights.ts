@@ -9,7 +9,7 @@ export const contestSeverityWeights = pgTable('contestSeverityWeights', {
   id: uuid('id').defaultRandom().primaryKey(),
   contestId: uuid('contestId')
     .notNull()
-    .references(() => contests.id),
+    .references(() => contests.id, {onDelete: 'cascade'}),
   info: numeric('info', {precision: 5, scale: 2}).notNull(),
   low: numeric('low', {precision: 5, scale: 2}).notNull(),
   medium: numeric('medium', {precision: 5, scale: 2}).notNull(),
