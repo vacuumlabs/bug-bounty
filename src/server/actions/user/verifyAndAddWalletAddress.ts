@@ -28,15 +28,15 @@ const verifyAndAddWalletAddressSchema = z.object({
   walletAddress: z.string(),
 })
 
-type VerifyAndAddWalletAddressParams = z.infer<
+type VerifyAndAddWalletAddressRequest = z.infer<
   typeof verifyAndAddWalletAddressSchema
 >
 
 export const verifyAndAddWalletAddress = async (
-  params: VerifyAndAddWalletAddressParams,
+  request: VerifyAndAddWalletAddressRequest,
 ) => {
   const session = await requireServerSession()
-  const result = verifyAndAddWalletAddressSchema.safeParse(params)
+  const result = verifyAndAddWalletAddressSchema.safeParse(request)
 
   if (!result.success) {
     return getApiZodError(result.error)

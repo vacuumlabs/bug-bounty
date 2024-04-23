@@ -1,16 +1,19 @@
 import {MutateOptions, useMutation} from '@tanstack/react-query'
 
 import {Contest} from '@/server/db/schema/contest'
-import {AddContest, addContest} from '@/server/actions/contest/addContest'
+import {
+  AddContestRequest,
+  addContest,
+} from '@/server/actions/contest/addContest'
 import {KnownIssue} from '@/server/db/schema/knownIssue'
 import {
-  AddKnownIssuesParams,
+  AddKnownIssuesRequest,
   addKnownIssues,
 } from '@/server/actions/contest/addKnownIssues'
 import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 export const useAddContest = (
-  options?: MutateOptions<Contest[], Error, AddContest>,
+  options?: MutateOptions<Contest[], Error, AddContestRequest>,
 ) => {
   return useMutation({
     ...options,
@@ -20,7 +23,7 @@ export const useAddContest = (
 }
 
 export const useAddKnownIssues = (
-  options?: MutateOptions<KnownIssue[], Error, AddKnownIssuesParams>,
+  options?: MutateOptions<KnownIssue[], Error, AddKnownIssuesRequest>,
 ) => {
   return useMutation({
     ...options,

@@ -1,14 +1,14 @@
 import {MutateOptions, useMutation} from '@tanstack/react-query'
 
 import {
-  AddFindingParams,
+  AddFindingRequest,
   AddFindingResponse,
   addFinding,
 } from '@/server/actions/finding/addFinding'
 import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 export const useAddFinding = (
-  options?: MutateOptions<AddFindingResponse, Error, AddFindingParams>,
+  options?: MutateOptions<AddFindingResponse, Error, AddFindingRequest>,
 ) => {
   return useMutation({
     ...options,

@@ -11,9 +11,9 @@ import {addContestSchema} from '@/server/utils/validations/schemas'
 
 const editContestSchema = addContestSchema.partial().required({id: true})
 
-export type EditContest = z.infer<typeof editContestSchema>
+export type EditContestRequest = z.infer<typeof editContestSchema>
 
-export const editContest = async (request: EditContest) => {
+export const editContest = async (request: EditContestRequest) => {
   const result = editContestSchema.safeParse(request)
 
   if (!result.success) {

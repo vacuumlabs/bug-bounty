@@ -17,12 +17,12 @@ const addKnownIssuesSchema = z.object({
 })
 
 export type AddKnownIssue = z.infer<typeof addKnownIssueSchema>
-export type AddKnownIssuesParams = z.infer<typeof addKnownIssuesSchema>
+export type AddKnownIssuesRequest = z.infer<typeof addKnownIssuesSchema>
 
-export const addKnownIssues = async (params: AddKnownIssuesParams) => {
+export const addKnownIssues = async (request: AddKnownIssuesRequest) => {
   const session = await requireServerSession()
 
-  const result = addKnownIssuesSchema.safeParse(params)
+  const result = addKnownIssuesSchema.safeParse(request)
 
   if (!result.success) {
     return getApiZodError(result.error)

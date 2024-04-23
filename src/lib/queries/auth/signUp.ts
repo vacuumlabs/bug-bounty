@@ -3,14 +3,16 @@ import {signIn} from 'next-auth/react'
 
 import {handleApiErrors} from '@/lib/utils/common/error'
 import {
-  SignUpParams,
+  SignUpRequest,
   signUpWithCredentials,
 } from '@/server/actions/auth/signUpWithCredentials'
 
-export const useSignUp = (options?: MutateOptions<void, Error, SignUpParams>) =>
+export const useSignUp = (
+  options?: MutateOptions<void, Error, SignUpRequest>,
+) =>
   useMutation({
     ...options,
-    mutationFn: async (values: SignUpParams) => {
+    mutationFn: async (values: SignUpRequest) => {
       const result = await signUpWithCredentials(values)
 
       handleApiErrors(result)

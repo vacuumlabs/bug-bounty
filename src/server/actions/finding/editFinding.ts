@@ -16,13 +16,13 @@ const editFindingSchema = addFindingSchema
 
 export type EditFinding = z.infer<typeof editFindingSchema>
 
-export type EditFindingParams = {
+export type EditFindingRequest = {
   finding: EditFinding
 }
 
 // TODO: Edit finding attachments
-export const editFinding = async (params: EditFindingParams) => {
-  const result = editFindingSchema.safeParse(params.finding)
+export const editFinding = async (request: EditFindingRequest) => {
+  const result = editFindingSchema.safeParse(request.finding)
 
   if (!result.success) {
     return getApiZodError(result.error)

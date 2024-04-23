@@ -14,11 +14,11 @@ const storeRewardTxHashSchema = z.object({
   txHash: z.string(),
 })
 
-type StoreRewardTxHashParams = z.infer<typeof storeRewardTxHashSchema>
+type StoreRewardTxHashRequest = z.infer<typeof storeRewardTxHashSchema>
 
-export const storeRewardTxHash = async (params: StoreRewardTxHashParams) => {
+export const storeRewardTxHash = async (request: StoreRewardTxHashRequest) => {
   await requireJudgeAuth()
-  const result = storeRewardTxHashSchema.safeParse(params)
+  const result = storeRewardTxHashSchema.safeParse(request)
 
   if (!result.success) {
     return getApiZodError(result.error)

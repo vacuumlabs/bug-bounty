@@ -8,9 +8,9 @@ import {db, schema} from '@/server/db'
 import {getApiZodError} from '@/lib/utils/common/error'
 import {addContestSchema} from '@/server/utils/validations/schemas'
 
-export type AddContest = z.infer<typeof addContestSchema>
+export type AddContestRequest = z.infer<typeof addContestSchema>
 
-export const addContest = async (request: AddContest) => {
+export const addContest = async (request: AddContestRequest) => {
   const session = await requireServerSession()
 
   if (isJudge(session)) {
