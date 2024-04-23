@@ -9,10 +9,10 @@ import {users} from '../../db/schema/user'
 import {getApiFormError, getApiZodError} from '@/lib/utils/common/error'
 import {signUpSchema} from '@/server/utils/validations/schemas'
 
-export type SignUpParams = z.infer<typeof signUpSchema>
+export type SignUpRequest = z.infer<typeof signUpSchema>
 
-export const signUpWithCredentials = async (params: SignUpParams) => {
-  const result = signUpSchema.safeParse(params)
+export const signUpWithCredentials = async (request: SignUpRequest) => {
+  const result = signUpSchema.safeParse(request)
 
   if (!result.success) {
     return getApiZodError(result.error)

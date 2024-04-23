@@ -15,16 +15,16 @@ const confirmOrRejectContestSchema = z
   })
   .strict()
 
-export type ConfirmOrRejectContestParams = z.infer<
+export type ConfirmOrRejectContestRequest = z.infer<
   typeof confirmOrRejectContestSchema
 >
 
 export const confirmOrRejectContest = async (
-  params: ConfirmOrRejectContestParams,
+  request: ConfirmOrRejectContestRequest,
 ) => {
   await requireJudgeAuth()
 
-  const result = confirmOrRejectContestSchema.safeParse(params)
+  const result = confirmOrRejectContestSchema.safeParse(request)
 
   if (!result.success) {
     return getApiZodError(result.error)

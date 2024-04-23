@@ -21,7 +21,7 @@ const requestSchema = z.object({
 export type AddFinding = z.infer<typeof addFindingSchema>
 export type AddFindingAttachment = z.infer<typeof addFindingAttachmentSchema>
 
-export type AddFindingParams = {
+export type AddFindingRequest = {
   finding: AddFinding
   attachments: AddFindingAttachment[]
 }
@@ -31,14 +31,14 @@ export type AddFindingResponse = Exclude<
   ApiZodError
 >
 
-export const addFinding = async (params: AddFindingParams) => {
+export const addFinding = async (request: AddFindingRequest) => {
   const session = await requireServerSession()
 
   if (isJudge(session)) {
     throw new Error("Judges can't create findings.")
   }
 
-  const result = requestSchema.safeParse(params)
+  const result = requestSchema.safeParse(request)
 
   if (!result.success) {
     return getApiZodError(result.error)

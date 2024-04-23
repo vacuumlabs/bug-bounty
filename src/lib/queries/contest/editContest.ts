@@ -1,15 +1,18 @@
 import {MutateOptions, useMutation} from '@tanstack/react-query'
 
 import {
-  ConfirmOrRejectContestParams,
+  ConfirmOrRejectContestRequest,
   confirmOrRejectContest,
 } from '@/server/actions/contest/confirmOrRejectContest'
 import {Contest} from '@/server/db/schema/contest'
-import {EditContest, editContest} from '@/server/actions/contest/editContest'
+import {
+  EditContestRequest,
+  editContest,
+} from '@/server/actions/contest/editContest'
 import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 export const useConfirmOrRejectContest = (
-  options?: MutateOptions<Contest[], Error, ConfirmOrRejectContestParams>,
+  options?: MutateOptions<Contest[], Error, ConfirmOrRejectContestRequest>,
 ) => {
   return useMutation({
     ...options,
@@ -19,7 +22,7 @@ export const useConfirmOrRejectContest = (
 }
 
 export const useEditContest = (
-  options?: MutateOptions<Contest[], Error, EditContest>,
+  options?: MutateOptions<Contest[], Error, EditContestRequest>,
 ) => {
   return useMutation({
     ...options,
