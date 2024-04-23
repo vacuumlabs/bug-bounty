@@ -15,34 +15,25 @@ import {
 const editContestSchema = addContestSchema.partial().required({id: true})
 const editContestSeverityWeightSchema = addContestSeverityWeightSchema.partial()
 
-export type EditContestRequest = {
-  contest: z.infer<typeof editContestSchema>
-  customWeights: z.infer<typeof editContestSeverityWeightSchema>
-}
+const editContestRequestSchema = z.object({
+  contest: editContestSchema,
+  customWeights: editContestSeverityWeightSchema,
+})
+export type EditContestRequest = z.infer<typeof editContestRequestSchema>
 
 export const editContest = async (request: EditContestRequest) => {
-  const contestSchemaResult = editContestSchema.safeParse(request)
+  const result = editContestRequestSchema.safeParse(request)
 
-  if (!contestSchemaResult.success) {
-    return getApiZodError(contestSchemaResult.error)
+  if (!result.success) {
+    return getApiZodError(result.error)
   }
 
-  const customWeightSchemaResult = addContestSeverityWeightSchema.safeParse(
-    request.customWeights,
-  )
+  const {contest, customWeights} = result.data
 
-  if (!customWeightSchemaResult.success) {
-    return getApiZodError(customWeightSchemaResult.error)
-  }
+  const existingContest = await requireEditableContest(contest.id)
 
-  const updateContestRequest = contestSchemaResult.data
-  const updateCustomWeightRequest = customWeightSchemaResult.data
-
-  const existingContest = await requireEditableContest(updateContestRequest.id)
-
-  const updatedStartDate =
-    updateContestRequest.startDate ?? existingContest.startDate
-  const updatedEndDate = updateContestRequest.endDate ?? existingContest.endDate
+  const updatedStartDate = contest.startDate ?? existingContest.startDate
+  const updatedEndDate = contest.endDate ?? existingContest.endDate
 
   if (isPast(updatedStartDate)) {
     throw new Error('Contest start date must be in the future.')
@@ -55,8 +46,8 @@ export const editContest = async (request: EditContestRequest) => {
   return db.transaction(async (tx) => {
     const updatedContest = await tx
       .update(schema.contests)
-      .set(updateContestRequest)
-      .where(eq(schema.contests.id, updateContestRequest.id))
+      .set(contest)
+      .where(eq(schema.contests.id, contest.id))
       .returning()
 
     if (!updatedContest[0]) {
@@ -65,7 +56,7 @@ export const editContest = async (request: EditContestRequest) => {
 
     await tx
       .update(schema.contestSeverityWeights)
-      .set(updateCustomWeightRequest)
+      .set(customWeights)
       .where(eq(schema.contestSeverityWeights.contestId, updatedContest[0].id))
 
     return updatedContest

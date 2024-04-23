@@ -11,10 +11,12 @@ import {
   addContestSeverityWeightSchema,
 } from '@/server/utils/validations/schemas'
 
-export type AddContestRequest = {
-  contest: z.infer<typeof addContestSchema>
-  customWeights: z.infer<typeof addContestSeverityWeightSchema>
-}
+const addContestRequestSchema = z.object({
+  contest: addContestSchema,
+  customWeights: addContestSeverityWeightSchema,
+})
+
+export type AddContestRequest = z.infer<typeof addContestRequestSchema>
 
 export const addContest = async (request: AddContestRequest) => {
   const session = await requireServerSession()
@@ -23,22 +25,13 @@ export const addContest = async (request: AddContestRequest) => {
     throw new Error("Judges can't create contests.")
   }
 
-  const contestSchemaResult = addContestSchema.safeParse(request.contest)
+  const result = addContestRequestSchema.safeParse(request)
 
-  if (!contestSchemaResult.success) {
-    return getApiZodError(contestSchemaResult.error)
+  if (!result.success) {
+    return getApiZodError(result.error)
   }
 
-  const customWeightSchemaResult = addContestSeverityWeightSchema.safeParse(
-    request.customWeights,
-  )
-
-  if (!customWeightSchemaResult.success) {
-    return getApiZodError(customWeightSchemaResult.error)
-  }
-
-  const contest = contestSchemaResult.data
-  const customWeightSchema = customWeightSchemaResult.data
+  const {contest, customWeights} = result.data
 
   if (isPast(contest.startDate)) {
     throw new Error('Contest start date must be in the future.')
@@ -63,7 +56,7 @@ export const addContest = async (request: AddContestRequest) => {
 
     await tx.insert(schema.contestSeverityWeights).values({
       contestId: insertedContest[0].id,
-      ...customWeightSchema,
+      ...customWeights,
     })
 
     return insertedContest
