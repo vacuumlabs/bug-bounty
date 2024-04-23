@@ -1,5 +1,5 @@
 import {relations, sql} from 'drizzle-orm'
-import {numeric, pgTable, timestamp, uuid} from 'drizzle-orm/pg-core'
+import {integer, pgTable, timestamp, uuid} from 'drizzle-orm/pg-core'
 import {createInsertSchema, createSelectSchema} from 'drizzle-zod'
 import {z} from 'zod'
 
@@ -10,11 +10,11 @@ export const contestSeverityWeights = pgTable('contestSeverityWeights', {
   contestId: uuid('contestId')
     .notNull()
     .references(() => contests.id, {onDelete: 'cascade'}),
-  info: numeric('info', {precision: 5, scale: 2}).notNull(),
-  low: numeric('low', {precision: 5, scale: 2}).notNull(),
-  medium: numeric('medium', {precision: 5, scale: 2}).notNull(),
-  high: numeric('high', {precision: 5, scale: 2}).notNull(),
-  critical: numeric('critical', {precision: 5, scale: 2}).notNull(),
+  info: integer('info').notNull(),
+  low: integer('low').notNull(),
+  medium: integer('medium').notNull(),
+  high: integer('high').notNull(),
+  critical: integer('critical').notNull(),
   createdAt: timestamp('createdAt', {
     mode: 'date',
   }).default(sql`CURRENT_TIMESTAMP`),
@@ -36,23 +36,23 @@ export const insertContestSeverityWeightSchema = createInsertSchema(
   contestSeverityWeights,
   {
     info: (schema) =>
-      schema.low.refine((value) => Number.parseFloat(value) >= 0, {
+      schema.low.refine((value) => value >= 0, {
         message: 'Custom severity weight must be greater than or equal to 0',
       }),
     low: (schema) =>
-      schema.low.refine((value) => Number.parseFloat(value) >= 0, {
+      schema.low.refine((value) => value >= 0, {
         message: 'Custom severity weight must be greater than or equal to 0',
       }),
     medium: (schema) =>
-      schema.medium.refine((value) => Number.parseFloat(value) >= 0, {
+      schema.medium.refine((value) => value >= 0, {
         message: 'Custom severity weight must be greater than or equal to 0',
       }),
     high: (schema) =>
-      schema.high.refine((value) => Number.parseFloat(value) >= 0, {
+      schema.high.refine((value) => value >= 0, {
         message: 'Custom severity weight must be greater than or equal to 0',
       }),
     critical: (schema) =>
-      schema.critical.refine((value) => Number.parseFloat(value) >= 0, {
+      schema.critical.refine((value) => value >= 0, {
         message: 'Custom severity weight must be greater than or equal to 0',
       }),
   },
