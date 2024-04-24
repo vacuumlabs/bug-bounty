@@ -8,5 +8,6 @@ export const queryKeys = createQueryKeyStore({
   },
   rewards: {
     all: (params: GetRewardsParams) => [params],
+    calculated: (contestId: string) => [contestId],
   },
 })

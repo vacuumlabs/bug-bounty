@@ -15,6 +15,10 @@ type CustomSeverityWeights = Pick<
   'info' | 'low' | 'medium' | 'high' | 'critical'
 >
 
+export type CalculateRewardsResponse = Awaited<
+  ReturnType<typeof calculateRewards>
+>
+
 const BEST_REPORT_BONUS = 0.3 // 30%
 
 const defaultSeverityWeights: Record<FindingSeverity, number> = {

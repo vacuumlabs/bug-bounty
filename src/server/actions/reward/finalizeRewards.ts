@@ -8,6 +8,10 @@ import {db, schema} from '@/server/db'
 import {ContestStatus} from '@/server/db/models'
 import {requireJudgeAuth} from '@/server/utils/auth'
 
+export type FinalizeRewardsResponse = Awaited<
+  ReturnType<typeof finalizeRewards>
+>
+
 export const finalizeRewards = async (contestId: string) => {
   await requireJudgeAuth()
 
@@ -22,6 +26,6 @@ export const finalizeRewards = async (contestId: string) => {
       })
       .where(eq(schema.contests.id, contestId))
 
-    await tx.insert(schema.rewards).values(rewards).returning()
+    return tx.insert(schema.rewards).values(rewards).returning()
   })
 }
