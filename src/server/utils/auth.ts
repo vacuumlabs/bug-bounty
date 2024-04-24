@@ -2,7 +2,7 @@ import {redirect} from 'next/navigation'
 import {Session, getServerSession} from 'next-auth'
 
 import {authOptions} from '../authOptions'
-import {UserRole} from '../db/schema/user'
+import {UserRole} from '../db/models'
 
 export const getServerAuthSession = () => getServerSession(authOptions)
 

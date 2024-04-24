@@ -7,13 +7,9 @@ import {rewards} from './reward'
 import {findings} from './finding'
 import {contests} from './contest'
 import {accounts} from './account'
+import {UserRole} from '../models'
 
 import {getDrizzleEnum} from '@/server/utils/enum'
-
-export enum UserRole {
-  JUDGE = 'judge',
-  AUDITOR = 'auditor',
-}
 
 export const users = pgTable('user', {
   id: uuid('id').defaultRandom().primaryKey(),
