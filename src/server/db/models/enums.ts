@@ -1,3 +1,8 @@
+export enum UserRole {
+  JUDGE = 'judge',
+  AUDITOR = 'auditor',
+}
+
 export enum ContestStatus {
   DRAFT = 'DRAFT',
   APPROVED = 'APPROVED',

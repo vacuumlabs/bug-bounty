@@ -10,7 +10,7 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import {DefaultJWT} from 'next-auth/jwt'
 
 import {verifyCredentials} from './actions/auth/verifyCredentials'
-import {UserRole} from './db/schema/user'
+import {UserRole} from './db/models'
 
 import {env} from '@/env'
 import {db} from '@/server/db'

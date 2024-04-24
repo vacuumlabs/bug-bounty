@@ -3,13 +3,18 @@ import {faker} from '@faker-js/faker'
 import bcrypt from 'bcryptjs'
 import {sql} from 'drizzle-orm'
 
-import {InsertUser, UserRole, users as usersTable} from './schema/user'
+import {InsertUser} from './schema/user'
 import {env} from '../../env.js'
 import {Contest, InsertContest} from './schema/contest'
 import {Finding, InsertFinding} from './schema/finding'
-import {InsertReward, rewards as rewardsTable} from './schema/reward'
+import {InsertReward} from './schema/reward'
 import {InsertKnownIssue} from './schema/knownIssue'
-import {ContestStatus, FindingSeverity, FindingStatus} from './models/enums'
+import {
+  ContestStatus,
+  FindingSeverity,
+  FindingStatus,
+  UserRole,
+} from './models/enums'
 
 import {db, schema} from './index'
 
@@ -159,7 +164,10 @@ const seed = async () => {
       console.log('Truncated all DB tables')
     }
 
-    const users = await tx.insert(usersTable).values(usersToInsert).returning()
+    const users = await tx
+      .insert(schema.users)
+      .values(usersToInsert)
+      .returning()
 
     const projectOwnerUserId = users[0]?.id
     const auditorUserId = users[1]?.id
@@ -198,7 +206,7 @@ const seed = async () => {
     const rewardsToInsert = pastContestFindings.map(getRewardToInsert)
 
     const rewards = await tx
-      .insert(rewardsTable)
+      .insert(schema.rewards)
       .values(rewardsToInsert)
       .returning()
 
