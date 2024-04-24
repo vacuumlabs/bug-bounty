@@ -32,7 +32,7 @@ export const contestSeverityWeightsRelations = relations(
   }),
 )
 
-export const insertContestSeverityWeightSchema = createInsertSchema(
+export const insertContestSeverityWeightsSchema = createInsertSchema(
   contestSeverityWeights,
   {
     info: (schema) =>
@@ -63,13 +63,13 @@ export const insertContestSeverityWeightSchema = createInsertSchema(
   })
   .strict()
 
-export const selectContestSeverityWeightSchema = createSelectSchema(
+export const selectContestSeverityWeightsSchema = createSelectSchema(
   contestSeverityWeights,
 )
 
-export type InsertContestSeverityWeight = z.infer<
-  typeof insertContestSeverityWeightSchema
+export type InsertContestSeverityWeights = z.infer<
+  typeof insertContestSeverityWeightsSchema
 >
-export type ContestSeverityWeight = z.infer<
-  typeof selectContestSeverityWeightSchema
+export type ContestSeverityWeights = z.infer<
+  typeof selectContestSeverityWeightsSchema
 >

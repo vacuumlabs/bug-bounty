@@ -8,12 +8,12 @@ import {db, schema} from '@/server/db'
 import {getApiZodError} from '@/lib/utils/common/error'
 import {
   addContestSchema,
-  addContestSeverityWeightSchema,
+  addContestSeverityWeightsSchema,
 } from '@/server/utils/validations/schemas'
 
 const addContestRequestSchema = z.object({
   contest: addContestSchema,
-  customWeights: addContestSeverityWeightSchema,
+  customWeights: addContestSeverityWeightsSchema,
 })
 
 export type AddContestRequest = z.infer<typeof addContestRequestSchema>

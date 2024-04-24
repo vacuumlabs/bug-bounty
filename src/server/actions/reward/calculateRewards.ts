@@ -8,8 +8,16 @@ import {InsertReward} from '../../db/schema/reward'
 import {requireJudgeAuth} from '../../utils/auth'
 import {ContestStatus, FindingSeverity, FindingStatus} from '../../db/models'
 
-// change when we decide on final weights or allow setting custom weights per contest
-const severityRewardWeights: Record<FindingSeverity, number> = {
+import {ContestSeverityWeights} from '@/server/db/schema/contestSeverityWeights'
+
+type CustomSeverityWeights = Pick<
+  ContestSeverityWeights,
+  'info' | 'low' | 'medium' | 'high' | 'critical'
+>
+
+const BEST_REPORT_BONUS = 0.3 // 30%
+
+const defaultSeverityWeights: Record<FindingSeverity, number> = {
   [FindingSeverity.CRITICAL]: 36,
   [FindingSeverity.HIGH]: 9,
   [FindingSeverity.MEDIUM]: 3,
@@ -17,15 +25,24 @@ const severityRewardWeights: Record<FindingSeverity, number> = {
   [FindingSeverity.INFO]: 0,
 }
 
-const BEST_REPORT_BONUS = 0.3 // 30%
+const getSeverityWeights = (customWeights: CustomSeverityWeights | null) => {
+  if (customWeights) {
+    return {
+      [FindingSeverity.CRITICAL]: customWeights.critical,
+      [FindingSeverity.HIGH]: customWeights.high,
+      [FindingSeverity.MEDIUM]: customWeights.medium,
+      [FindingSeverity.LOW]: customWeights.low,
+      [FindingSeverity.INFO]: customWeights.info,
+    }
+  }
+
+  return defaultSeverityWeights
+}
 
 const calculatePointsPerSubmission = (
-  severity: FindingSeverity,
+  severityWeight: number,
   numberOfSubmissions: number,
-) => {
-  const weight = severityRewardWeights[severity]
-  return (weight * 0.9 ** (numberOfSubmissions - 1)) / numberOfSubmissions
-}
+) => (severityWeight * 0.9 ** (numberOfSubmissions - 1)) / numberOfSubmissions
 
 const getRewardForFinding = (
   finding: Pick<Finding, 'id' | 'authorId'>,
@@ -84,6 +101,7 @@ export const calculateRewards = async (contestId: string) => {
       status: true,
     },
     with: {
+      contestSeverityWeights: true,
       deduplicatedFindings: {
         with: {
           findings: {
@@ -109,12 +127,14 @@ export const calculateRewards = async (contestId: string) => {
     throw new Error(`Rewards for this contest were already calculated.`)
   }
 
+  const severityWeights = getSeverityWeights(contest.contestSeverityWeights)
+
   const findingsWithPoints = contest.deduplicatedFindings
     .map(({severity, findings, bestFindingId}) => ({
       findings,
       bestFindingId,
       pointsPerSubmission: calculatePointsPerSubmission(
-        severity,
+        severityWeights[severity],
         findings.length,
       ),
     }))
