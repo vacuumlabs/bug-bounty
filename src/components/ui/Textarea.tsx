@@ -1,11 +1,10 @@
-import * as React from 'react'
+import {TextareaHTMLAttributes, forwardRef} from 'react'
 
 import {cn} from '@/lib/utils/client/tailwind'
 
-export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> &
-  object
+export type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & object
 
-const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({className, ...props}, ref) => {
     return (
       <textarea
