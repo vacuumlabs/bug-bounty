@@ -70,29 +70,38 @@ export const addFinding = async (request: AddFindingRequest) => {
     throw new Error('Contest is not approved.')
   }
 
-  const findings = await db
-    .insert(schema.findings)
-    .values({...finding, authorId: session.user.id})
-    .returning()
+  return db.transaction(async (tx) => {
+    const findings = await tx
+      .insert(schema.findings)
+      .values({...finding, authorId: session.user.id})
+      .returning()
 
-  if (!findings[0]) {
-    throw new Error('Failed to create finding.')
-  }
+    const insertedFinding = findings[0]
 
-  const findingId = findings[0].id
+    if (!insertedFinding) {
+      throw new Error('Failed to create finding.')
+    }
 
-  const attachmentsToInsert = attachments.map((attachment) => ({
-    ...attachment,
-    findingId,
-  }))
+    if (attachments.length === 0) {
+      return {
+        ...insertedFinding,
+        insertedAttachments: [],
+      }
+    }
 
-  const insertedAttachments = await db
-    .insert(schema.findingAttachments)
-    .values(attachmentsToInsert)
-    .returning()
+    const attachmentsToInsert = attachments.map((attachment) => ({
+      ...attachment,
+      findingId: insertedFinding.id,
+    }))
 
-  return {
-    ...findings[0],
-    insertedAttachments,
-  }
+    const insertedAttachments = await tx
+      .insert(schema.findingAttachments)
+      .values(attachmentsToInsert)
+      .returning()
+
+    return {
+      ...insertedFinding,
+      insertedAttachments,
+    }
+  })
 }
