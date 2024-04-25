@@ -1,4 +1,6 @@
-import {MutateOptions, useMutation} from '@tanstack/react-query'
+import {MutateOptions, useMutation, useQueryClient} from '@tanstack/react-query'
+
+import {queryKeys} from '../keys'
 
 import {
   EditFindingRequest,
@@ -24,9 +26,15 @@ export const useEditFinding = (
 export const useApproveOrRejectFinding = (
   options?: MutateOptions<Finding[], Error, ApproveOrRejectFindingRequest>,
 ) => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     ...options,
     mutationFn: withApiErrorHandler(approveOrRejectFinding),
-    // TODO: invalidate relevant GET queries
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.deduplicatedFindings.all._def,
+      })
+    },
   })
 }

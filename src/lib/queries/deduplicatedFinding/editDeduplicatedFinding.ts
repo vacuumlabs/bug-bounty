@@ -1,4 +1,6 @@
-import {MutateOptions, useMutation} from '@tanstack/react-query'
+import {MutateOptions, useMutation, useQueryClient} from '@tanstack/react-query'
+
+import {queryKeys} from '../keys'
 
 import {withApiErrorHandler} from '@/lib/utils/common/error'
 import {
@@ -14,9 +16,15 @@ export const useMergeDeduplicatedFindings = (
     MergeDeduplicatedFindingsRequest
   >,
 ) => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     ...options,
     mutationFn: withApiErrorHandler(mergeDeduplicatedFindings),
-    // TODO: invalidate relevant GET queries
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.deduplicatedFindings.all._def,
+      })
+    },
   })
 }
