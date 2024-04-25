@@ -1,7 +1,9 @@
 import type {z} from 'zod'
 import {createInsertSchema, createSelectSchema} from 'drizzle-zod'
 import {
+  char,
   index,
+  numeric,
   pgTable,
   text,
   timestamp,
@@ -30,6 +32,15 @@ export const contests = pgTable(
     repoUrl: varchar('repoUrl', {length: 255}).notNull(),
     description: text('description').notNull(),
     setupSteps: text('setupSteps').notNull(),
+    rewardsAmount: numeric('rewardsAmount', {
+      precision: 20,
+      scale: 0,
+    }).notNull(),
+    rewardsTransferTxHash: char('rewardsTransferTxHash', {length: 64}),
+    distributedRewardsAmount: numeric('distributedRewardsAmount', {
+      precision: 20,
+      scale: 0,
+    }),
     startDate: timestamp('startDate', {
       mode: 'date',
     }).notNull(),

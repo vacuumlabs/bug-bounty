@@ -59,6 +59,11 @@ const getContestsToInsert = (projectOwnerUserId: string): InsertContest[] => [
     setupSteps: faker.lorem.sentence(),
     startDate: faker.date.past(),
     endDate: faker.date.recent(),
+    rewardsAmount: faker.finance.amount({
+      min: 100_000_000,
+      max: 1_000_000_000,
+      dec: 0,
+    }),
     status: ContestStatus.APPROVED,
   },
   {
@@ -69,6 +74,11 @@ const getContestsToInsert = (projectOwnerUserId: string): InsertContest[] => [
     setupSteps: faker.lorem.sentence(),
     startDate: faker.date.recent(),
     endDate: faker.date.soon(),
+    rewardsAmount: faker.finance.amount({
+      min: 100_000_000,
+      max: 1_000_000_000,
+      dec: 0,
+    }),
     status: ContestStatus.APPROVED,
   },
   {
@@ -79,6 +89,11 @@ const getContestsToInsert = (projectOwnerUserId: string): InsertContest[] => [
     setupSteps: faker.lorem.sentence(),
     startDate: faker.date.soon(),
     endDate: faker.date.future(),
+    rewardsAmount: faker.finance.amount({
+      min: 100_000_000,
+      max: 1_000_000_000,
+      dec: 0,
+    }),
     status: ContestStatus.APPROVED,
   },
   {
@@ -89,6 +104,11 @@ const getContestsToInsert = (projectOwnerUserId: string): InsertContest[] => [
     setupSteps: faker.lorem.sentence(),
     startDate: faker.date.soon(),
     endDate: faker.date.future(),
+    rewardsAmount: faker.finance.amount({
+      min: 100_000_000,
+      max: 1_000_000_000,
+      dec: 0,
+    }),
     status: ContestStatus.PENDING,
   },
 ]

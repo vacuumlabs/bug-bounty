@@ -9,15 +9,16 @@ import {requireEditableContest} from '@/server/utils/validations/contest'
 import {getApiZodError} from '@/lib/utils/common/error'
 import {
   addContestSchema,
-  addContestSeverityWeightSchema,
+  addContestSeverityWeightsSchema,
 } from '@/server/utils/validations/schemas'
 
 const editContestSchema = addContestSchema.partial().required({id: true})
-const editContestSeverityWeightSchema = addContestSeverityWeightSchema.partial()
+const editContestSeverityWeightsSchema =
+  addContestSeverityWeightsSchema.partial()
 
 const editContestRequestSchema = z.object({
   contest: editContestSchema,
-  customWeights: editContestSeverityWeightSchema,
+  customWeights: editContestSeverityWeightsSchema,
 })
 export type EditContestRequest = z.infer<typeof editContestRequestSchema>
 

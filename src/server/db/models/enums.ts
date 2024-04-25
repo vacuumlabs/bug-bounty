@@ -3,6 +3,7 @@ export enum ContestStatus {
   APPROVED = 'APPROVED',
   PENDING = 'PENDING',
   REJECTED = 'REJECTED',
+  FINISHED = 'FINISHED',
 }
 
 export enum FindingSeverity {
