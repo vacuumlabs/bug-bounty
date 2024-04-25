@@ -1,6 +1,7 @@
 import {createQueryKeyStore} from '@lukemorales/query-key-factory'
 
-import {GetRewardsParams} from '@/server/actions/reward/getReward'
+import {type GetRewardsParams} from '@/server/actions/reward/getReward'
+import {type GetPublicContestsParams} from '@/server/actions/contest/getContests'
 
 export const queryKeys = createQueryKeyStore({
   users: {
@@ -9,5 +10,8 @@ export const queryKeys = createQueryKeyStore({
   rewards: {
     all: (params: GetRewardsParams) => [params],
     calculated: (contestId: string) => [contestId],
+  },
+  contests: {
+    public: (params: GetPublicContestsParams) => [params],
   },
 })
