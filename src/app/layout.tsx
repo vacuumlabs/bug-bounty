@@ -29,7 +29,7 @@ const RootLayout = async ({
           <nav className="fixed flex h-[90px] w-full items-center justify-end bg-slate-500 p-4">
             <ConnectWallet />
           </nav>
-          {children}
+          <div className="flex flex-col pt-[90px]">{children}</div>
         </Providers>
         <Toaster />
       </body>
