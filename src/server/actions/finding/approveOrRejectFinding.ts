@@ -32,7 +32,14 @@ export const approveOrRejectFinding = async (
   const {findingId, newStatus} = result.data
 
   const finding = await db.query.findings.findFirst({
-    columns: {status: true},
+    columns: {
+      id: true,
+      contestId: true,
+      title: true,
+      description: true,
+      severity: true,
+      status: true,
+    },
     with: {
       contest: {
         columns: {endDate: true},
@@ -53,6 +60,34 @@ export const approveOrRejectFinding = async (
     throw new Error(
       'Finding cannot be confirmed/rejected before the contest ends.',
     )
+  }
+
+  if (newStatus === FindingStatus.APPROVED) {
+    return db.transaction(async (db) => {
+      const deduplicatedFinding = await db
+        .insert(schema.deduplicatedFindings)
+        .values({
+          contestId: finding.contestId,
+          bestFindingId: finding.id,
+          description: finding.description,
+          title: finding.title,
+          severity: finding.severity,
+        })
+        .returning()
+
+      if (!deduplicatedFinding[0]) {
+        throw new Error('Failed to create deduplicated finding.')
+      }
+
+      return db
+        .update(schema.findings)
+        .set({
+          status: newStatus,
+          deduplicatedFindingId: deduplicatedFinding[0].id,
+        })
+        .where(eq(schema.findings.id, findingId))
+        .returning()
+    })
   }
 
   return db
