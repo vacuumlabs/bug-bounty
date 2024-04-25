@@ -5,7 +5,7 @@ import {
   UserRole,
 } from '@/server/db/models'
 
-export type SelectOption<T> = {
+export type SelectOption<T = string> = {
   value: T
   label: string
 }
