@@ -1,4 +1,6 @@
-import {MutateOptions, useMutation} from '@tanstack/react-query'
+import {MutateOptions, useMutation, useQueryClient} from '@tanstack/react-query'
+
+import {queryKeys} from '../keys'
 
 import {Contest} from '@/server/db/schema/contest'
 import {
@@ -15,10 +17,16 @@ import {withApiErrorHandler} from '@/lib/utils/common/error'
 export const useAddContest = (
   options?: MutateOptions<Contest[], Error, AddContestRequest>,
 ) => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     ...options,
     mutationFn: withApiErrorHandler(addContest),
-    // TODO: invalidate relevant GET queries
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.contests._def,
+      })
+    },
   })
 }
 

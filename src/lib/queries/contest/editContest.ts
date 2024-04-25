@@ -1,4 +1,6 @@
-import {MutateOptions, useMutation} from '@tanstack/react-query'
+import {MutateOptions, useMutation, useQueryClient} from '@tanstack/react-query'
+
+import {queryKeys} from '../keys'
 
 import {
   ConfirmOrRejectContestRequest,
@@ -14,19 +16,31 @@ import {withApiErrorHandler} from '@/lib/utils/common/error'
 export const useConfirmOrRejectContest = (
   options?: MutateOptions<Contest[], Error, ConfirmOrRejectContestRequest>,
 ) => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     ...options,
     mutationFn: withApiErrorHandler(confirmOrRejectContest),
-    // TODO: invalidate relevant GET queries
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.contests._def,
+      })
+    },
   })
 }
 
 export const useEditContest = (
   options?: MutateOptions<Contest[], Error, EditContestRequest>,
 ) => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     ...options,
     mutationFn: withApiErrorHandler(editContest),
-    // TODO: invalidate relevant GET queries
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.contests._def,
+      })
+    },
   })
 }
