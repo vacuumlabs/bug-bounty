@@ -14,7 +14,7 @@ const ProfilePage = async () => {
   await prefetchGetUser(session.user.id)
 
   return (
-    <main className="flex max-w-[1000px] flex-col items-start gap-8 px-20 pt-[100px]">
+    <main className="flex max-w-[1000px] flex-col items-start gap-8 px-20 pt-[50px]">
       <h1 className="text-2xl">My profile</h1>
       <HydrationBoundary>
         <Profile />
@@ -22,6 +22,9 @@ const ProfilePage = async () => {
       <Separator className="mt-10" />
       <Button asChild variant="link">
         <Link href="/">Home</Link>
+      </Button>
+      <Button asChild variant="link">
+        <Link href="/finding/new">Add finding</Link>
       </Button>
       <SignOutButton variant="link" callbackUrl="/">
         Sign out
