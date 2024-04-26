@@ -2,6 +2,7 @@ import {createQueryKeyStore} from '@lukemorales/query-key-factory'
 
 import {type GetRewardsParams} from '@/server/actions/reward/getReward'
 import {type GetPublicContestsParams} from '@/server/actions/contest/getContests'
+import {type GetDeduplicatedFindingsParams} from '@/server/actions/deduplicatedFinding/getDeduplicatedFinding'
 
 export const queryKeys = createQueryKeyStore({
   users: {
@@ -13,5 +14,8 @@ export const queryKeys = createQueryKeyStore({
   },
   contests: {
     public: (params: GetPublicContestsParams) => [params],
+  },
+  deduplicatedFindings: {
+    all: (params: GetDeduplicatedFindingsParams) => [params],
   },
 })

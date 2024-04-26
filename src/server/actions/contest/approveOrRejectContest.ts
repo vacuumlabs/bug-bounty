@@ -8,23 +8,23 @@ import {ContestStatus} from '@/server/db/models'
 import {requireJudgeAuth} from '@/server/utils/auth'
 import {getApiZodError} from '@/lib/utils/common/error'
 
-const confirmOrRejectContestSchema = z
+const approveOrRejectContestSchema = z
   .object({
     contestId: z.string(),
     newStatus: z.enum([ContestStatus.APPROVED, ContestStatus.REJECTED]),
   })
   .strict()
 
-export type ConfirmOrRejectContestRequest = z.infer<
-  typeof confirmOrRejectContestSchema
+export type ApproveOrRejectContestRequest = z.infer<
+  typeof approveOrRejectContestSchema
 >
 
-export const confirmOrRejectContest = async (
-  request: ConfirmOrRejectContestRequest,
+export const approveOrRejectContest = async (
+  request: ApproveOrRejectContestRequest,
 ) => {
   await requireJudgeAuth()
 
-  const result = confirmOrRejectContestSchema.safeParse(request)
+  const result = approveOrRejectContestSchema.safeParse(request)
 
   if (!result.success) {
     return getApiZodError(result.error)
@@ -42,7 +42,7 @@ export const confirmOrRejectContest = async (
   }
 
   if (contest.status !== ContestStatus.PENDING) {
-    throw new Error('Only pending contests can be confirmed/rejected.')
+    throw new Error('Only pending contests can be approved/rejected.')
   }
 
   return db

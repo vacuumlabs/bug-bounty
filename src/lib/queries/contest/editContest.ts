@@ -3,9 +3,9 @@ import {MutateOptions, useMutation, useQueryClient} from '@tanstack/react-query'
 import {queryKeys} from '../keys'
 
 import {
-  ConfirmOrRejectContestRequest,
-  confirmOrRejectContest,
-} from '@/server/actions/contest/confirmOrRejectContest'
+  ApproveOrRejectContestRequest,
+  approveOrRejectContest,
+} from '@/server/actions/contest/approveOrRejectContest'
 import {Contest} from '@/server/db/schema/contest'
 import {
   EditContestRequest,
@@ -13,14 +13,14 @@ import {
 } from '@/server/actions/contest/editContest'
 import {withApiErrorHandler} from '@/lib/utils/common/error'
 
-export const useConfirmOrRejectContest = (
-  options?: MutateOptions<Contest[], Error, ConfirmOrRejectContestRequest>,
+export const useApproveOrRejectContest = (
+  options?: MutateOptions<Contest[], Error, ApproveOrRejectContestRequest>,
 ) => {
   const queryClient = useQueryClient()
 
   return useMutation({
     ...options,
-    mutationFn: withApiErrorHandler(confirmOrRejectContest),
+    mutationFn: withApiErrorHandler(approveOrRejectContest),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: queryKeys.contests._def,
