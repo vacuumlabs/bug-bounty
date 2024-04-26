@@ -10,7 +10,7 @@ import {db, schema} from '@/server/db'
 
 const mergeDeduplicatedFindingsSchema = z.object({
   bestDeduplicatedFindingId: z.string(),
-  deduplicatedFindingIds: z.array(z.string()),
+  deduplicatedFindingIds: z.array(z.string()).nonempty(),
 })
 
 export type MergeDeduplicatedFindingsRequest = z.infer<

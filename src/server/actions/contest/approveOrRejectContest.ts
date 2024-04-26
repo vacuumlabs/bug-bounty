@@ -42,7 +42,7 @@ export const approveOrRejectContest = async (
   }
 
   if (contest.status !== ContestStatus.PENDING) {
-    throw new Error('Only pending contests can be approveed/rejected.')
+    throw new Error('Only pending contests can be approved/rejected.')
   }
 
   return db
