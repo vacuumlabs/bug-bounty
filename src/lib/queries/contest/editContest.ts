@@ -20,7 +20,7 @@ export const useApproveOrRejectContest = (
 
   return useMutation({
     ...options,
-    mutationFn: withApiErrorHandler(confirmOrRejectContest),
+    mutationFn: withApiErrorHandler(approveOrRejectContest),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: queryKeys.contests._def,
