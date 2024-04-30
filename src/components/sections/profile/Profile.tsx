@@ -20,7 +20,7 @@ const WalletAddress = ({address}: WalletAddressProps) =>
       </Button>
     </div>
   ) : (
-    <Button asChild variant="link">
+    <Button asChild>
       <Link href="/profile/connect-wallet">Connect your wallet</Link>
     </Button>
   )

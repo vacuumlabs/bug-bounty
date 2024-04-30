@@ -15,18 +15,18 @@ const ProfilePage = async () => {
 
   return (
     <main className="flex max-w-[1000px] flex-col items-start gap-8 px-20 pt-[50px]">
-      <h1 className="text-2xl">My profile</h1>
+      <h1 className="text-3xl font-semibold">My profile</h1>
       <HydrationBoundary>
         <Profile />
       </HydrationBoundary>
       <Separator className="mt-10" />
-      <Button asChild variant="link">
+      <Button asChild variant="outline">
         <Link href="/">Home</Link>
       </Button>
-      <Button asChild variant="link">
+      <Button asChild variant="outline">
         <Link href="/finding/new">Add finding</Link>
       </Button>
-      <SignOutButton variant="link" callbackUrl="/">
+      <SignOutButton variant="outline" callbackUrl="/">
         Sign out
       </SignOutButton>
     </main>

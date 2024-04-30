@@ -52,7 +52,8 @@ const SignUpPage = () => {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center py-8">
+    <main className="flex flex-col items-center justify-center gap-10 py-[100px]">
+      <h1 className="text-3xl font-semibold">Sign Up</h1>
       <Form {...form} onSubmit={onSubmit} className="w-[300px]">
         <FormField
           control={form.control}

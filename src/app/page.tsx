@@ -14,29 +14,32 @@ const Home = async () => {
   return (
     <main className="flex flex-col items-center justify-between p-32">
       <div className="flex flex-col items-center justify-center gap-4">
+        <p className="pb-20 text-4xl font-semibold">
+          Welcome to the new Cardano Bug Bounty platform!
+        </p>
         <p className="text-center text-2xl text-black">
           {session && (
             <span>Logged in as {session.user.name ?? session.user.email}</span>
           )}
         </p>
         {session ? (
-          <>
-            <Button asChild variant="link">
+          <div className="flex gap-2">
+            <Button asChild variant="outline">
               <Link href={'/profile'}>My profile</Link>
             </Button>
-            <SignOutButton variant="link" callbackUrl="/">
+            <SignOutButton variant="outline" callbackUrl="/">
               Sign out
             </SignOutButton>
-          </>
+          </div>
         ) : (
-          <>
-            <Button asChild variant="link">
+          <div className="flex gap-2">
+            <Button asChild>
               <Link href={'/api/auth/signin'}>Sign in</Link>
             </Button>
-            <Button asChild variant="link">
+            <Button asChild variant="outline">
               <Link href={'/auth/signup'}>Sign up</Link>
             </Button>
-          </>
+          </div>
         )}
       </div>
       {isJudge(session) && (

@@ -9,7 +9,7 @@ const NewFindingPage = async () => {
 
   return (
     <main className="flex max-w-screen-lg flex-col gap-8 px-10 py-[30px]">
-      <h1 className="text-3xl ">New Finding</h1>
+      <h1 className="text-3xl font-semibold">New Finding</h1>
       <HydrationBoundary>
         <NewFindingForm />
       </HydrationBoundary>
