@@ -10,7 +10,7 @@ import {getApiZodError} from '@/lib/utils/common/error'
 
 const approveOrRejectContestSchema = z
   .object({
-    contestId: z.string(),
+    contestId: z.string().uuid(),
     newStatus: z.enum([ContestStatus.APPROVED, ContestStatus.REJECTED]),
   })
   .strict()

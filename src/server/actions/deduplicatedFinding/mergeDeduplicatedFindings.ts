@@ -9,8 +9,8 @@ import {getApiZodError} from '@/lib/utils/common/error'
 import {db, schema} from '@/server/db'
 
 const mergeDeduplicatedFindingsSchema = z.object({
-  bestDeduplicatedFindingId: z.string(),
-  deduplicatedFindingIds: z.array(z.string()).nonempty(),
+  bestDeduplicatedFindingId: z.string().uuid(),
+  deduplicatedFindingIds: z.array(z.string().uuid()).nonempty(),
 })
 
 export type MergeDeduplicatedFindingsRequest = z.infer<

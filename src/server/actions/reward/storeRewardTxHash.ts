@@ -10,8 +10,8 @@ import {requireJudgeAuth} from '../../utils/auth'
 import {getApiZodError} from '@/lib/utils/common/error'
 
 const storeRewardTxHashSchema = z.object({
-  rewardId: z.string(),
-  txHash: z.string(),
+  rewardId: z.string().uuid(),
+  txHash: z.string().min(1),
 })
 
 type StoreRewardTxHashRequest = z.infer<typeof storeRewardTxHashSchema>

@@ -19,13 +19,13 @@ import {getApiZodError} from '@/lib/utils/common/error'
 import {ZodOutput} from '@/lib/types/zod'
 
 const dataSignatureSchema = z.object({
-  signature: z.string(),
-  key: z.string(),
+  signature: z.string().min(1),
+  key: z.string().min(1),
 }) satisfies ZodOutput<DataSignature>
 
 const verifyAndAddWalletAddressSchema = z.object({
   signature: dataSignatureSchema,
-  walletAddress: z.string(),
+  walletAddress: z.string().min(1),
 })
 
 type VerifyAndAddWalletAddressRequest = z.infer<
