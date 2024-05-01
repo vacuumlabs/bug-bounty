@@ -52,6 +52,7 @@ export const insertFindingAttachmentSchema = createInsertSchema(
   {
     attachmentUrl: (schema) =>
       schema.attachmentUrl.url('Invalid attachment URL.'),
+    mimeType: (schema) => schema.mimeType.min(1, 'MIME type can’t be empty.'),
   },
 )
   .omit({

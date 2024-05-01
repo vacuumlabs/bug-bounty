@@ -20,7 +20,7 @@ import {signUpSchema} from '@/server/utils/validations/schemas'
 
 const formSchema = signUpSchema
   .extend({
-    confirmPassword: z.string().min(8),
+    confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',

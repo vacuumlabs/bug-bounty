@@ -48,6 +48,11 @@ export const usersRelations = relations(users, ({many}) => ({
 export const insertUserSchema = createInsertSchema(users, {
   email: (schema) => schema.email.email(),
   image: (schema) => schema.image.url(),
+  name: (schema) => schema.name.min(3, 'Name must be at least 3 characters.'),
+  alias: (schema) =>
+    schema.alias.min(3, 'Alias must be at least 3 characters.'),
+  password: (schema) =>
+    schema.password.min(8, 'Password must be at least 8 characters.'),
 })
   .omit({
     createdAt: true,
