@@ -19,7 +19,7 @@ export const findingAttachments = pgTable(
       .notNull()
       .references(() => findings.id, {onDelete: 'cascade'}),
     attachmentUrl: varchar('url', {length: 255}).notNull(),
-    mimeType: varchar('mimeType', {length: 255}).notNull(),
+    mimeType: varchar('mimeType', {length: 255}),
     createdAt: timestamp('createdAt', {
       mode: 'date',
     }).default(sql`CURRENT_TIMESTAMP`),
