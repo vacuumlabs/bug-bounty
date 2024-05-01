@@ -52,6 +52,8 @@ export const insertUserSchema = createInsertSchema(users, {
   alias: (schema) =>
     schema.alias.min(3, 'Alias must be at least 3 characters.'),
   password: (schema) => schema.password.min(1, 'Password hash can’t be empty.'),
+  walletAddress: (schema) =>
+    schema.walletAddress.min(1, 'Wallet address can’t be empty.'),
 })
   .omit({
     createdAt: true,
