@@ -83,6 +83,14 @@ export const findingRelations = relations(findings, ({one, many}) => ({
 export const insertFindingSchema = createInsertSchema(findings, {
   targetFileUrl: (schema) =>
     schema.targetFileUrl.url('Invalid target file URL.'),
+  title: (schema) =>
+    schema.title.min(1, {
+      message: 'Title can’t be empty.',
+    }),
+  description: (schema) =>
+    schema.description.min(1, {
+      message: 'Description can’t be empty.',
+    }),
 })
   .omit({
     createdAt: true,

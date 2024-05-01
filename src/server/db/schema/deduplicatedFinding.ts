@@ -67,6 +67,16 @@ export const deduplicatedFindingRelations = relations(
 
 export const insertDeduplicatedFindingSchema = createInsertSchema(
   deduplicatedFindings,
+  {
+    title: (schema) =>
+      schema.title.min(1, {
+        message: 'Title can’t be empty.',
+      }),
+    description: (schema) =>
+      schema.description.min(1, {
+        message: 'Description can’t be empty.',
+      }),
+  },
 )
   .omit({
     createdAt: true,

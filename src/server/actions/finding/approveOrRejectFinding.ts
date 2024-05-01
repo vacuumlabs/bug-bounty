@@ -10,7 +10,7 @@ import {getApiZodError} from '@/lib/utils/common/error'
 import {db, schema} from '@/server/db'
 
 const approveOrRejectFindingSchema = z.object({
-  findingId: z.string(),
+  findingId: z.string().uuid(),
   newStatus: z.enum([FindingStatus.APPROVED, FindingStatus.REJECTED]),
 })
 

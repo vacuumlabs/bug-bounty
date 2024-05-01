@@ -81,6 +81,11 @@ export const contestRelations = relations(contests, ({one, many}) => ({
 
 export const insertContestSchema = createInsertSchema(contests, {
   repoUrl: (schema) => schema.repoUrl.url('Invalid repository URL.'),
+  title: (schema) => schema.title.min(1, 'Title must be at least 1 character.'),
+  description: (schema) =>
+    schema.description.min(1, 'Description can’t be empty.'),
+  setupSteps: (schema) =>
+    schema.setupSteps.min(1, 'Setup steps can’t be empty.'),
 })
   .omit({
     createdAt: true,

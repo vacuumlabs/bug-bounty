@@ -18,7 +18,7 @@ import {useSetUserAlias} from '@/lib/queries/user/setUserAlias'
 import {FormError} from '@/lib/types/error'
 
 const formSchema = z.object({
-  alias: z.string(),
+  alias: z.string().min(3),
 })
 
 type FormValues = z.infer<typeof formSchema>

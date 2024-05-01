@@ -45,6 +45,9 @@ export const knownIssueRelations = relations(knownIssues, ({one}) => ({
 
 export const insertKnownIssueSchema = createInsertSchema(knownIssues, {
   fileUrl: (schema) => schema.fileUrl.url('Invalid file URL.'),
+  title: (schema) => schema.title.min(1, 'Title can’t be empty.'),
+  description: (schema) =>
+    schema.description.min(1, 'Description can’t be empty.'),
 })
   .omit({
     createdAt: true,

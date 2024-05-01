@@ -12,7 +12,7 @@ const addKnownIssueSchema = insertKnownIssueSchema
   .strict()
 
 const addKnownIssuesSchema = z.object({
-  contestId: z.string(),
+  contestId: z.string().uuid(),
   knownIssues: z.array(addKnownIssueSchema),
 })
 

@@ -60,6 +60,8 @@ export const insertRewardSchema = createInsertSchema(rewards, {
       (value) => !/^\d+$/.test(value),
       'Amount is not a number.',
     ),
+  transferTxHash: (schema) =>
+    schema.transferTxHash.min(1, 'Transfer TX hash can’t be empty.'),
 })
   .omit({
     createdAt: true,
