@@ -21,7 +21,7 @@ const setUserAliasAction = async (alias: string | null) => {
   )
 
   if (doesAliasExists) {
-    throw new FormError('Alias already exists')
+    throw new FormError('Alias already exists.')
   }
 
   return db.update(users).set({alias}).where(eq(users.id, id)).returning()
