@@ -24,10 +24,15 @@ import {FindingStatus} from '@/server/db/models'
 import {useGetPublicContests} from '@/lib/queries/contest/getContests'
 import {AsyncCombobox} from '@/components/ui/Combobox'
 import {toast} from '@/components/ui/Toast'
+import Dropzone from '@/components/ui/Dropzone'
 
-const formSchema = addFindingSchema.omit({
-  status: true,
-})
+const formSchema = addFindingSchema
+  .omit({
+    status: true,
+  })
+  .extend({
+    attachments: z.instanceof(File).array().optional(),
+  })
 
 type FormValues = z.infer<typeof formSchema>
 
@@ -54,14 +59,16 @@ const NewFindingForm = () => {
 
   const {handleSubmit} = form
 
-  const getOnSubmit = (status: AddFindingStatus) => (values: FormValues) => {
-    mutate(
-      {finding: {...values, status}, attachments: []},
-      {
-        onSuccess: () => toast({title: 'Finding added.'}),
-      },
-    )
-  }
+  const getOnSubmit =
+    (status: AddFindingStatus) =>
+    ({attachments, ...values}: FormValues) => {
+      mutate(
+        {finding: {...values, status}, attachments},
+        {
+          onSuccess: () => toast({title: 'Finding added.'}),
+        },
+      )
+    }
 
   return (
     <Form {...form}>
@@ -136,6 +143,22 @@ const NewFindingForm = () => {
                 onValueChange={field.onChange}
                 defaultValue={field.value}
                 options={selectOptions.findingSeverity}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="attachments"
+        render={({field}) => (
+          <FormItem>
+            <FormLabel>Attachments</FormLabel>
+            <FormControl>
+              <Dropzone
+                {...field}
+                message="Drag and drop or select multiple files"
               />
             </FormControl>
             <FormMessage />
