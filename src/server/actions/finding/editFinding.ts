@@ -5,7 +5,7 @@ import {z} from 'zod'
 
 import {db, schema} from '@/server/db'
 import {requireEditableFinding} from '@/server/utils/validations/finding'
-import {getApiZodError} from '@/lib/utils/common/error'
+import {serializeServerErrors} from '@/lib/utils/common/error'
 import {addFindingSchema} from '@/server/utils/validations/schemas'
 
 const editFindingSchema = addFindingSchema
@@ -21,14 +21,8 @@ export type EditFindingRequest = {
 }
 
 // TODO: Edit finding attachments
-export const editFinding = async (request: EditFindingRequest) => {
-  const result = editFindingSchema.safeParse(request.finding)
-
-  if (!result.success) {
-    return getApiZodError(result.error)
-  }
-
-  const updatedFinding = result.data
+const editFindingAction = async (request: EditFindingRequest) => {
+  const updatedFinding = editFindingSchema.parse(request.finding)
 
   await requireEditableFinding(updatedFinding.id)
 
@@ -38,3 +32,5 @@ export const editFinding = async (request: EditFindingRequest) => {
     .where(eq(schema.findings.id, updatedFinding.id))
     .returning()
 }
+
+export const editFinding = serializeServerErrors(editFindingAction)

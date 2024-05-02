@@ -2,20 +2,21 @@
 
 import {eq} from 'drizzle-orm'
 
-import {calculateRewards} from './calculateRewards'
+import {calculateRewardsAction} from './calculateRewards'
 
 import {db, schema} from '@/server/db'
 import {ContestStatus} from '@/server/db/models'
 import {requireJudgeAuth} from '@/server/utils/auth'
+import {serializeServerErrors} from '@/lib/utils/common/error'
 
 export type FinalizeRewardsResponse = Awaited<
   ReturnType<typeof finalizeRewards>
 >
 
-export const finalizeRewards = async (contestId: string) => {
+const finalizeRewardsAction = async (contestId: string) => {
   await requireJudgeAuth()
 
-  const {rewards, totalRewards} = await calculateRewards(contestId)
+  const {totalRewards, rewards} = await calculateRewardsAction(contestId)
 
   return db.transaction(async (tx) => {
     await tx
@@ -29,3 +30,5 @@ export const finalizeRewards = async (contestId: string) => {
     return tx.insert(schema.rewards).values(rewards).returning()
   })
 }
+
+export const finalizeRewards = serializeServerErrors(finalizeRewardsAction)

@@ -3,7 +3,10 @@
 import {db} from '../../db'
 import {requireServerSession} from '../../utils/auth'
 
-export const getUser = async () => {
+import {ServerError} from '@/lib/types/error'
+import {serializeServerErrors} from '@/lib/utils/common/error'
+
+const getUserAction = async () => {
   const session = await requireServerSession()
 
   const user = await db.query.users.findFirst({
@@ -11,8 +14,10 @@ export const getUser = async () => {
   })
 
   if (!user) {
-    throw new Error('User not found')
+    throw new ServerError('User not found')
   }
 
   return user
 }
+
+export const getUser = serializeServerErrors(getUserAction)

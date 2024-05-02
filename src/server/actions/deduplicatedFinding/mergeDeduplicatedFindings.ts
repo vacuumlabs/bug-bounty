@@ -5,8 +5,9 @@ import {isFuture} from 'date-fns'
 import {eq, inArray} from 'drizzle-orm'
 
 import {requireJudgeAuth} from '@/server/utils/auth'
-import {getApiZodError} from '@/lib/utils/common/error'
+import {serializeServerErrors} from '@/lib/utils/common/error'
 import {db, schema} from '@/server/db'
+import {ServerError} from '@/lib/types/error'
 
 const mergeDeduplicatedFindingsSchema = z.object({
   bestDeduplicatedFindingId: z.string().uuid(),
@@ -21,18 +22,13 @@ export type MergeDeduplicatedFindingsResponse = Awaited<
   ReturnType<typeof mergeDeduplicatedFindings>
 >
 
-export const mergeDeduplicatedFindings = async (
+const mergeDeduplicatedFindingsAction = async (
   request: MergeDeduplicatedFindingsRequest,
 ) => {
   await requireJudgeAuth()
 
-  const result = mergeDeduplicatedFindingsSchema.safeParse(request)
-
-  if (!result.success) {
-    return getApiZodError(result.error)
-  }
-
-  const {bestDeduplicatedFindingId, deduplicatedFindingIds} = result.data
+  const {bestDeduplicatedFindingId, deduplicatedFindingIds} =
+    mergeDeduplicatedFindingsSchema.parse(request)
 
   return db.transaction(async (tx) => {
     const bestDeduplicatedFinding =
@@ -47,11 +43,11 @@ export const mergeDeduplicatedFindings = async (
       })
 
     if (!bestDeduplicatedFinding) {
-      throw new Error('Main deduplicated finding not found.')
+      throw new ServerError('Main deduplicated finding not found.')
     }
 
     if (isFuture(bestDeduplicatedFinding.contest.endDate)) {
-      throw new Error(
+      throw new ServerError(
         'Deduplicated findings cannot be merged before the contest ends.',
       )
     }
@@ -75,7 +71,9 @@ export const mergeDeduplicatedFindings = async (
     )
 
     if (!isSameContest) {
-      throw new Error('Deduplicated findings must be in the same contest.')
+      throw new ServerError(
+        'Deduplicated findings must be in the same contest.',
+      )
     }
 
     const updateFindings = deduplicatedFindings.flatMap((deduplicatedFinding) =>
@@ -103,9 +101,13 @@ export const mergeDeduplicatedFindings = async (
       })
 
     if (!updatedDeduplicatedFindings) {
-      throw new Error('Updated deduplicated finding not found.')
+      throw new ServerError('Updated deduplicated finding not found.')
     }
 
     return updatedDeduplicatedFindings
   })
 }
+
+export const mergeDeduplicatedFindings = serializeServerErrors(
+  mergeDeduplicatedFindingsAction,
+)

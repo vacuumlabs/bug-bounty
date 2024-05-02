@@ -6,11 +6,12 @@ import {isAfter, isPast} from 'date-fns'
 
 import {db, schema} from '@/server/db'
 import {requireEditableContest} from '@/server/utils/validations/contest'
-import {getApiZodError} from '@/lib/utils/common/error'
+import {serializeServerErrors} from '@/lib/utils/common/error'
 import {
   addContestSchema,
   addContestSeverityWeightsSchema,
 } from '@/server/utils/validations/schemas'
+import {ServerError} from '@/lib/types/error'
 
 const editContestSchema = addContestSchema.partial().required({id: true})
 const editContestSeverityWeightsSchema =
@@ -20,16 +21,11 @@ const editContestRequestSchema = z.object({
   contest: editContestSchema,
   customWeights: editContestSeverityWeightsSchema,
 })
+
 export type EditContestRequest = z.infer<typeof editContestRequestSchema>
 
-export const editContest = async (request: EditContestRequest) => {
-  const result = editContestRequestSchema.safeParse(request)
-
-  if (!result.success) {
-    return getApiZodError(result.error)
-  }
-
-  const {contest, customWeights} = result.data
+const editContestAction = async (request: EditContestRequest) => {
+  const {contest, customWeights} = editContestRequestSchema.parse(request)
 
   const existingContest = await requireEditableContest(contest.id)
 
@@ -37,11 +33,11 @@ export const editContest = async (request: EditContestRequest) => {
   const updatedEndDate = contest.endDate ?? existingContest.endDate
 
   if (isPast(updatedStartDate)) {
-    throw new Error('Contest start date must be in the future.')
+    throw new ServerError('Contest start date must be in the future.')
   }
 
   if (isAfter(updatedStartDate, updatedEndDate)) {
-    throw new Error('Contest start date must be before end date.')
+    throw new ServerError('Contest start date must be before end date.')
   }
 
   return db.transaction(async (tx) => {
@@ -52,7 +48,7 @@ export const editContest = async (request: EditContestRequest) => {
       .returning()
 
     if (!updatedContest[0]) {
-      throw new Error('Failed to update contest')
+      throw new ServerError('Failed to update contest.')
     }
 
     await tx
@@ -63,3 +59,5 @@ export const editContest = async (request: EditContestRequest) => {
     return updatedContest
   })
 }
+
+export const editContest = serializeServerErrors(editContestAction)

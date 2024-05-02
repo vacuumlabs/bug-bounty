@@ -5,7 +5,8 @@ import {z} from 'zod'
 import {db, schema} from '@/server/db'
 import {insertKnownIssueSchema} from '@/server/db/schema/knownIssue'
 import {requireServerSession} from '@/server/utils/auth'
-import {getApiZodError} from '@/lib/utils/common/error'
+import {serializeServerErrors} from '@/lib/utils/common/error'
+import {ServerError} from '@/lib/types/error'
 
 const addKnownIssueSchema = insertKnownIssueSchema
   .omit({contestId: true})
@@ -19,16 +20,10 @@ const addKnownIssuesSchema = z.object({
 export type AddKnownIssue = z.infer<typeof addKnownIssueSchema>
 export type AddKnownIssuesRequest = z.infer<typeof addKnownIssuesSchema>
 
-export const addKnownIssues = async (request: AddKnownIssuesRequest) => {
+const addKnownIssuesAction = async (request: AddKnownIssuesRequest) => {
   const session = await requireServerSession()
 
-  const result = addKnownIssuesSchema.safeParse(request)
-
-  if (!result.success) {
-    return getApiZodError(result.error)
-  }
-
-  const {contestId, knownIssues} = result.data
+  const {contestId, knownIssues} = addKnownIssuesSchema.parse(request)
 
   const contest = await db.query.contests.findFirst({
     columns: {authorId: true},
@@ -36,11 +31,11 @@ export const addKnownIssues = async (request: AddKnownIssuesRequest) => {
   })
 
   if (!contest) {
-    throw new Error('Contest not found.')
+    throw new ServerError('Contest not found.')
   }
 
   if (contest.authorId !== session.user.id) {
-    throw new Error('Only contest authors can add known issues.')
+    throw new ServerError('Only contest authors can add known issues.')
   }
 
   const knownIssuesToInsert = knownIssues.map((knownIssue) => ({
@@ -50,3 +45,5 @@ export const addKnownIssues = async (request: AddKnownIssuesRequest) => {
 
   return db.insert(schema.knownIssues).values(knownIssuesToInsert).returning()
 }
+
+export const addKnownIssues = serializeServerErrors(addKnownIssuesAction)

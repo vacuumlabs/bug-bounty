@@ -4,6 +4,8 @@ import {Session, getServerSession} from 'next-auth'
 import {authOptions} from '../authOptions'
 import {UserRole} from '../db/models'
 
+import {ServerError} from '@/lib/types/error'
+
 export const getServerAuthSession = () => getServerSession(authOptions)
 
 export const getUserId = async () => {
@@ -15,7 +17,7 @@ export const requireServerSession = async () => {
   const session = await getServerAuthSession()
 
   if (!session) {
-    throw new Error('Not authenticated')
+    throw new ServerError('Not authenticated.')
   }
 
   return session
@@ -35,7 +37,7 @@ export const requireJudgeAuth = async () => {
   const session = await getServerAuthSession()
 
   if (!session || session.user.role !== UserRole.JUDGE) {
-    throw new Error('Not authorized - JUDGE role is required.')
+    throw new ServerError('Not authorized - JUDGE role is required.')
   }
 
   return session

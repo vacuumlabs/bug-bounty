@@ -6,7 +6,8 @@ import {z} from 'zod'
 import {db, schema} from '@/server/db'
 import {ContestStatus} from '@/server/db/models'
 import {requireJudgeAuth} from '@/server/utils/auth'
-import {getApiZodError} from '@/lib/utils/common/error'
+import {serializeServerErrors} from '@/lib/utils/common/error'
+import {ServerError} from '@/lib/types/error'
 
 const approveOrRejectContestSchema = z
   .object({
@@ -19,18 +20,12 @@ export type ApproveOrRejectContestRequest = z.infer<
   typeof approveOrRejectContestSchema
 >
 
-export const approveOrRejectContest = async (
+const approveOrRejectContestAction = async (
   request: ApproveOrRejectContestRequest,
 ) => {
   await requireJudgeAuth()
 
-  const result = approveOrRejectContestSchema.safeParse(request)
-
-  if (!result.success) {
-    return getApiZodError(result.error)
-  }
-
-  const {contestId, newStatus} = result.data
+  const {contestId, newStatus} = approveOrRejectContestSchema.parse(request)
 
   const contest = await db.query.contests.findFirst({
     columns: {status: true},
@@ -38,11 +33,11 @@ export const approveOrRejectContest = async (
   })
 
   if (!contest) {
-    throw new Error('Contest not found.')
+    throw new ServerError('Contest not found.')
   }
 
   if (contest.status !== ContestStatus.PENDING) {
-    throw new Error('Only pending contests can be approved/rejected.')
+    throw new ServerError('Only pending contests can be approved/rejected.')
   }
 
   return db
@@ -51,3 +46,7 @@ export const approveOrRejectContest = async (
     .where(eq(schema.contests.id, contestId))
     .returning()
 }
+
+export const approveOrRejectContest = serializeServerErrors(
+  approveOrRejectContestAction,
+)

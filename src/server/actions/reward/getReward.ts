@@ -2,13 +2,15 @@
 
 import {db} from '../../db'
 
+import {getApiError} from '@/lib/utils/common/error'
+
 export const getReward = async (id: string) => {
   const reward = await db.query.rewards.findFirst({
     where: (reward, {eq}) => eq(reward.id, id),
   })
 
   if (!reward) {
-    throw new Error('Reward not found')
+    return getApiError('Reward not found')
   }
 
   return reward
@@ -31,7 +33,7 @@ export const getRewardPaymentDetails = async (id: string) => {
   })
 
   if (!reward) {
-    throw new Error('Reward not found')
+    return getApiError('Reward not found')
   }
 
   return {

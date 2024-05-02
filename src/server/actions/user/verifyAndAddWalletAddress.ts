@@ -15,8 +15,9 @@ import {users} from '../../db/schema/user'
 import {requireServerSession} from '../../utils/auth'
 
 import {formatWalletSignMessage} from '@/lib/utils/common/wallet'
-import {getApiZodError} from '@/lib/utils/common/error'
+import {serializeServerErrors} from '@/lib/utils/common/error'
 import {ZodOutput} from '@/lib/types/zod'
+import {ServerError} from '@/lib/types/error'
 
 const dataSignatureSchema = z.object({
   signature: z.string().min(1),
@@ -32,17 +33,12 @@ type VerifyAndAddWalletAddressRequest = z.infer<
   typeof verifyAndAddWalletAddressSchema
 >
 
-export const verifyAndAddWalletAddress = async (
+const verifyAndAddWalletAddressAction = async (
   request: VerifyAndAddWalletAddressRequest,
 ) => {
   const session = await requireServerSession()
-  const result = verifyAndAddWalletAddressSchema.safeParse(request)
-
-  if (!result.success) {
-    return getApiZodError(result.error)
-  }
-
-  const {signature, walletAddress} = result.data
+  const {signature, walletAddress} =
+    verifyAndAddWalletAddressSchema.parse(request)
 
   const nonce = await getCsrfToken({
     req: {
@@ -53,7 +49,7 @@ export const verifyAndAddWalletAddress = async (
   })
 
   if (!nonce) {
-    throw new Error('Missing CSRF token.')
+    throw new ServerError('Missing CSRF token.')
   }
 
   const isVerified = checkSignature(
@@ -63,7 +59,7 @@ export const verifyAndAddWalletAddress = async (
   )
 
   if (!isVerified) {
-    throw new Error('Invalid signature.')
+    throw new ServerError('Invalid signature.')
   }
 
   return db
@@ -72,3 +68,7 @@ export const verifyAndAddWalletAddress = async (
     .where(eq(users.id, session.user.id))
     .returning()
 }
+
+export const verifyAndAddWalletAddress = serializeServerErrors(
+  verifyAndAddWalletAddressAction,
+)

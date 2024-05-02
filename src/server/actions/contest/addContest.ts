@@ -5,11 +5,12 @@ import {z} from 'zod'
 
 import {isJudge, requireServerSession} from '@/server/utils/auth'
 import {db, schema} from '@/server/db'
-import {getApiZodError} from '@/lib/utils/common/error'
+import {serializeServerErrors} from '@/lib/utils/common/error'
 import {
   addContestSchema,
   addContestSeverityWeightsSchema,
 } from '@/server/utils/validations/schemas'
+import {ServerError} from '@/lib/types/error'
 
 const addContestRequestSchema = z.object({
   contest: addContestSchema,
@@ -18,27 +19,21 @@ const addContestRequestSchema = z.object({
 
 export type AddContestRequest = z.infer<typeof addContestRequestSchema>
 
-export const addContest = async (request: AddContestRequest) => {
+const addContestAction = async (request: AddContestRequest) => {
   const session = await requireServerSession()
 
   if (isJudge(session)) {
-    throw new Error("Judges can't create contests.")
+    throw new ServerError("Judges can't create contests.")
   }
 
-  const result = addContestRequestSchema.safeParse(request)
-
-  if (!result.success) {
-    return getApiZodError(result.error)
-  }
-
-  const {contest, customWeights} = result.data
+  const {contest, customWeights} = addContestRequestSchema.parse(request)
 
   if (isPast(contest.startDate)) {
-    throw new Error('Contest start date must be in the future.')
+    throw new ServerError('Contest start date must be in the future.')
   }
 
   if (isAfter(contest.startDate, contest.endDate)) {
-    throw new Error('Contest start date must be before end date.')
+    throw new ServerError('Contest start date must be before end date.')
   }
 
   return db.transaction(async (tx) => {
@@ -51,7 +46,7 @@ export const addContest = async (request: AddContestRequest) => {
       .returning()
 
     if (!insertedContest[0]) {
-      throw new Error('Failed to create contest')
+      throw new ServerError('Failed to create contest.')
     }
 
     await tx.insert(schema.contestSeverityWeights).values({
@@ -62,3 +57,5 @@ export const addContest = async (request: AddContestRequest) => {
     return insertedContest
   })
 }
+
+export const addContest = serializeServerErrors(addContestAction)
