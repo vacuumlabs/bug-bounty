@@ -16,6 +16,7 @@ import {
 import {Button} from '@/components/ui/Button'
 import {useSetUserAlias} from '@/lib/queries/user/setUserAlias'
 import {FormError} from '@/lib/types/error'
+import {toast} from '@/components/ui/Toast'
 
 const formSchema = z.object({
   alias: z.string().min(3),
@@ -41,6 +42,7 @@ const SetUserAliasForm = ({initialAlias}: SetUserAliasFormProps) => {
     getValues,
     control,
     formState: {isDirty},
+    reset,
   } = form
 
   const onSubmit = () => {
@@ -50,6 +52,10 @@ const SetUserAliasForm = ({initialAlias}: SetUserAliasFormProps) => {
         if (error instanceof FormError) {
           form.setError('alias', {type: 'custom', message: error.message})
         }
+      },
+      onSuccess: () => {
+        reset(getValues(), {keepValues: true})
+        toast({title: 'Alias set.'})
       },
     })
   }

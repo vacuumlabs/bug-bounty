@@ -9,7 +9,9 @@ import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 const getQueryOptions = (userId: string | undefined) => ({
   queryKey: queryKeys.users.detail(userId).queryKey,
-  queryFn: withApiErrorHandler(getUser),
+  // getUser has to be explicitly called without arguments, otherwise React Query
+  // would inject context, which is not serializable for server actions
+  queryFn: withApiErrorHandler(() => getUser()),
 })
 
 export const useGetUser = () => {
