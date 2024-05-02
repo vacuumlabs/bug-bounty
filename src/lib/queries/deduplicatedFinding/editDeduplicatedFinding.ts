@@ -23,7 +23,7 @@ export const useMergeDeduplicatedFindings = (
     mutationFn: withApiErrorHandler(mergeDeduplicatedFindings),
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: queryKeys.deduplicatedFindings.all._def,
+        queryKey: queryKeys.deduplicatedFindings._def,
       })
     },
   })

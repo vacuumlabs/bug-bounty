@@ -10,6 +10,7 @@ import {requireConnectedWallet} from '../../utils/client/wallet'
 
 import {verifyAndAddWalletAddress} from '@/server/actions/user/verifyAndAddWalletAddress'
 import {formatWalletSignMessage} from '@/lib/utils/common/wallet'
+import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 const addWalletAddress = async (browserWallet: BrowserWallet) => {
   const wallet = await requireConnectedWallet(browserWallet)
@@ -48,7 +49,7 @@ export const useAddWalletAddress = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: () => addWalletAddress(wallet),
+    mutationFn: withApiErrorHandler(() => addWalletAddress(wallet)),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: queryKeys.users.detail._def,

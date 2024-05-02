@@ -7,10 +7,11 @@ import {
   getDeduplicatedFindings,
 } from '@/server/actions/deduplicatedFinding/getDeduplicatedFinding'
 import getServerQueryClient from '@/server/utils/queryClient'
+import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 const getQueryOptions = (params: GetDeduplicatedFindingsParams) => ({
   queryKey: queryKeys.deduplicatedFindings.all(params).queryKey,
-  queryFn: () => getDeduplicatedFindings(params),
+  queryFn: withApiErrorHandler(() => getDeduplicatedFindings(params)),
 })
 
 export const useGetDeduplicatedFindings = (

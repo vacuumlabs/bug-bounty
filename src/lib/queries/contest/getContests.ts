@@ -7,10 +7,11 @@ import {
   getPublicContests,
   type GetPublicContestsParams,
 } from '@/server/actions/contest/getContests'
+import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 const getQueryOptions = (params: GetPublicContestsParams) => ({
   queryKey: queryKeys.contests.public(params).queryKey,
-  queryFn: () => getPublicContests(params),
+  queryFn: withApiErrorHandler(() => getPublicContests(params)),
 })
 
 export const useGetPublicContests = (params: GetPublicContestsParams) =>

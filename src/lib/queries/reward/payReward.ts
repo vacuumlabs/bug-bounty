@@ -16,7 +16,7 @@ const payReward = async (browserWallet: BrowserWallet, rewardId: string) => {
     amount,
     walletAddress: receiverAddress,
     transferTxHash,
-  } = await getRewardPaymentDetails(rewardId)
+  } = handleApiErrors(await getRewardPaymentDetails(rewardId))
 
   if (!receiverAddress) {
     throw new Error("The auditor hasn't added his wallet address yet.")
