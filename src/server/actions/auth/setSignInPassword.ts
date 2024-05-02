@@ -7,7 +7,9 @@ import {db} from '../../db'
 import {users} from '../../db/schema/user'
 import {requireServerSession} from '../../utils/auth'
 
-export const setSignInPassword = async (password: string) => {
+import {serializeServerErrors} from '@/lib/utils/common/error'
+
+const setSignInPasswordAction = async (password: string) => {
   const session = await requireServerSession()
 
   const id = session.user.id
@@ -19,3 +21,5 @@ export const setSignInPassword = async (password: string) => {
     .where(eq(users.id, id))
     .returning()
 }
+
+export const setSignInPassword = serializeServerErrors(setSignInPasswordAction)

@@ -6,9 +6,10 @@ import {db} from '../../db'
 import {users} from '../../db/schema/user'
 import {requireServerSession} from '../../utils/auth'
 
-import {getApiFormError} from '@/lib/utils/common/error'
+import {FormError} from '@/lib/types/error'
+import {serializeServerErrors} from '@/lib/utils/common/error'
 
-export const setUserAlias = async (alias: string | null) => {
+const setUserAliasAction = async (alias: string | null) => {
   const session = await requireServerSession()
   const id = session.user.id
 
@@ -20,8 +21,10 @@ export const setUserAlias = async (alias: string | null) => {
   )
 
   if (doesAliasExists) {
-    return getApiFormError('Alias already exists')
+    throw new FormError('Alias already exists')
   }
 
   return db.update(users).set({alias}).where(eq(users.id, id)).returning()
 }
+
+export const setUserAlias = serializeServerErrors(setUserAliasAction)

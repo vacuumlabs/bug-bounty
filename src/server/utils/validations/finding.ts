@@ -4,6 +4,7 @@ import {requireServerSession} from '../auth'
 
 import {db} from '@/server/db'
 import {FindingStatus} from '@/server/db/models'
+import {ServerError} from '@/lib/types/error'
 
 export const requireEditableFinding = async (findingId: string) => {
   const session = await requireServerSession()
@@ -20,22 +21,22 @@ export const requireEditableFinding = async (findingId: string) => {
   })
 
   if (!finding) {
-    throw new Error('Finding not found.')
+    throw new ServerError('Finding not found.')
   }
 
   if (finding.authorId !== session.user.id) {
-    throw new Error('Only authors can update their findings.')
+    throw new ServerError('Only authors can update their findings.')
   }
 
   if (isPast(finding.contest.endDate)) {
-    throw new Error('Contest has ended.')
+    throw new ServerError('Contest has ended.')
   }
 
   if (
     finding.status !== FindingStatus.DRAFT &&
     finding.status !== FindingStatus.PENDING
   ) {
-    throw new Error(
+    throw new ServerError(
       'Finding cannot be changed after it’s been confirmed or rejected.',
     )
   }

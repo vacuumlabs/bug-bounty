@@ -6,8 +6,9 @@ import {isFuture} from 'date-fns'
 
 import {FindingStatus} from '@/server/db/models'
 import {requireJudgeAuth} from '@/server/utils/auth'
-import {getApiZodError} from '@/lib/utils/common/error'
+import {serializeServerErrors} from '@/lib/utils/common/error'
 import {db, schema} from '@/server/db'
+import {ServerError} from '@/lib/types/error'
 
 const approveOrRejectFindingSchema = z.object({
   findingId: z.string().uuid(),
@@ -18,18 +19,12 @@ export type ApproveOrRejectFindingRequest = z.infer<
   typeof approveOrRejectFindingSchema
 >
 
-export const approveOrRejectFinding = async (
+const approveOrRejectFindingAction = async (
   request: ApproveOrRejectFindingRequest,
 ) => {
   await requireJudgeAuth()
 
-  const result = approveOrRejectFindingSchema.safeParse(request)
-
-  if (!result.success) {
-    return getApiZodError(result.error)
-  }
-
-  const {findingId, newStatus} = result.data
+  const {findingId, newStatus} = approveOrRejectFindingSchema.parse(request)
 
   const finding = await db.query.findings.findFirst({
     columns: {
@@ -49,15 +44,15 @@ export const approveOrRejectFinding = async (
   })
 
   if (!finding) {
-    throw new Error('Finding not found.')
+    throw new ServerError('Finding not found.')
   }
 
   if (finding.status !== FindingStatus.PENDING) {
-    throw new Error('Only pending findings can be confirmed/rejected.')
+    throw new ServerError('Only pending findings can be confirmed/rejected.')
   }
 
   if (isFuture(finding.contest.endDate)) {
-    throw new Error(
+    throw new ServerError(
       'Finding cannot be confirmed/rejected before the contest ends.',
     )
   }
@@ -76,7 +71,7 @@ export const approveOrRejectFinding = async (
         .returning()
 
       if (!deduplicatedFinding[0]) {
-        throw new Error('Failed to create deduplicated finding.')
+        throw new ServerError('Failed to create deduplicated finding.')
       }
 
       return db
@@ -96,3 +91,7 @@ export const approveOrRejectFinding = async (
     .where(eq(schema.findings.id, findingId))
     .returning()
 }
+
+export const approveOrRejectFinding = serializeServerErrors(
+  approveOrRejectFindingAction,
+)

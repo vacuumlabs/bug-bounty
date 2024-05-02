@@ -9,6 +9,8 @@ import {requireJudgeAuth} from '../../utils/auth'
 import {ContestStatus, FindingSeverity, FindingStatus} from '../../db/models'
 
 import {ContestSeverityWeights} from '@/server/db/schema/contestSeverityWeights'
+import {ServerError} from '@/lib/types/error'
+import {serializeServerErrors} from '@/lib/utils/common/error'
 
 type CustomSeverityWeights = Pick<
   ContestSeverityWeights,
@@ -63,7 +65,7 @@ const getRewardForFinding = (
   }
 }
 
-export const calculateRewards = async (contestId: string) => {
+export const calculateRewardsAction = async (contestId: string) => {
   await requireJudgeAuth()
 
   const findings = await db.query.findings.findMany({
@@ -86,13 +88,13 @@ export const calculateRewards = async (contestId: string) => {
   )
 
   if (hasPendingFindings) {
-    throw new Error('There are still pending findings in this contest.')
+    throw new ServerError('There are still pending findings in this contest.')
   }
   if (hasNoApprovedFindings) {
-    throw new Error('No approved findings found for this contest.')
+    throw new ServerError('No approved findings found for this contest.')
   }
   if (hasUnassignedFindings) {
-    throw new Error(
+    throw new ServerError(
       'Some approved findings are not assigned to a deduplicated finding.',
     )
   }
@@ -122,13 +124,13 @@ export const calculateRewards = async (contestId: string) => {
   })
 
   if (!contest) {
-    throw new Error(`Contest with id: ${contestId} not found.`)
+    throw new ServerError(`Contest with id: ${contestId} not found.`)
   }
   if (isFuture(contest.endDate)) {
-    throw new Error(`Contest has not yet ended.`)
+    throw new ServerError(`Contest has not yet ended.`)
   }
   if (contest.status === ContestStatus.FINISHED) {
-    throw new Error(`Rewards for this contest were already calculated.`)
+    throw new ServerError(`Rewards for this contest were already calculated.`)
   }
 
   const severityWeights = getSeverityWeights(contest.contestSeverityWeights)
@@ -177,8 +179,10 @@ export const calculateRewards = async (contestId: string) => {
   )
 
   if (totalRewards > Number(contest.rewardsAmount)) {
-    throw new Error('Total rewards exceed contest rewards amount.')
+    throw new ServerError('Total rewards exceed contest rewards amount.')
   }
 
   return {rewards, totalRewards}
 }
+
+export const calculateRewards = serializeServerErrors(calculateRewardsAction)

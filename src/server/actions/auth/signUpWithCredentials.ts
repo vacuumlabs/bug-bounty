@@ -6,19 +6,14 @@ import {z} from 'zod'
 import {db} from '../../db'
 import {users} from '../../db/schema/user'
 
-import {getApiFormError, getApiZodError} from '@/lib/utils/common/error'
+import {serializeServerErrors} from '@/lib/utils/common/error'
 import {signUpSchema} from '@/server/utils/validations/schemas'
+import {FormError} from '@/lib/types/error'
 
 export type SignUpRequest = z.infer<typeof signUpSchema>
 
-export const signUpWithCredentials = async (request: SignUpRequest) => {
-  const result = signUpSchema.safeParse(request)
-
-  if (!result.success) {
-    return getApiZodError(result.error)
-  }
-
-  const {email, password, name} = result.data
+const signUpWithCredentialsAction = async (request: SignUpRequest) => {
+  const {email, password, name} = signUpSchema.parse(request)
 
   const hashedPassword = await bcrypt.hash(password, 10)
 
@@ -27,8 +22,7 @@ export const signUpWithCredentials = async (request: SignUpRequest) => {
   })
 
   if (user) {
-    // Server actions don't support throwing custom error types, so we have to use error object and handle it on client
-    return getApiFormError('User already exists')
+    throw new FormError('User already exists')
   }
 
   const data = await db
@@ -43,3 +37,7 @@ export const signUpWithCredentials = async (request: SignUpRequest) => {
 
   return data
 }
+
+export const signUpWithCredentials = serializeServerErrors(
+  signUpWithCredentialsAction,
+)
