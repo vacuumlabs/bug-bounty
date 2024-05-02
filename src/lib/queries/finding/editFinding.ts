@@ -33,7 +33,7 @@ export const useApproveOrRejectFinding = (
     mutationFn: withApiErrorHandler(approveOrRejectFinding),
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: queryKeys.deduplicatedFindings.all._def,
+        queryKey: queryKeys.deduplicatedFindings._def,
       })
     },
   })

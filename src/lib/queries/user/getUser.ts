@@ -5,10 +5,11 @@ import {useUserId} from '../../hooks/useUserId'
 
 import {getUser} from '@/server/actions/user/getUser'
 import getServerQueryClient from '@/server/utils/queryClient'
+import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 const getQueryOptions = (userId: string | undefined) => ({
   queryKey: queryKeys.users.detail(userId).queryKey,
-  queryFn: () => getUser(),
+  queryFn: withApiErrorHandler(getUser),
 })
 
 export const useGetUser = () => {

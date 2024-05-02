@@ -6,6 +6,7 @@ import {
   CalculateRewardsResponse,
   calculateRewards,
 } from '@/server/actions/reward/calculateRewards'
+import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 export const useCalculatedRewards = (
   contestId: string,
@@ -13,7 +14,7 @@ export const useCalculatedRewards = (
 ) => {
   return useQuery({
     ...options,
-    queryFn: () => calculateRewards(contestId),
+    queryFn: withApiErrorHandler(() => calculateRewards(contestId)),
     queryKey: queryKeys.rewards.calculated(contestId).queryKey,
   })
 }

@@ -7,10 +7,11 @@ import {
   getRewards,
   type GetRewardsParams,
 } from '@/server/actions/reward/getReward'
+import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 const getQueryOptions = (params: GetRewardsParams) => ({
   queryKey: queryKeys.rewards.all(params).queryKey,
-  queryFn: () => getRewards(params),
+  queryFn: withApiErrorHandler(() => getRewards(params)),
 })
 
 export const useGetRewards = (params: GetRewardsParams) =>
