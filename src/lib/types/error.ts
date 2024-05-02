@@ -17,3 +17,10 @@ export class ZodFormError extends ZodError {
     this.name = 'ZodFormError'
   }
 }
+
+export class ServerError extends Error {
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options)
+    this.name = 'ServerError'
+  }
+}
