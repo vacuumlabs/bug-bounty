@@ -6,6 +6,7 @@ import SignOutButton from '@/components/ui/SignOutButon'
 import JudgeRewardsList from '@/components/sections/judge/JudgeRewardsList'
 import {prefetchGetRewards} from '@/lib/queries/reward/getRewards'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
+import GithubFileSelect from '@/components/sections/contest/GithubFileSelect'
 
 const Home = async () => {
   const session = await getServerAuthSession()
@@ -23,13 +24,17 @@ const Home = async () => {
           )}
         </p>
         {session ? (
-          <div className="flex gap-2">
-            <Button asChild variant="outline">
-              <Link href={'/profile'}>My profile</Link>
-            </Button>
-            <SignOutButton variant="outline" callbackUrl="/">
-              Sign out
-            </SignOutButton>
+          <div>
+            <div className="flex gap-2 pb-4">
+              <Button asChild variant="outline">
+                <Link href={'/profile'}>My profile</Link>
+              </Button>
+              <SignOutButton variant="outline" callbackUrl="/">
+                Sign out
+              </SignOutButton>
+            </div>
+
+            <GithubFileSelect />
           </div>
         ) : (
           <div className="flex gap-2">

@@ -20,6 +20,7 @@ declare module 'next-auth' {
     user: {
       id: string
       role: UserRole
+      provider: string | undefined
     } & DefaultSession['user']
   }
 }
@@ -27,6 +28,7 @@ declare module 'next-auth' {
 declare module 'next-auth/jwt' {
   interface JWT extends DefaultJWT {
     role: UserRole
+    provider: string | undefined
   }
 }
 
@@ -35,7 +37,7 @@ export const authOptions: NextAuthOptions = {
     newUser: '/profile/connect-wallet',
   },
   callbacks: {
-    jwt: async ({token, user, trigger}) => {
+    jwt: async ({token, user, trigger, account}) => {
       if (trigger !== 'signIn' && trigger !== 'signUp') {
         return token
       }
@@ -52,6 +54,7 @@ export const authOptions: NextAuthOptions = {
       }
 
       token.role = userData.role
+      token.provider = account?.provider
       return token
     },
     session: ({session, token}) => ({
@@ -60,6 +63,7 @@ export const authOptions: NextAuthOptions = {
         ...session.user,
         role: token.role,
         id: token.sub,
+        provider: token.provider,
       },
     }),
     signIn: ({user, account}) => {

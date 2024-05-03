@@ -45,3 +45,15 @@ export const requireJudgeAuth = async () => {
 
 export const isJudge = (session: Session | null) =>
   session?.user.role === UserRole.JUDGE
+
+export const requireGitHubAuth = async () => {
+  const session = await getServerAuthSession()
+
+  if (!session || session.user.provider !== 'github') {
+    throw new Error(
+      'Not authorized - GitHub authenticated account is required.',
+    )
+  }
+
+  return session
+}
