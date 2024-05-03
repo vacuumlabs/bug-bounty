@@ -8,10 +8,11 @@ import {
   getRepoFiles,
 } from '@/server/actions/github/getGithub'
 import {useUserId} from '@/lib/hooks/useUserId'
+import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 const getPublicReposQueryOptions = (userId: string | undefined) => ({
   queryKey: queryKeys.gitHub.publicRepos(userId).queryKey,
-  queryFn: () => getPublicRepos(),
+  queryFn: withApiErrorHandler(() => getPublicRepos()),
 })
 
 export const useGetPublicRepos = () => {
@@ -20,10 +21,12 @@ export const useGetPublicRepos = () => {
   return useQuery({...getPublicReposQueryOptions(userId), enabled: !!userId})
 }
 
-const getRepoFilesQueryOptions = (params: GetRepoFilesParams | undefined) => ({
+const getRepoFilesQueryOptions = (params: GetRepoFilesParams) => ({
   queryKey: queryKeys.gitHub.repoFiles(params).queryKey,
-  queryFn: () => (params ? getRepoFiles(params) : null),
+  queryFn: withApiErrorHandler(() => getRepoFiles(params)),
 })
 
-export const useGetRepoFiles = (params: GetRepoFilesParams | undefined) =>
-  useQuery({...getRepoFilesQueryOptions(params), enabled: !!params})
+export const useGetRepoFiles = (
+  params: GetRepoFilesParams,
+  options?: {enabled?: boolean},
+) => useQuery({...options, ...getRepoFilesQueryOptions(params)})

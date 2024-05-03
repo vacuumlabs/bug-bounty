@@ -5,10 +5,14 @@ import {z} from 'zod'
 
 import {requireGitHubAuth} from '@/server/utils/auth'
 import {db} from '@/server/db'
+import {ServerError} from '@/lib/types/error'
+import {serializeServerErrors} from '@/lib/utils/common/error'
 
-export type GetPublicReposResponse = Awaited<ReturnType<typeof getPublicRepos>>
+export type GetPublicReposResponse = Awaited<
+  ReturnType<typeof getPublicReposAction>
+>
 
-export const getPublicRepos = async () => {
+const getPublicReposAction = async () => {
   const session = await requireGitHubAuth()
 
   const account = await db.query.accounts.findFirst({
@@ -18,7 +22,7 @@ export const getPublicRepos = async () => {
   })
 
   if (!account) {
-    throw new Error('GitHub account not found')
+    throw new ServerError('GitHub account not found')
   }
 
   const octokit = new Octokit({
@@ -39,7 +43,11 @@ export const getPublicRepos = async () => {
     }))
 }
 
-export type GetRepoFilesResponse = Awaited<ReturnType<typeof getRepoFiles>>
+export const getPublicRepos = serializeServerErrors(getPublicReposAction)
+
+export type GetRepoFilesResponse = Awaited<
+  ReturnType<typeof getRepoFilesAction>
+>
 
 const getRepoFilesParamsSchema = z.object({
   repo: z.string(),
@@ -49,16 +57,10 @@ const getRepoFilesParamsSchema = z.object({
 
 export type GetRepoFilesParams = z.infer<typeof getRepoFilesParamsSchema>
 
-export const getRepoFiles = async (request: GetRepoFilesParams) => {
+const getRepoFilesAction = async (request: GetRepoFilesParams) => {
   const session = await requireGitHubAuth()
 
-  const result = getRepoFilesParamsSchema.safeParse(request)
-
-  if (!result.success) {
-    throw new Error('Invalid request')
-  }
-
-  const {repo, owner, defaultBranch} = result.data
+  const {repo, owner, defaultBranch} = getRepoFilesParamsSchema.parse(request)
 
   const account = await db.query.accounts.findFirst({
     columns: {access_token: true},
@@ -67,7 +69,7 @@ export const getRepoFiles = async (request: GetRepoFilesParams) => {
   })
 
   if (!account) {
-    throw new Error('GitHub account not found')
+    throw new ServerError('GitHub account not found')
   }
 
   const octokit = new Octokit({
@@ -95,3 +97,5 @@ export const getRepoFiles = async (request: GetRepoFilesParams) => {
 
   return data.tree
 }
+
+export const getRepoFiles = serializeServerErrors(getRepoFilesAction)
