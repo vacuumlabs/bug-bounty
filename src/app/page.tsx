@@ -24,17 +24,13 @@ const Home = async () => {
           )}
         </p>
         {session ? (
-          <div>
-            <div className="flex gap-2 pb-4">
-              <Button asChild variant="outline">
-                <Link href={'/profile'}>My profile</Link>
-              </Button>
-              <SignOutButton variant="outline" callbackUrl="/">
-                Sign out
-              </SignOutButton>
-            </div>
-
-            <GithubFileSelect />
+          <div className="flex gap-2 ">
+            <Button asChild variant="outline">
+              <Link href={'/profile'}>My profile</Link>
+            </Button>
+            <SignOutButton variant="outline" callbackUrl="/">
+              Sign out
+            </SignOutButton>
           </div>
         ) : (
           <div className="flex gap-2">
