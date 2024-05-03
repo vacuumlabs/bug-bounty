@@ -6,7 +6,6 @@ import SignOutButton from '@/components/ui/SignOutButon'
 import JudgeRewardsList from '@/components/sections/judge/JudgeRewardsList'
 import {prefetchGetRewards} from '@/lib/queries/reward/getRewards'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
-import GithubFileSelect from '@/components/sections/contest/GithubFileSelect'
 
 const Home = async () => {
   const session = await getServerAuthSession()
