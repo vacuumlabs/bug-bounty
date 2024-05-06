@@ -5,12 +5,12 @@ import {signIn, useSession} from 'next-auth/react'
 
 import {Button} from '@/components/ui/Button'
 import {useGetPublicRepos} from '@/lib/queries/github/getGitHub'
-import {GetPublicReposResponse} from '@/server/actions/github/getGithub'
+import {GithubRepository} from '@/server/actions/github/getGithub'
 import {ScrollArea} from '@/components/ui/ScrollArea'
 
 type GithubRepoSelect = {
-  selectedRepo: GetPublicReposResponse[number] | null
-  onSelectRepo: (repo: GetPublicReposResponse[number] | null) => void
+  selectedRepo: GithubRepository | null
+  onSelectRepo: (repo: GithubRepository | null) => void
 }
 
 const GithubRepoSelect = ({selectedRepo, onSelectRepo}: GithubRepoSelect) => {
@@ -39,9 +39,7 @@ const GithubRepoSelect = ({selectedRepo, onSelectRepo}: GithubRepoSelect) => {
               <RepoList
                 repos={publicReposData}
                 isLoading={publicReposIsLoading}
-                selectRepo={(params: GetPublicReposResponse[number]) =>
-                  onSelectRepo(params)
-                }
+                selectRepo={(params: GithubRepository) => onSelectRepo(params)}
               />
             </div>
           </ScrollArea>
@@ -59,9 +57,9 @@ const GithubRepoSelect = ({selectedRepo, onSelectRepo}: GithubRepoSelect) => {
 }
 
 type RepoListProps = {
-  repos: GetPublicReposResponse | undefined
+  repos: GithubRepository[] | undefined
   isLoading: boolean
-  selectRepo: (params: GetPublicReposResponse[number]) => void
+  selectRepo: (params: GithubRepository) => void
 }
 
 const RepoList = ({repos, isLoading, selectRepo}: RepoListProps) => {

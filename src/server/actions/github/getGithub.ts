@@ -10,6 +10,8 @@ export type GetPublicReposResponse = Awaited<
   ReturnType<typeof getPublicReposAction>
 >
 
+export type GithubRepository = GetPublicReposResponse[number]
+
 const getPublicReposAction = async () => {
   const {account} = await requireGitHubAuth()
 
