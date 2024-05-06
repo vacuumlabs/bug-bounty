@@ -17,7 +17,7 @@ const GithubRepoSelect = ({selectedRepo, onSelectRepo}: GithubRepoSelect) => {
   const session = useSession()
 
   const {data: publicReposData, isLoading: publicReposIsLoading} =
-    useGetPublicRepos(session.data?.user.provider)
+    useGetPublicRepos()
 
   if (session.data?.user.provider !== 'github') {
     return (

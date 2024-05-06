@@ -1,4 +1,5 @@
 import {useQuery} from '@tanstack/react-query'
+import {useSession} from 'next-auth/react'
 
 import {queryKeys} from '../keys'
 
@@ -15,12 +16,13 @@ const getPublicReposQueryOptions = (userId: string | undefined) => ({
   queryFn: withApiErrorHandler(() => getPublicRepos()),
 })
 
-export const useGetPublicRepos = (provider: string | undefined) => {
+export const useGetPublicRepos = () => {
   const userId = useUserId()
+  const session = useSession()
 
   return useQuery({
     ...getPublicReposQueryOptions(userId),
-    enabled: !!userId && provider === 'github',
+    enabled: !!userId && session.data?.user.provider === 'github',
   })
 }
 
@@ -35,11 +37,11 @@ const getRepoFilesQueryOptions = (params: GetRepoFilesParams | undefined) => ({
   }),
 })
 
-export const useGetRepoFiles = (
-  params: GetRepoFilesParams | undefined,
-  provider: string | undefined,
-) =>
-  useQuery({
+export const useGetRepoFiles = (params: GetRepoFilesParams | undefined) => {
+  const session = useSession()
+
+  return useQuery({
     ...getRepoFilesQueryOptions(params),
-    enabled: !!params && provider === 'github',
+    enabled: !!params && session.data?.user.provider === 'github',
   })
+}
