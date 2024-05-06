@@ -15,17 +15,21 @@ type SelectProps<T extends string> = {
   options: SelectOption<T>[]
   placeholder?: string
   value?: T | null
+  defaultValue?: T
   onValueChange?: (value: T) => void
-} & RadixSelectProps
+} & Omit<RadixSelectProps, 'value' | 'defaultValue' | 'onValueChange'>
 
 const Select = <T extends string>({
   className,
   options,
   placeholder,
+  value,
   ...rootProps
 }: SelectProps<T>) => {
   return (
-    <SelectRoot {...rootProps}>
+    <SelectRoot
+      value={value === null ? '' : value}
+      {...(rootProps as RadixSelectProps)}>
       <SelectTrigger className={cn('w-[180px]', className)}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
