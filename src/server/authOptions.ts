@@ -103,6 +103,11 @@ export const authOptions: NextAuthOptions = {
       clientId: env.GITHUB_CLIENT_ID,
       clientSecret: env.GITHUB_CLIENT_SECRET,
       allowDangerousEmailAccountLinking: true,
+      authorization: {
+        params: {
+          scope: 'read:user user:email public_repo',
+        },
+      },
     }),
     CredentialsProvider({
       name: 'Email',
