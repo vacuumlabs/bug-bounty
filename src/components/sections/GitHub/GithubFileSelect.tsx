@@ -95,7 +95,9 @@ const FileTree = ({
     }
   }
 
-  return fileTree.map((file) => (
+  const filteredFileTree = fileTree.filter((file) => file.path != undefined)
+
+  return filteredFileTree.map((file) => (
     <div key={file.path}>
       <Checkbox
         id={file.path}
