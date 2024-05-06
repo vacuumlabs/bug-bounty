@@ -15,10 +15,13 @@ const getPublicReposQueryOptions = (userId: string | undefined) => ({
   queryFn: withApiErrorHandler(() => getPublicRepos()),
 })
 
-export const useGetPublicRepos = () => {
+export const useGetPublicRepos = (provider: string | undefined) => {
   const userId = useUserId()
 
-  return useQuery({...getPublicReposQueryOptions(userId), enabled: !!userId})
+  return useQuery({
+    ...getPublicReposQueryOptions(userId),
+    enabled: !!userId && provider === 'github',
+  })
 }
 
 const getRepoFilesQueryOptions = (params: GetRepoFilesParams | undefined) => ({
@@ -32,5 +35,11 @@ const getRepoFilesQueryOptions = (params: GetRepoFilesParams | undefined) => ({
   }),
 })
 
-export const useGetRepoFiles = (params: GetRepoFilesParams | undefined) =>
-  useQuery({...getRepoFilesQueryOptions(params), enabled: !!params})
+export const useGetRepoFiles = (
+  params: GetRepoFilesParams | undefined,
+  provider: string | undefined,
+) =>
+  useQuery({
+    ...getRepoFilesQueryOptions(params),
+    enabled: !!params && provider === 'github',
+  })

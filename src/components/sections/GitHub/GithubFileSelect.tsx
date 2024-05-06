@@ -27,6 +27,7 @@ const GithubFileSelect = ({
 
   const {data: repoFilesData, isLoading: repoFilesIsLoading} = useGetRepoFiles(
     selectedRepo ?? undefined,
+    session.data?.user.provider,
   )
 
   if (session.data?.user.provider !== 'github') {
