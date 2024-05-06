@@ -50,7 +50,7 @@ export const requireGitHubAuth = async () => {
   const session = await getServerAuthSession()
 
   if (!session || session.user.provider !== 'github') {
-    throw new Error(
+    throw new ServerError(
       'Not authorized - GitHub authenticated account is required.',
     )
   }
