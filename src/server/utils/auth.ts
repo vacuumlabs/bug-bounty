@@ -3,6 +3,7 @@ import {Session, getServerSession} from 'next-auth'
 
 import {authOptions} from '../authOptions'
 import {UserRole} from '../db/models'
+import {db} from '../db'
 
 import {ServerError} from '@/lib/types/error'
 
@@ -55,5 +56,15 @@ export const requireGitHubAuth = async () => {
     )
   }
 
-  return session
+  const account = await db.query.accounts.findFirst({
+    columns: {access_token: true},
+    where: (account, {eq, and}) =>
+      and(eq(account.userId, session.user.id), eq(account.provider, 'github')),
+  })
+
+  if (!account) {
+    throw new ServerError('GitHub account not found.')
+  }
+
+  return {session, account}
 }

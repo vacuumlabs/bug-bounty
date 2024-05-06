@@ -4,8 +4,6 @@ import {Octokit} from 'octokit'
 import {z} from 'zod'
 
 import {requireGitHubAuth} from '@/server/utils/auth'
-import {db} from '@/server/db'
-import {ServerError} from '@/lib/types/error'
 import {serializeServerErrors} from '@/lib/utils/common/error'
 
 export type GetPublicReposResponse = Awaited<
@@ -13,17 +11,7 @@ export type GetPublicReposResponse = Awaited<
 >
 
 const getPublicReposAction = async () => {
-  const session = await requireGitHubAuth()
-
-  const account = await db.query.accounts.findFirst({
-    columns: {access_token: true},
-    where: (account, {eq, and}) =>
-      and(eq(account.userId, session.user.id), eq(account.provider, 'github')),
-  })
-
-  if (!account) {
-    throw new ServerError('GitHub account not found')
-  }
+  const {account} = await requireGitHubAuth()
 
   const octokit = new Octokit({
     auth: account.access_token,
@@ -58,19 +46,9 @@ const getRepoFilesParamsSchema = z.object({
 export type GetRepoFilesParams = z.infer<typeof getRepoFilesParamsSchema>
 
 const getRepoFilesAction = async (request: GetRepoFilesParams) => {
-  const session = await requireGitHubAuth()
+  const {account} = await requireGitHubAuth()
 
   const {repo, owner, defaultBranch} = getRepoFilesParamsSchema.parse(request)
-
-  const account = await db.query.accounts.findFirst({
-    columns: {access_token: true},
-    where: (account, {eq, and}) =>
-      and(eq(account.userId, session.user.id), eq(account.provider, 'github')),
-  })
-
-  if (!account) {
-    throw new ServerError('GitHub account not found')
-  }
 
   const octokit = new Octokit({
     auth: account.access_token,
