@@ -21,12 +21,16 @@ export const useGetPublicRepos = () => {
   return useQuery({...getPublicReposQueryOptions(userId), enabled: !!userId})
 }
 
-const getRepoFilesQueryOptions = (params: GetRepoFilesParams) => ({
+const getRepoFilesQueryOptions = (params: GetRepoFilesParams | undefined) => ({
   queryKey: queryKeys.gitHub.repoFiles(params).queryKey,
-  queryFn: withApiErrorHandler(() => getRepoFiles(params)),
+  queryFn: withApiErrorHandler(() => {
+    if (!params) {
+      throw new Error('GetRepoFilesParams is required.')
+    }
+
+    return getRepoFiles(params)
+  }),
 })
 
-export const useGetRepoFiles = (
-  params: GetRepoFilesParams,
-  options?: {enabled?: boolean},
-) => useQuery({...options, ...getRepoFilesQueryOptions(params)})
+export const useGetRepoFiles = (params: GetRepoFilesParams | undefined) =>
+  useQuery({...getRepoFilesQueryOptions(params), enabled: !!params})

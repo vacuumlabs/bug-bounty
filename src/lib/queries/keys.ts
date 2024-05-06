@@ -21,6 +21,6 @@ export const queryKeys = createQueryKeyStore({
   },
   gitHub: {
     publicRepos: (userId: string | undefined) => [userId],
-    repoFiles: (params: GetRepoFilesParams) => [params],
+    repoFiles: (params: GetRepoFilesParams | undefined) => [params],
   },
 })
