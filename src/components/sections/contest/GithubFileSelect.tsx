@@ -85,7 +85,7 @@ const RepoList = ({repos, isLoading, selectRepo}: RepoListProps) => {
   if (!repos || repos.length === 0) return <span>No public repos found</span>
 
   return repos.map((repo) => (
-    <button
+    <Button
       key={repo.id}
       onClick={() =>
         selectRepo({
@@ -95,7 +95,7 @@ const RepoList = ({repos, isLoading, selectRepo}: RepoListProps) => {
         })
       }>
       {repo.fullName}
-    </button>
+    </Button>
   ))
 }
 
