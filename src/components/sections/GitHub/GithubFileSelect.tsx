@@ -35,7 +35,7 @@ const GithubFileSelect = ({
       <Button
         onClick={() => signIn('github')}
         className="bg-gray-800 text-white">
-        Sign in with Github to select repo files
+        Sign in with Github to select files
       </Button>
     )
   }
@@ -67,7 +67,7 @@ type FileTreeProps = {
   fileTree: GetRepoFilesResponse | undefined | null
   isLoading: boolean
   selectedFilePaths: string[]
-  onSelectFilePaths: (files: string[]) => void
+  onSelectFilePaths: (newFiles: string[]) => void
 }
 
 const FileTree = ({
@@ -84,10 +84,14 @@ const FileTree = ({
     checked: CheckedState,
     path: string | undefined,
   ) => {
+    if (!path) {
+      return
+    }
+
     if (checked) {
-      onSelectFilePaths(selectedFilePaths.filter((file) => file !== path))
+      onSelectFilePaths([...selectedFilePaths, path])
     } else {
-      onSelectFilePaths([...selectedFilePaths, path ?? ''])
+      onSelectFilePaths(selectedFilePaths.filter((file) => file !== path))
     }
   }
 

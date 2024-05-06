@@ -24,7 +24,7 @@ const GithubRepoSelect = ({selectedRepo, onSelectRepo}: GithubRepoSelect) => {
       <Button
         onClick={() => signIn('github')}
         className="bg-gray-800 text-white">
-        Sign in with Github to select repo files
+        Sign in with Github to select a repo
       </Button>
     )
   }
