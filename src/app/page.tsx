@@ -23,7 +23,7 @@ const Home = async () => {
           )}
         </p>
         {session ? (
-          <div className="flex gap-2 ">
+          <div className="flex gap-2">
             <Button asChild variant="outline">
               <Link href={'/profile'}>My profile</Link>
             </Button>
