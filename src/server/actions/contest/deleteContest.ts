@@ -8,7 +8,7 @@ import {serializeServerErrors} from '@/lib/utils/common/error'
 
 export type DeleteContestResponse = Awaited<ReturnType<typeof deleteContest>>
 
-const deleteContestAction = async (contestId: string) => {
+export const deleteContestAction = async (contestId: string) => {
   await requireEditableContest(contestId)
 
   return db

@@ -28,7 +28,10 @@ export const contestSeverityWeights = pgTable('contestSeverityWeights', {
 export const contestSeverityWeightsRelations = relations(
   contestSeverityWeights,
   ({one}) => ({
-    contest: one(contests),
+    contest: one(contests, {
+      fields: [contestSeverityWeights.contestId],
+      references: [contests.id],
+    }),
   }),
 )
 

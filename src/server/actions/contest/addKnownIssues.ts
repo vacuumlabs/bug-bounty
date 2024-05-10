@@ -20,7 +20,7 @@ const addKnownIssuesSchema = z.object({
 export type AddKnownIssue = z.infer<typeof addKnownIssueSchema>
 export type AddKnownIssuesRequest = z.infer<typeof addKnownIssuesSchema>
 
-const addKnownIssuesAction = async (request: AddKnownIssuesRequest) => {
+export const addKnownIssuesAction = async (request: AddKnownIssuesRequest) => {
   const session = await requireServerSession()
 
   const {contestId, knownIssues} = addKnownIssuesSchema.parse(request)

@@ -24,7 +24,7 @@ const editContestRequestSchema = z.object({
 
 export type EditContestRequest = z.infer<typeof editContestRequestSchema>
 
-const editContestAction = async (request: EditContestRequest) => {
+export const editContestAction = async (request: EditContestRequest) => {
   const {contest, customWeights} = editContestRequestSchema.parse(request)
 
   const existingContest = await requireEditableContest(contest.id)

@@ -12,7 +12,7 @@ export type DeleteKnownIssueResponse = Awaited<
   ReturnType<typeof deleteKnownIssue>
 >
 
-const deleteKnownIssueAction = async (knownIssueId: string) => {
+export const deleteKnownIssueAction = async (knownIssueId: string) => {
   const session = await requireServerSession()
 
   const knownIssue = await db.query.knownIssues.findFirst({
