@@ -1,17 +1,16 @@
 import {useSearchParamsState} from '@/lib/hooks/useSearchParamsState'
-
-const validContestTypes = ['current', 'future', 'past'] as const
-
-type ValidContestType = (typeof validContestTypes)[number]
+import {isEnumMember} from '@/lib/utils/common/enums'
+import {ContestOccurence} from '@/server/db/models'
 
 export const useSearchParamsContestType = () => {
-  const [contestType, setContestType] = useSearchParamsState('type', 'current')
-
-  const currentType = (validContestTypes as Readonly<string[]>).includes(
-    contestType,
+  const [contestType, setContestType] = useSearchParamsState(
+    'type',
+    ContestOccurence.PRESENT,
   )
-    ? (contestType as ValidContestType)
-    : 'current'
+
+  const currentType = isEnumMember(ContestOccurence, contestType)
+    ? contestType
+    : ContestOccurence.PRESENT
 
   return [currentType, setContestType] as const
 }

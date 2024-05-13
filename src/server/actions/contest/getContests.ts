@@ -1,12 +1,12 @@
 'use server'
 
 import {db} from '@/server/db'
-import {ContestStatus} from '@/server/db/models'
+import {ContestOccurence, ContestStatus} from '@/server/db/models'
 
 export type GetPublicContestsParams = {
   limit?: number
   offset?: number
-  type?: 'past' | 'current' | 'future'
+  type?: ContestOccurence
   searchQuery?: string
 }
 
@@ -25,14 +25,18 @@ export const getPublicContests = async ({
           ContestStatus.APPROVED,
           ContestStatus.FINISHED,
         ]),
-        type === 'past' ? lte(contests.endDate, new Date()) : undefined,
-        type === 'current'
+        type === ContestOccurence.PAST
+          ? lte(contests.endDate, new Date())
+          : undefined,
+        type === ContestOccurence.PRESENT
           ? and(
               lte(contests.startDate, new Date()),
               gte(contests.endDate, new Date()),
             )
           : undefined,
-        type === 'future' ? gte(contests.startDate, new Date()) : undefined,
+        type === ContestOccurence.FUTURE
+          ? gte(contests.startDate, new Date())
+          : undefined,
         searchQuery
           ? or(
               ilike(contests.title, `%${searchQuery}%`),

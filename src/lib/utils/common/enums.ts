@@ -78,3 +78,8 @@ export const selectOptions = {
   contestStatus: createSelectOptions(translations.contestStatus),
   findingStatus: createSelectOptions(translations.findingStatus),
 } satisfies Record<keyof typeof translations, SelectOption<unknown>[]>
+
+export const isEnumMember = <T extends string>(
+  enumObject: Record<string, T>,
+  value: string,
+): value is T => Object.values<string>(enumObject).includes(value)

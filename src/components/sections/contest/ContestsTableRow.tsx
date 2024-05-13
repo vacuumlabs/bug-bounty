@@ -8,29 +8,30 @@ import {Button} from '@/components/ui/Button'
 import {Contest} from '@/server/db/schema/contest'
 import {formatAda} from '@/lib/utils/common/format'
 import {cn} from '@/lib/utils/client/tailwind'
+import {ContestOccurence} from '@/server/db/models'
 
 type ContestsTableRowProps = {
   contest: Contest
 }
 
 const contestStatusTexts: Record<string, string> = {
-  current: 'Live',
-  future: 'Upcoming',
-  past: 'Completed',
+  [ContestOccurence.PRESENT]: 'Live',
+  [ContestOccurence.FUTURE]: 'Upcoming',
+  [ContestOccurence.PAST]: 'Completed',
 }
 
 const timeTexts = {
-  current: 'Ends ',
-  future: 'Starts ',
-  past: 'Ended ',
+  [ContestOccurence.PRESENT]: 'Ends ',
+  [ContestOccurence.FUTURE]: 'Starts ',
+  [ContestOccurence.PAST]: 'Ended ',
 }
 
 const indicatorVariants = cva('h-4 w-4 rounded-full', {
   variants: {
     type: {
-      current: 'bg-lime-500',
-      future: 'bg-cyan-500',
-      past: 'bg-fuchsia-500',
+      [ContestOccurence.PRESENT]: 'bg-lime-500',
+      [ContestOccurence.FUTURE]: 'bg-cyan-500',
+      [ContestOccurence.PAST]: 'bg-fuchsia-500',
     },
   },
 })

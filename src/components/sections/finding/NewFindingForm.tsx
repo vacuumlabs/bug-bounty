@@ -20,7 +20,7 @@ import {Textarea} from '@/components/ui/Textarea'
 import {Select} from '@/components/ui/Select'
 import {selectOptions} from '@/lib/utils/common/enums'
 import {Button} from '@/components/ui/Button'
-import {FindingStatus} from '@/server/db/models'
+import {ContestOccurence, FindingStatus} from '@/server/db/models'
 import {useGetPublicContests} from '@/lib/queries/contest/getContests'
 import {AsyncCombobox} from '@/components/ui/Combobox'
 import {toast} from '@/components/ui/Toast'
@@ -39,7 +39,10 @@ type FormValues = z.infer<typeof formSchema>
 type AddFindingStatus = z.infer<typeof addFindingSchema>['status']
 
 const useGetFilteredContests = (searchQuery: string) =>
-  useGetPublicContests({type: 'current', searchQuery: searchQuery || undefined})
+  useGetPublicContests({
+    type: ContestOccurence.PRESENT,
+    searchQuery: searchQuery || undefined,
+  })
 
 const NewFindingForm = () => {
   const searchParams = useSearchParams()

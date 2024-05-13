@@ -11,6 +11,12 @@ export enum ContestStatus {
   FINISHED = 'FINISHED',
 }
 
+export enum ContestOccurence {
+  PAST = 'past',
+  PRESENT = 'present',
+  FUTURE = 'future',
+}
+
 export enum FindingSeverity {
   INFO = 'info',
   LOW = 'low',
