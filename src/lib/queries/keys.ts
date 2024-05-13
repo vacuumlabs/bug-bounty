@@ -15,6 +15,7 @@ export const queryKeys = createQueryKeyStore({
   },
   contests: {
     public: (params: GetPublicContestsParams) => [params],
+    publicCounts: null,
   },
   deduplicatedFindings: {
     all: (params: GetDeduplicatedFindingsParams) => [params],
