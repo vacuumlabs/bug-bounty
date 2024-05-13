@@ -4,9 +4,13 @@ import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 import {prefetchGetPublicContests} from '@/lib/queries/contest/getContests'
 import Contests from '@/components/sections/contest/Contests'
 import {ContestOccurence} from '@/server/db/models'
+import {prefetchGetPublicContestCounts} from '@/lib/queries/contest/getPublicContestCounts'
 
 const ContestsPage = async () => {
-  await prefetchGetPublicContests({type: ContestOccurence.PRESENT})
+  await Promise.all([
+    prefetchGetPublicContests({type: ContestOccurence.PRESENT}),
+    prefetchGetPublicContestCounts(),
+  ])
 
   return (
     <main className="flex flex-grow flex-col">
