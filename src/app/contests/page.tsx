@@ -3,9 +3,10 @@ import Link from 'next/link'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 import {prefetchGetPublicContests} from '@/lib/queries/contest/getContests'
 import Contests from '@/components/sections/contest/Contests'
+import {ContestOccurence} from '@/server/db/models'
 
 const ContestsPage = async () => {
-  await prefetchGetPublicContests({type: 'current'})
+  await prefetchGetPublicContests({type: ContestOccurence.PRESENT})
 
   return (
     <main className="flex flex-grow flex-col">
