@@ -4,6 +4,7 @@ import {getServerSession} from 'next-auth'
 import {v4 as uuidv4} from 'uuid'
 
 import {trunacateDb} from '../utils/db'
+import {expectAnyDate, expectAnyString} from '../utils/expect'
 
 import {ContestStatus, UserRole} from '@/server/db/models'
 import {InsertUser} from '@/server/db/schema/user'
@@ -79,12 +80,9 @@ describe('addKnownIssues', () => {
 
     expect(result).toEqual([
       {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        id: expect.any(String),
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        createdAt: expect.any(Date),
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        updatedAt: expect.any(Date),
+        id: expectAnyString,
+        createdAt: expectAnyDate,
+        updatedAt: expectAnyDate,
         contestId: contest[0].id,
         title: 'Example Known Issue',
         description: 'This is an example known issue.',
