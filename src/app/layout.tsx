@@ -27,13 +27,13 @@ const RootLayout = async ({
     <html lang="en">
       <body className={inter.className}>
         <Providers session={session}>
-          <nav className="fixed flex h-[90px] w-full items-center justify-between bg-slate-200 p-4 px-6">
+          <nav className="fixed z-10 flex h-[90px] w-full items-center justify-between bg-slate-200 p-4 px-6">
             <Link className="text-3xl font-semibold text-black" href="/">
               Cardano Bug Bounty PoC
             </Link>
             <ConnectWallet />
           </nav>
-          <div className="flex flex-col pt-[90px]">{children}</div>
+          <div className="flex min-h-screen flex-col pt-[90px]">{children}</div>
         </Providers>
         <Toaster />
       </body>
