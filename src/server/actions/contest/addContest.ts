@@ -19,7 +19,7 @@ const addContestRequestSchema = z.object({
 
 export type AddContestRequest = z.infer<typeof addContestRequestSchema>
 
-const addContestAction = async (request: AddContestRequest) => {
+export const addContestAction = async (request: AddContestRequest) => {
   const session = await requireServerSession()
 
   if (isJudge(session)) {

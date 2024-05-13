@@ -20,7 +20,7 @@ export type ApproveOrRejectContestRequest = z.infer<
   typeof approveOrRejectContestSchema
 >
 
-const approveOrRejectContestAction = async (
+export const approveOrRejectContestAction = async (
   request: ApproveOrRejectContestRequest,
 ) => {
   await requireJudgeAuth()
