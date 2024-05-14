@@ -5,7 +5,12 @@ import {v4 as uuidv4} from 'uuid'
 
 import {trunacateDb} from '../utils/db'
 
-import {ContestStatus, UserRole} from '@/server/db/models'
+import {
+  ContestStatus,
+  ProjectCategory,
+  ProjectLanguage,
+  UserRole,
+} from '@/server/db/models'
 import {db, schema} from '@/server/db'
 import {InsertUser} from '@/server/db/schema/user'
 import {InsertContest} from '@/server/db/schema/contest'
@@ -20,8 +25,10 @@ const contestsToInsert: InsertContest[] = [
     description: 'This is an example contest.',
     repoUrl: 'https://github.com/example-contest',
     rewardsAmount: '1000',
-    setupSteps: 'Step 1, Step 2, Step 3',
+    customConditions: 'There are four custom conditions.',
     status: ContestStatus.APPROVED,
+    projectCategory: [ProjectCategory.DEFI, ProjectCategory.INFRASTRUCTURE],
+    projectLanguage: [ProjectLanguage.AIKEN],
     distributedRewardsAmount: '0',
     startDate: addDays(new Date(), 1),
     endDate: addDays(new Date(), 2),
@@ -32,7 +39,7 @@ const contestsToInsert: InsertContest[] = [
     description: 'This is an example contest 2.',
     repoUrl: 'https://github.com/example-contest-2',
     rewardsAmount: '1002',
-    setupSteps: 'Step 1, Step 2, Step 3',
+    customConditions: 'There are four custom conditions.',
     status: ContestStatus.FINISHED,
     distributedRewardsAmount: '0',
     startDate: addDays(new Date(), 1),
@@ -44,8 +51,10 @@ const contestsToInsert: InsertContest[] = [
     description: 'This is an example contest 3.',
     repoUrl: 'https://github.com/example-contest-3',
     rewardsAmount: '1003',
-    setupSteps: 'Step 1, Step 2, Step 3',
+    customConditions: 'There are four custom conditions.',
     status: ContestStatus.PENDING,
+    projectCategory: [],
+    projectLanguage: [],
     distributedRewardsAmount: '0',
     startDate: addDays(new Date(), 1),
     endDate: addDays(new Date(), 2),
@@ -56,8 +65,10 @@ const contestsToInsert: InsertContest[] = [
     description: 'This is an example contest 4.',
     repoUrl: 'https://github.com/example-contest-4',
     rewardsAmount: '1004',
-    setupSteps: 'Step 1, Step 2, Step 3',
+    customConditions: 'There are four custom conditions.',
     status: ContestStatus.REJECTED,
+    projectCategory: [ProjectCategory.OTHER],
+    projectLanguage: [ProjectLanguage.OTHER],
     distributedRewardsAmount: '0',
     startDate: addDays(new Date(), 1),
     endDate: addDays(new Date(), 2),

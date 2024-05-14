@@ -2,6 +2,8 @@ import {
   ContestStatus,
   FindingSeverity,
   FindingStatus,
+  ProjectCategory,
+  ProjectLanguage,
   UserRole,
 } from '@/server/db/models'
 
@@ -33,6 +35,20 @@ const translations = {
     [ContestStatus.PENDING]: 'Pending',
     [ContestStatus.APPROVED]: 'Approved',
     [ContestStatus.REJECTED]: 'Rejected',
+  },
+  projectLanguage: {
+    [ProjectLanguage.AIKEN]: 'Aiken',
+    [ProjectLanguage.PLUTARCH]: 'Plutarch',
+    [ProjectLanguage.PLUTUS]: 'Plutus',
+    [ProjectLanguage.OTHER]: 'Other',
+  },
+  projectCategory: {
+    [ProjectCategory.BLOCKCHAIN]: 'Blockchain',
+    [ProjectCategory.DEFI]: 'DeFi',
+    [ProjectCategory.EXCHANGE]: 'Exchange',
+    [ProjectCategory.INFRASTRUCTURE]: 'Infrastructure',
+    [ProjectCategory.NFT]: 'NFT',
+    [ProjectCategory.OTHER]: 'Other',
   },
 }
 
@@ -70,6 +86,8 @@ export const translateEnum = {
   findingSeverity: getTranslations(translations.findingSeverity),
   findingStatus: getTranslations(translations.findingStatus),
   contestStatus: getTranslations(translations.contestStatus),
+  projectLanguage: getTranslations(translations.projectLanguage),
+  projectCategory: getTranslations(translations.projectCategory),
 } satisfies Record<keyof typeof translations, () => void>
 
 export const selectOptions = {
@@ -77,6 +95,8 @@ export const selectOptions = {
   findingSeverity: createSelectOptions(translations.findingSeverity),
   contestStatus: createSelectOptions(translations.contestStatus),
   findingStatus: createSelectOptions(translations.findingStatus),
+  projectLanguage: createSelectOptions(translations.projectLanguage),
+  projectCategory: createSelectOptions(translations.projectCategory),
 } satisfies Record<keyof typeof translations, SelectOption<unknown>[]>
 
 export const isEnumMember = <T extends string>(

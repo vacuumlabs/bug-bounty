@@ -16,7 +16,7 @@ import {findings} from './finding'
 import {users} from './user'
 import {knownIssues} from './knownIssue'
 import {deduplicatedFindings} from './deduplicatedFinding'
-import {ContestStatus} from '../models/enums'
+import {ContestStatus, ProjectCategory, ProjectLanguage} from '../models/enums'
 import {contestSeverityWeights} from './contestSeverityWeights'
 
 import {getDrizzleEnum} from '@/server/utils/enum'
@@ -30,8 +30,17 @@ export const contests = pgTable(
       .references(() => users.id),
     title: varchar('name', {length: 255}).notNull(),
     repoUrl: varchar('repoUrl', {length: 255}).notNull(),
+    filesInScope: varchar('filesInScope', {length: 255}).array(),
     description: text('description').notNull(),
-    setupSteps: text('setupSteps').notNull(),
+    customConditions: text('customConditions'),
+    projectLanguage: varchar('projectLanguage', {
+      length: 32,
+      enum: getDrizzleEnum(ProjectLanguage),
+    }).array(),
+    projectCategory: varchar('projectCategory', {
+      length: 32,
+      enum: getDrizzleEnum(ProjectCategory),
+    }).array(),
     rewardsAmount: numeric('rewardsAmount', {
       precision: 20,
       scale: 0,
@@ -84,8 +93,6 @@ export const insertContestSchema = createInsertSchema(contests, {
   title: (schema) => schema.title.min(1, 'Title must be at least 1 character.'),
   description: (schema) =>
     schema.description.min(1, 'Description can’t be empty.'),
-  setupSteps: (schema) =>
-    schema.setupSteps.min(1, 'Setup steps can’t be empty.'),
 })
   .omit({
     createdAt: true,
