@@ -31,3 +31,19 @@ export enum FindingStatus {
   PENDING = 'pending',
   REJECTED = 'rejected',
 }
+
+export enum ProjectLanguage {
+  AIKEN = 'AIKEN',
+  PLUTARCH = 'PLUTARCH',
+  PLUTUS = 'PLUTUS',
+  OTHER = 'OTHER',
+}
+
+export enum ProjectCategory {
+  BLOCKCHAIN = 'BLOCKCHAIN',
+  DEFI = 'DEFI',
+  EXCHANGE = 'EXCHANGE',
+  INFRASTRUCTURE = 'INFRASTRUCTURE',
+  NFT = 'NFT',
+  OTHER = 'OTHER',
+}

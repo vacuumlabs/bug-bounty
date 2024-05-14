@@ -5,7 +5,12 @@ import {v4 as uuidv4} from 'uuid'
 
 import {trunacateDb} from '../utils/db'
 
-import {ContestStatus, UserRole} from '@/server/db/models'
+import {
+  ContestStatus,
+  ProjectCategory,
+  ProjectLanguage,
+  UserRole,
+} from '@/server/db/models'
 import {InsertUser} from '@/server/db/schema/user'
 import {db, schema} from '@/server/db'
 import {InsertContest} from '@/server/db/schema/contest'
@@ -22,7 +27,9 @@ const contestRequest: InsertContest = {
   description: 'This is an example contest.',
   repoUrl: 'https://github.com/example-contest',
   rewardsAmount: '1000',
-  setupSteps: 'Step 1, Step 2, Step 3',
+  customConditions: 'There are four custom conditions.',
+  projectCategory: [ProjectCategory.DEFI, ProjectCategory.INFRASTRUCTURE],
+  projectLanguage: [ProjectLanguage.AIKEN],
   status: ContestStatus.PENDING,
   distributedRewardsAmount: '0',
   startDate: addDays(new Date(), 1),

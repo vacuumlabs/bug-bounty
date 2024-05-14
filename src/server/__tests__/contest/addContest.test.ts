@@ -10,7 +10,12 @@ import {
   AddContestRequest,
   addContestAction,
 } from '@/server/actions/contest/addContest'
-import {ContestStatus, UserRole} from '@/server/db/models'
+import {
+  ContestStatus,
+  ProjectCategory,
+  ProjectLanguage,
+  UserRole,
+} from '@/server/db/models'
 import {db, schema} from '@/server/db'
 import {InsertUser} from '@/server/db/schema/user'
 
@@ -22,9 +27,10 @@ const request: AddContestRequest = {
     description: 'This is an example contest.',
     repoUrl: 'https://github.com/example-contest',
     rewardsAmount: '1000',
-    setupSteps: 'Step 1, Step 2, Step 3',
+    customConditions: 'There are four custom conditions.',
+    projectCategory: [ProjectCategory.DEFI, ProjectCategory.INFRASTRUCTURE],
+    projectLanguage: [ProjectLanguage.AIKEN],
     status: ContestStatus.PENDING,
-    distributedRewardsAmount: '0',
     startDate: addDays(new Date(), 1),
     endDate: addDays(new Date(), 2),
   },

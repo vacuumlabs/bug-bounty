@@ -13,6 +13,8 @@ import {
   ContestStatus,
   FindingSeverity,
   FindingStatus,
+  ProjectCategory,
+  ProjectLanguage,
   UserRole,
 } from './models/enums'
 
@@ -55,65 +57,48 @@ const usersToInsert: InsertUser[] = [
   },
 ]
 
+const getBasicContestData = (projectOwnerUserId: string) => ({
+  authorId: projectOwnerUserId,
+  title: faker.company.name(),
+  description: faker.lorem.paragraphs(),
+  repoUrl: faker.internet.url(),
+  filesInScope: faker.helpers.multiple(() => faker.internet.url()),
+  projectCategory: faker.helpers.uniqueArray(
+    () => faker.helpers.enumValue(ProjectCategory),
+    2,
+  ),
+  projectLanguage: [faker.helpers.enumValue(ProjectLanguage)],
+  customConditions: faker.lorem.sentence(),
+  rewardsAmount: faker.finance.amount({
+    min: 100_000_000,
+    max: 1_000_000_000,
+    dec: 0,
+  }),
+})
+
 const getContestsToInsert = (projectOwnerUserId: string): InsertContest[] => [
   {
-    authorId: projectOwnerUserId,
-    title: faker.company.name(),
-    description: faker.lorem.paragraph(),
-    repoUrl: faker.internet.url(),
-    setupSteps: faker.lorem.sentence(),
+    ...getBasicContestData(projectOwnerUserId),
     startDate: faker.date.past(),
     endDate: faker.date.recent(),
-    rewardsAmount: faker.finance.amount({
-      min: 100_000_000,
-      max: 1_000_000_000,
-      dec: 0,
-    }),
     status: ContestStatus.APPROVED,
   },
   {
-    authorId: projectOwnerUserId,
-    title: faker.company.name(),
-    description: faker.lorem.paragraph(),
-    repoUrl: faker.internet.url(),
-    setupSteps: faker.lorem.sentence(),
+    ...getBasicContestData(projectOwnerUserId),
     startDate: faker.date.recent(),
     endDate: faker.date.soon(),
-    rewardsAmount: faker.finance.amount({
-      min: 100_000_000,
-      max: 1_000_000_000,
-      dec: 0,
-    }),
     status: ContestStatus.APPROVED,
   },
   {
-    authorId: projectOwnerUserId,
-    title: faker.company.name(),
-    description: faker.lorem.paragraph(),
-    repoUrl: faker.internet.url(),
-    setupSteps: faker.lorem.sentence(),
+    ...getBasicContestData(projectOwnerUserId),
     startDate: faker.date.soon(),
     endDate: faker.date.future(),
-    rewardsAmount: faker.finance.amount({
-      min: 100_000_000,
-      max: 1_000_000_000,
-      dec: 0,
-    }),
     status: ContestStatus.APPROVED,
   },
   {
-    authorId: projectOwnerUserId,
-    title: faker.company.name(),
-    description: faker.lorem.paragraph(),
-    repoUrl: faker.internet.url(),
-    setupSteps: faker.lorem.sentence(),
+    ...getBasicContestData(projectOwnerUserId),
     startDate: faker.date.soon(),
     endDate: faker.date.future(),
-    rewardsAmount: faker.finance.amount({
-      min: 100_000_000,
-      max: 1_000_000_000,
-      dec: 0,
-    }),
     status: ContestStatus.PENDING,
   },
 ]
@@ -176,9 +161,13 @@ const seed = async () => {
       throw new Error('Failed to generate users')
     }
 
+    const contestToInsert = Array.from({length: 5}).flatMap(() =>
+      getContestsToInsert(projectOwnerUserId),
+    )
+
     const contests = await tx
       .insert(schema.contests)
-      .values(getContestsToInsert(projectOwnerUserId))
+      .values(contestToInsert)
       .returning()
 
     const pastContestId = contests[0]?.id

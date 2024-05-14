@@ -5,7 +5,12 @@ import {v4 as uuidv4} from 'uuid'
 
 import {trunacateDb} from '../utils/db'
 
-import {ContestStatus, UserRole} from '@/server/db/models'
+import {
+  ContestStatus,
+  ProjectCategory,
+  ProjectLanguage,
+  UserRole,
+} from '@/server/db/models'
 import {db, schema} from '@/server/db'
 import {InsertUser} from '@/server/db/schema/user'
 import {InsertContest} from '@/server/db/schema/contest'
@@ -23,7 +28,8 @@ const contestToInsert: InsertContest = {
   description: 'This is an example contest.',
   repoUrl: 'https://github.com/example-contest',
   rewardsAmount: '1000',
-  setupSteps: 'Step 1, Step 2, Step 3',
+  customConditions: 'There are four custom conditions.',
+  projectCategory: [ProjectCategory.DEFI, ProjectCategory.INFRASTRUCTURE],
   status: ContestStatus.PENDING,
   distributedRewardsAmount: '0',
   startDate: addDays(new Date(), 1),
@@ -91,7 +97,9 @@ describe('editContest', () => {
         title: 'Edited Contest',
         description: 'This is an edited contest.',
         repoUrl: 'https://github.com/edited-contest',
-        setupSteps: 'Edited setup steps',
+        customConditions: 'Edited setup steps',
+        projectCategory: [ProjectCategory.NFT],
+        projectLanguage: [ProjectLanguage.AIKEN],
       },
       customWeights: {
         info: 2,

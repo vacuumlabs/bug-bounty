@@ -22,7 +22,7 @@ const contestsToInsert: InsertContest = {
   description: 'This is an example contest.',
   repoUrl: 'https://github.com/example-contest',
   rewardsAmount: '1000',
-  setupSteps: 'Step 1, Step 2, Step 3',
+  customConditions: 'There are four custom conditions.',
   status: ContestStatus.APPROVED,
   distributedRewardsAmount: '0',
   startDate: addDays(new Date(), 1),

@@ -1,0 +1,40 @@
+diff --git a/node_modules/drizzle-zod/index.d.mts b/node_modules/drizzle-zod/index.d.mts
+index d956d8a..7f480f4 100644
+--- a/node_modules/drizzle-zod/index.d.mts
++++ b/node_modules/drizzle-zod/index.d.mts
+@@ -10,11 +10,11 @@ type MapInsertColumnToZod<TColumn extends Column, TType extends z.ZodTypeAny> =
+ type MapSelectColumnToZod<TColumn extends Column, TType extends z.ZodTypeAny> = TColumn['_']['notNull'] extends false ? z.ZodNullable<TType> : TType;
+ type MapColumnToZod<TColumn extends Column, TType extends z.ZodTypeAny, TMode extends 'insert' | 'select'> = TMode extends 'insert' ? MapInsertColumnToZod<TColumn, TType> : MapSelectColumnToZod<TColumn, TType>;
+ type MaybeOptional<TColumn extends Column, TType extends z.ZodTypeAny, TMode extends 'insert' | 'select', TNoOptional extends boolean> = TNoOptional extends true ? TType : MapColumnToZod<TColumn, TType, TMode>;
+-type GetZodType<TColumn extends Column> = TColumn['_']['dataType'] extends infer TDataType ? TDataType extends 'custom' ? z.ZodAny : TDataType extends 'json' ? z.ZodType<Json> : TColumn extends {
+-    enumValues: [string, ...string[]];
+-} ? Equal<TColumn['enumValues'], [string, ...string[]]> extends true ? z.ZodString : z.ZodEnum<TColumn['enumValues']> : TDataType extends 'array' ? z.ZodArray<GetZodType<Assume<TColumn['_'], {
++type GetZodType<TColumn extends Column> = TColumn['_']['dataType'] extends infer TDataType ? TDataType extends 'custom' ? z.ZodAny : TDataType extends 'array' ? z.ZodArray<GetZodType<Assume<TColumn['_'], {
+     baseColumn: Column;
+-}>['baseColumn']>> : TDataType extends 'bigint' ? z.ZodBigInt : TDataType extends 'number' ? z.ZodNumber : TDataType extends 'string' ? z.ZodString : TDataType extends 'boolean' ? z.ZodBoolean : TDataType extends 'date' ? z.ZodDate : z.ZodAny : never;
++}>['baseColumn']>> : TDataType extends 'json' ? z.ZodType<Json> : TColumn extends {
++    enumValues: [string, ...string[]];
++} ? Equal<TColumn['enumValues'], [string, ...string[]]> extends true ? z.ZodString : z.ZodEnum<TColumn['enumValues']> : TDataType extends 'bigint' ? z.ZodBigInt : TDataType extends 'number' ? z.ZodNumber : TDataType extends 'string' ? z.ZodString : TDataType extends 'boolean' ? z.ZodBoolean : TDataType extends 'date' ? z.ZodDate : z.ZodAny : never;
+ type ValueOrUpdater<T, TUpdaterArg> = T | ((arg: TUpdaterArg) => T);
+ type UnwrapValueOrUpdater<T> = T extends ValueOrUpdater<infer U, any> ? U : never;
+ export type Refine<TTable extends Table, TMode extends 'select' | 'insert'> = {
+diff --git a/node_modules/drizzle-zod/index.d.ts b/node_modules/drizzle-zod/index.d.ts
+index d956d8a..7f480f4 100644
+--- a/node_modules/drizzle-zod/index.d.ts
++++ b/node_modules/drizzle-zod/index.d.ts
+@@ -10,11 +10,11 @@ type MapInsertColumnToZod<TColumn extends Column, TType extends z.ZodTypeAny> =
+ type MapSelectColumnToZod<TColumn extends Column, TType extends z.ZodTypeAny> = TColumn['_']['notNull'] extends false ? z.ZodNullable<TType> : TType;
+ type MapColumnToZod<TColumn extends Column, TType extends z.ZodTypeAny, TMode extends 'insert' | 'select'> = TMode extends 'insert' ? MapInsertColumnToZod<TColumn, TType> : MapSelectColumnToZod<TColumn, TType>;
+ type MaybeOptional<TColumn extends Column, TType extends z.ZodTypeAny, TMode extends 'insert' | 'select', TNoOptional extends boolean> = TNoOptional extends true ? TType : MapColumnToZod<TColumn, TType, TMode>;
+-type GetZodType<TColumn extends Column> = TColumn['_']['dataType'] extends infer TDataType ? TDataType extends 'custom' ? z.ZodAny : TDataType extends 'json' ? z.ZodType<Json> : TColumn extends {
+-    enumValues: [string, ...string[]];
+-} ? Equal<TColumn['enumValues'], [string, ...string[]]> extends true ? z.ZodString : z.ZodEnum<TColumn['enumValues']> : TDataType extends 'array' ? z.ZodArray<GetZodType<Assume<TColumn['_'], {
++type GetZodType<TColumn extends Column> = TColumn['_']['dataType'] extends infer TDataType ? TDataType extends 'custom' ? z.ZodAny : TDataType extends 'array' ? z.ZodArray<GetZodType<Assume<TColumn['_'], {
+     baseColumn: Column;
+-}>['baseColumn']>> : TDataType extends 'bigint' ? z.ZodBigInt : TDataType extends 'number' ? z.ZodNumber : TDataType extends 'string' ? z.ZodString : TDataType extends 'boolean' ? z.ZodBoolean : TDataType extends 'date' ? z.ZodDate : z.ZodAny : never;
++}>['baseColumn']>> : TDataType extends 'json' ? z.ZodType<Json> : TColumn extends {
++    enumValues: [string, ...string[]];
++} ? Equal<TColumn['enumValues'], [string, ...string[]]> extends true ? z.ZodString : z.ZodEnum<TColumn['enumValues']> : TDataType extends 'bigint' ? z.ZodBigInt : TDataType extends 'number' ? z.ZodNumber : TDataType extends 'string' ? z.ZodString : TDataType extends 'boolean' ? z.ZodBoolean : TDataType extends 'date' ? z.ZodDate : z.ZodAny : never;
+ type ValueOrUpdater<T, TUpdaterArg> = T | ((arg: TUpdaterArg) => T);
+ type UnwrapValueOrUpdater<T> = T extends ValueOrUpdater<infer U, any> ? U : never;
+ export type Refine<TTable extends Table, TMode extends 'select' | 'insert'> = {
