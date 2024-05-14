@@ -170,7 +170,7 @@ const NewFindingForm = () => {
       />
       <div className="flex gap-2">
         <Button
-          variant="secondary"
+          variant="outline"
           type="submit"
           onClick={handleSubmit(getOnSubmit(FindingStatus.DRAFT))}>
           Save as draft

@@ -15,7 +15,11 @@ export const signUpSchema = z.object({
 })
 
 export const addContestSchema = insertContestSchema
-  .omit({authorId: true})
+  .omit({
+    authorId: true,
+    distributedRewardsAmount: true,
+    rewardsTransferTxHash: true,
+  })
   .extend({
     status: z.enum([ContestStatus.PENDING, ContestStatus.DRAFT]),
   })
