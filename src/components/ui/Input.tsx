@@ -1,11 +1,19 @@
 import {InputHTMLAttributes, forwardRef} from 'react'
 
 import {cn} from '@/lib/utils/client/tailwind'
+import {Merge} from '@/lib/types/general'
 
-export type InputProps = InputHTMLAttributes<HTMLInputElement>
+export type InputProps = Merge<
+  InputHTMLAttributes<HTMLInputElement>,
+  {
+    value: null
+  }
+>
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({className, type, ...props}, ref) => {
+  ({className, type, value: receivedValue, ...props}, ref) => {
+    const value = receivedValue === null ? '' : receivedValue
+
     return (
       <input
         type={type}
@@ -14,6 +22,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           className,
         )}
         ref={ref}
+        value={value}
         {...props}
       />
     )

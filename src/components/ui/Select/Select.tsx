@@ -9,15 +9,19 @@ import SelectItem from './SelectItem'
 
 import {SelectOption} from '@/lib/utils/common/enums'
 import {cn} from '@/lib/utils/client/tailwind'
+import {Override} from '@/lib/types/general'
 
-type SelectProps<T extends string> = {
-  className?: string
-  options: SelectOption<T>[]
-  placeholder?: string
-  value?: T | null
-  defaultValue?: T
-  onValueChange?: (value: T) => void
-} & Omit<RadixSelectProps, 'value' | 'defaultValue' | 'onValueChange'>
+type SelectProps<T extends string> = Override<
+  RadixSelectProps,
+  {
+    className?: string
+    options: SelectOption<T>[]
+    placeholder?: string
+    value?: T | null
+    defaultValue?: T
+    onValueChange?: (value: T) => void
+  }
+>
 
 const Select = <T extends string>({
   className,
