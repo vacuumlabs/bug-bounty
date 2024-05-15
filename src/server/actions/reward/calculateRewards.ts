@@ -11,8 +11,9 @@ import {ContestStatus, FindingSeverity, FindingStatus} from '../../db/models'
 import {ContestSeverityWeights} from '@/server/db/schema/contestSeverityWeights'
 import {ServerError} from '@/lib/types/error'
 import {serializeServerErrors} from '@/lib/utils/common/error'
+import {defaultSeverityWeights} from '@/lib/utils/common/contest'
 
-type CustomSeverityWeights = Pick<
+export type SeverityWeights = Pick<
   ContestSeverityWeights,
   'info' | 'low' | 'medium' | 'high' | 'critical'
 >
@@ -23,15 +24,7 @@ export type CalculateRewardsResponse = Awaited<
 
 const BEST_REPORT_BONUS = 0.3 // 30%
 
-const defaultSeverityWeights: Record<FindingSeverity, number> = {
-  [FindingSeverity.CRITICAL]: 36,
-  [FindingSeverity.HIGH]: 9,
-  [FindingSeverity.MEDIUM]: 3,
-  [FindingSeverity.LOW]: 1,
-  [FindingSeverity.INFO]: 0,
-}
-
-const getSeverityWeights = (customWeights: CustomSeverityWeights | null) => {
+const getSeverityWeights = (customWeights: SeverityWeights | null) => {
   if (customWeights) {
     return {
       [FindingSeverity.CRITICAL]: customWeights.critical,

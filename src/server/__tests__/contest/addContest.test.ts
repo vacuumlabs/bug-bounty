@@ -34,7 +34,7 @@ const request: AddContestRequest = {
     startDate: addDays(new Date(), 1),
     endDate: addDays(new Date(), 2),
   },
-  customWeights: {
+  severityWeights: {
     info: 1,
     low: 2,
     medium: 3,
@@ -111,7 +111,7 @@ describe('addContest', () => {
       updatedAt: expectAnyDate,
       createdAt: expectAnyDate,
       contestId: dbContest.id,
-      ...request.customWeights,
+      ...request.severityWeights,
     })
   })
 })
