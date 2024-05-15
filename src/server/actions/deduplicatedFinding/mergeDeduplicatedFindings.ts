@@ -22,7 +22,7 @@ export type MergeDeduplicatedFindingsResponse = Awaited<
   ReturnType<typeof mergeDeduplicatedFindings>
 >
 
-const mergeDeduplicatedFindingsAction = async (
+export const mergeDeduplicatedFindingsAction = async (
   request: MergeDeduplicatedFindingsRequest,
 ) => {
   await requireJudgeAuth()
