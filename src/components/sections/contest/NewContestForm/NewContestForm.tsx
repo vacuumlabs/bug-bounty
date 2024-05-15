@@ -78,9 +78,12 @@ const NewContestForm = () => {
 
   const getOnSubmit =
     (status: AddContestStatus) =>
-    ({customWeights, repository, ...values}: FormValues) => {
+    ({severityWeights, repository, ...values}: FormValues) => {
       mutate(
-        {contest: {...values, repoUrl: repository.url, status}, customWeights},
+        {
+          contest: {...values, repoUrl: repository.url, status},
+          severityWeights,
+        },
         {
           onSuccess: () =>
             toast({

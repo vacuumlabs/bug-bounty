@@ -14,7 +14,7 @@ import {ServerError} from '@/lib/types/error'
 
 const addContestRequestSchema = z.object({
   contest: addContestSchema,
-  customWeights: addContestSeverityWeightsSchema,
+  severityWeights: addContestSeverityWeightsSchema,
 })
 
 export type AddContestRequest = z.infer<typeof addContestRequestSchema>
@@ -26,7 +26,7 @@ export const addContestAction = async (request: AddContestRequest) => {
     throw new ServerError("Judges can't create contests.")
   }
 
-  const {contest, customWeights} = addContestRequestSchema.parse(request)
+  const {contest, severityWeights} = addContestRequestSchema.parse(request)
 
   if (isPast(contest.startDate)) {
     throw new ServerError('Contest start date must be in the future.')
@@ -51,7 +51,7 @@ export const addContestAction = async (request: AddContestRequest) => {
 
     await tx.insert(schema.contestSeverityWeights).values({
       contestId: insertedContest[0].id,
-      ...customWeights,
+      ...severityWeights,
     })
 
     return insertedContest

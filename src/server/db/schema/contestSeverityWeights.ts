@@ -40,23 +40,23 @@ export const insertContestSeverityWeightsSchema = createInsertSchema(
   {
     info: (schema) =>
       schema.info.min(0, {
-        message: 'Custom severity weight must be greater than or equal to 0',
+        message: 'Severity weight must be greater than or equal to 0',
       }),
     low: (schema) =>
       schema.low.min(0, {
-        message: 'Custom severity weight must be greater than or equal to 0',
+        message: 'Severity weight must be greater than or equal to 0',
       }),
     medium: (schema) =>
       schema.medium.min(0, {
-        message: 'Custom severity weight must be greater than or equal to 0',
+        message: 'Severity weight must be greater than or equal to 0',
       }),
     high: (schema) =>
       schema.high.min(0, {
-        message: 'Custom severity weight must be greater than or equal to 0',
+        message: 'Severity weight must be greater than or equal to 0',
       }),
     critical: (schema) =>
       schema.critical.min(0, {
-        message: 'Custom severity weight must be greater than or equal to 0',
+        message: 'Severity weight must be greater than or equal to 0',
       }),
   },
 )
