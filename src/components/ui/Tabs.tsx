@@ -4,14 +4,18 @@ import * as TabsPrimitive from '@radix-ui/react-tabs'
 import {ComponentPropsWithoutRef, ElementRef, forwardRef} from 'react'
 
 import {cn} from '@/lib/utils/client/tailwind'
+import {Override} from '@/lib/types/general'
 
 const TabsRoot = TabsPrimitive.Root
 
-type TabsProps<T extends string> = {
-  value?: T
-  defaultValue?: T
-  onValueChange?: (value: T) => void
-} & Omit<TabsPrimitive.TabsProps, 'defaultValue' | 'value' | 'onValueChange'>
+type TabsProps<T extends string> = Override<
+  TabsPrimitive.TabsProps,
+  {
+    value?: T
+    defaultValue?: T
+    onValueChange?: (value: T) => void
+  }
+>
 
 const Tabs = <T extends string>({...props}: TabsProps<T>) => (
   <TabsRoot {...(props as TabsPrimitive.TabsProps)} />

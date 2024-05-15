@@ -14,14 +14,18 @@ import {Button} from './Button'
 import {Card, CardContent} from '@/components/ui/Card'
 import {Input} from '@/components/ui/Input'
 import {cn} from '@/lib/utils/client/tailwind'
+import {Override} from '@/lib/types/general'
 
-type DropzoneProps = {
-  wrapperClassName?: string
-  className?: string
-  message: string
-  onChange: (acceptedFiles: File[] | null) => void
-  value: File[] | null | undefined
-} & Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>
+type DropzoneProps = Override<
+  InputHTMLAttributes<HTMLInputElement>,
+  {
+    wrapperClassName?: string
+    className?: string
+    message: string
+    onChange: (acceptedFiles: File[] | null) => void
+    value: File[] | null | undefined
+  }
+>
 
 const Dropzone = forwardRef<HTMLDivElement, DropzoneProps>(
   ({className, wrapperClassName, message, onChange, value, ...props}, ref) => {
