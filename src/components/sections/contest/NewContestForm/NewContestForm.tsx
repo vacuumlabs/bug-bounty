@@ -1,11 +1,11 @@
 'use client'
 
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Control, useForm} from 'react-hook-form'
+import {UseFormReturn, useForm} from 'react-hook-form'
 import {z} from 'zod'
 import {useState} from 'react'
 
-import NewContestFormPage1 from './NewContestFormPage1'
+import NewContestFormPage1, {page1fields} from './NewContestFormPage1'
 
 import {Form} from '@/components/ui/Form'
 import {useSearchParamsState} from '@/lib/hooks/useSearchParamsState'
@@ -19,22 +19,35 @@ import {Button} from '@/components/ui/Button'
 import {toast} from '@/components/ui/Toast'
 import {ContestStatus} from '@/server/db/models'
 import FormPagination from '@/components/ui/FormPagination'
+import {ZodOutput} from '@/lib/types/zod'
+import {GithubRepository} from '@/server/actions/github/getGithub'
 
 const formPages = ['Basic information', 'Parameter settings', 'Review']
+
+const githubRepoSchema = z.object({
+  id: z.number(),
+  url: z.string().url(),
+  owner: z.string(),
+  defaultBranch: z.string(),
+  name: z.string(),
+  fullName: z.string(),
+}) satisfies ZodOutput<GithubRepository>
 
 const formSchema = addContestSchema
   .omit({
     status: true,
+    repoUrl: true,
   })
   .extend({
     customWeights: addContestSeverityWeightsSchema,
+    repository: githubRepoSchema,
   })
 
 type FormValues = z.infer<typeof formSchema>
 type AddContestStatus = z.infer<typeof addContestSchema>['status']
 
 export type NewContestFormPageProps = {
-  control: Control<FormValues>
+  form: UseFormReturn<FormValues>
 }
 
 const useNewContestFormSearchParamsPage = () => {
@@ -61,13 +74,13 @@ const NewContestForm = () => {
     },
   })
 
-  const {control, handleSubmit, trigger} = form
+  const {handleSubmit, trigger} = form
 
   const getOnSubmit =
     (status: AddContestStatus) =>
-    ({customWeights, ...values}: FormValues) => {
+    ({customWeights, repository, ...values}: FormValues) => {
       mutate(
-        {contest: {...values, status}, customWeights},
+        {contest: {...values, repoUrl: repository.url, status}, customWeights},
         {
           onSuccess: () =>
             toast({
@@ -98,7 +111,7 @@ const NewContestForm = () => {
           pages={formPages}
         />
         <TabsContent className="mt-11" value="1">
-          <NewContestFormPage1 control={control} />
+          <NewContestFormPage1 form={form} />
         </TabsContent>
         <TabsContent value="2">{/* TODO */}</TabsContent>
         <TabsContent value="3">{/* TODO */}</TabsContent>
