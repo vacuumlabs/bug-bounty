@@ -40,21 +40,19 @@ const ContestsTableRow = ({contest}: ContestsTableRowProps) => {
   const [contestType] = useSearchParamsContestType()
 
   return (
-    <tr
-      key={contest.id}
-      className="flex items-center gap-10 bg-white px-8 py-4">
+    <tr key={contest.id} className="flex items-center gap-4 bg-white px-8 py-4">
       <td className="flex-grow font-semibold">{contest.title}</td>
-      <td className="flex items-center gap-3">
+      <td className="flex items-center justify-end gap-3">
         <div className={cn(indicatorVariants({type: contestType}))} />
         <span className="font-semibold">{contestStatusTexts[contestType]}</span>
       </td>
-      <td className="flex items-baseline justify-center gap-1.5">
+      <td className="flex w-[15%] items-baseline justify-center gap-1.5">
         <span className="text-sm">{timeTexts[contestType]}</span>
         <span className="font-semibold">
           {DateTime.fromJSDate(contest.endDate).toRelative({locale: 'en'})}
         </span>
       </td>
-      <td className="flex items-baseline justify-center gap-4">
+      <td className="flex w-[15%] items-baseline justify-center gap-4">
         <span className="text-sm">Rewards</span>
         <span className="font-semibold">
           {formatAda(contest.rewardsAmount)}
