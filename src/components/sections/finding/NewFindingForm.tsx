@@ -142,11 +142,7 @@ const NewFindingForm = () => {
           <FormItem>
             <FormLabel>Severity</FormLabel>
             <FormControl>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                options={selectOptions.findingSeverity}
-              />
+              <Select {...field} options={selectOptions.findingSeverity} />
             </FormControl>
             <FormMessage />
           </FormItem>
