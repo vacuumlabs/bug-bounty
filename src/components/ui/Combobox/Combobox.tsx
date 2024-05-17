@@ -1,7 +1,7 @@
 'use client'
 
 import {Check, ChevronsUpDown} from 'lucide-react'
-import {useState} from 'react'
+import {Ref, useState} from 'react'
 
 import {cn} from '@/lib/utils/client/tailwind'
 import {Button} from '@/components/ui/Button'
@@ -16,17 +16,20 @@ import {
 } from '@/components/ui/Command'
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/Popover'
 import {SelectOption} from '@/lib/utils/common/enums'
+import {genericForwardRef} from '@/lib/utils/common/react'
 
 export type CommonComboboxProps<T extends string> = {
   className?: string
   emptyListText?: string
   placeholder?: string
   searchPlaceholder?: string
-  value: T | undefined
-  onChange: (value: T | undefined) => void
+  suppressHydrationWarning?: boolean
+  value: T | null | undefined
+  onBlur?: () => void
+  onChange: (value: T | null) => void
 }
 
-type ComboboxProps<T extends string> = {
+export type ComboboxProps<T extends string = string> = {
   isLoading?: boolean
   options: SelectOption<T>[]
   searchQuery?: string
@@ -39,24 +42,29 @@ const getLabelForValue = (options: SelectOption[], value: string) => {
   return option?.label
 }
 
-const Combobox = <T extends string>({
-  className,
-  emptyListText = 'No items found.',
-  isLoading,
-  options,
-  placeholder = 'Select an option',
-  searchPlaceholder = 'Search...',
-  searchQuery,
-  setSearchQuery,
-  shouldFilter,
-  value,
-  onChange,
-}: ComboboxProps<T>) => {
+const Combobox = <T extends string>(
+  {
+    className,
+    emptyListText = 'No items found.',
+    isLoading,
+    options,
+    placeholder = 'Select an option',
+    searchPlaceholder = 'Search...',
+    searchQuery,
+    setSearchQuery,
+    shouldFilter,
+    suppressHydrationWarning,
+    value,
+    onBlur,
+    onChange,
+  }: ComboboxProps<T>,
+  ref: Ref<HTMLButtonElement>,
+) => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedLabel, setSelectedLabel] = useState<string>()
 
   const onSelect = (newValue: string) => {
-    onChange(newValue === value ? undefined : (newValue as T))
+    onChange(newValue === value ? null : (newValue as T))
 
     const label = getLabelForValue(options, newValue)
     setSelectedLabel(label)
@@ -67,17 +75,19 @@ const Combobox = <T extends string>({
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button
+          suppressHydrationWarning={suppressHydrationWarning}
+          ref={ref}
           variant="outline"
           role="combobox"
           aria-expanded={isOpen}
-          className={cn('flex w-[200px] justify-between', className)}>
+          className={cn('flex w-[250px] justify-between', className)}>
           {value
             ? selectedLabel ?? getLabelForValue(options, value)
             : placeholder}
           <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent onBlur={onBlur} className="w-[250px] p-0">
         <Command shouldFilter={shouldFilter}>
           <CommandInput
             value={searchQuery}
@@ -110,4 +120,4 @@ const Combobox = <T extends string>({
   )
 }
 
-export default Combobox
+export default genericForwardRef(Combobox)
