@@ -8,6 +8,7 @@ import {DateTime} from 'luxon'
 
 import NewContestFormPage1, {page1fields} from './NewContestFormPage1'
 import NewContestFormPage2, {page2fields} from './NewContestFormPage2'
+import NewContestFormReviewPage from './NewContestFormReviewPage'
 
 import {Form} from '@/components/ui/Form'
 import {useSearchParamsState} from '@/lib/hooks/useSearchParamsState'
@@ -66,7 +67,7 @@ const formSchema = addContestSchema
   })
   .transform(({rewardsAmount, ...data}) => ({
     ...data,
-    rewardsAmount: Math.round(Number(rewardsAmount) * 10e6).toString(),
+    rewardsAmount: Math.round(Number(rewardsAmount) * 1e6).toString(),
   }))
 
 type FormValues = z.infer<typeof formSchema>
@@ -125,19 +126,20 @@ const NewContestForm = () => {
 
   const getOnSubmit =
     (status: AddContestStatus) =>
-    ({severityWeights, repository, ...values}: FormValues) => {
+    ({severityWeights, repository, timezone, ...values}: FormValues) => {
       mutate(
         {
           contest: {...values, repoUrl: repository.url, status},
           severityWeights,
         },
         {
+          // TODO: navigate somewhere
           onSuccess: () =>
             toast({
               title:
                 status === ContestStatus.DRAFT
-                  ? 'Finding saved.'
-                  : 'Finding added.',
+                  ? 'Contest saved.'
+                  : 'Contest added.',
             }),
         },
       )
@@ -167,7 +169,9 @@ const NewContestForm = () => {
         <TabsContent forceMount hidden={page !== '2'} value="2">
           <NewContestFormPage2 form={form} />
         </TabsContent>
-        <TabsContent value="3">{/* TODO */}</TabsContent>
+        <TabsContent value="3">
+          <NewContestFormReviewPage form={form} />{' '}
+        </TabsContent>
       </Tabs>
       <div className="flex justify-between">
         <Button
