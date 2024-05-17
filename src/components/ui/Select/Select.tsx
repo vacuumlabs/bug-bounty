@@ -1,6 +1,7 @@
 'use client'
 
 import {SelectProps as RadixSelectProps} from '@radix-ui/react-select'
+import {Ref} from 'react'
 
 import {SelectRoot, SelectValue} from './primitives'
 import SelectTrigger from './SelectTrigger'
@@ -10,8 +11,9 @@ import SelectItem from './SelectItem'
 import {SelectOption} from '@/lib/utils/common/enums'
 import {cn} from '@/lib/utils/client/tailwind'
 import {Override} from '@/lib/types/general'
+import {genericForwardRef} from '@/lib/utils/common/react'
 
-type SelectProps<T extends string> = Override<
+export type SelectProps<T extends string = string> = Override<
   RadixSelectProps,
   {
     className?: string
@@ -19,33 +21,45 @@ type SelectProps<T extends string> = Override<
     placeholder?: string
     value?: T | null
     defaultValue?: T
-    onValueChange?: (value: T) => void
+    onChange?: (value: T) => void
+    onBlur?: () => void
   }
 >
 
-const Select = <T extends string>({
-  className,
-  options,
-  placeholder,
-  value,
-  ...rootProps
-}: SelectProps<T>) => {
-  return (
-    <SelectRoot
-      value={value === null ? '' : value}
-      {...(rootProps as RadixSelectProps)}>
-      <SelectTrigger className={cn('w-[180px]', className)}>
-        <SelectValue placeholder={placeholder} />
-      </SelectTrigger>
-      <SelectContent>
-        {options.map(({value, label}) => (
-          <SelectItem key={value} value={value}>
-            {label}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </SelectRoot>
-  )
-}
+const Select = genericForwardRef(
+  <T extends string>(
+    {
+      className,
+      options,
+      placeholder,
+      value,
+      onChange,
+      onBlur,
+      ...rootProps
+    }: SelectProps<T>,
+    ref: Ref<HTMLButtonElement>,
+  ) => {
+    return (
+      <SelectRoot
+        value={value === null ? '' : value}
+        onValueChange={onChange}
+        {...rootProps}>
+        <SelectTrigger
+          onBlur={onBlur}
+          ref={ref}
+          className={cn('w-[180px]', className)}>
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map(({value, label}) => (
+            <SelectItem key={value} value={value}>
+              {label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </SelectRoot>
+    )
+  },
+)
 
 export default Select
