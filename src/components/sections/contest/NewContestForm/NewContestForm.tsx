@@ -5,6 +5,7 @@ import {UseFormReturn, useForm} from 'react-hook-form'
 import {z} from 'zod'
 import {useState} from 'react'
 import {DateTime} from 'luxon'
+import {useRouter} from 'next/navigation'
 
 import NewContestFormPage1, {page1fields} from './NewContestFormPage1'
 import NewContestFormPage2, {page2fields} from './NewContestFormPage2'
@@ -96,6 +97,7 @@ const useNewContestFormSearchParamsPage = () => {
 const NewContestForm = () => {
   const [page, setPage] = useNewContestFormSearchParamsPage()
   const [lastAllowedIndex, setLastAllowedIndex] = useState(0)
+  const router = useRouter()
 
   const {mutate} = useAddContest()
 
@@ -133,14 +135,15 @@ const NewContestForm = () => {
           severityWeights,
         },
         {
-          // TODO: navigate somewhere
-          onSuccess: () =>
-            toast({
-              title:
-                status === ContestStatus.DRAFT
-                  ? 'Contest saved.'
-                  : 'Contest added.',
-            }),
+          onSuccess: () => {
+            if (status === ContestStatus.DRAFT) {
+              toast({
+                title: 'Contest saved.',
+              })
+            } else {
+              router.push('/contests/new/success')
+            }
+          },
         },
       )
     }
