@@ -1,4 +1,4 @@
-import {ZodError, ZodIssue} from 'zod'
+import {ZodError, ZodIssue, z} from 'zod'
 
 import {
   FormError,
@@ -144,3 +144,13 @@ export const withApiErrorHandler =
 
     return handleApiErrors(result, shouldFormHandleZodErrors)
   }
+
+const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
+  if (issue.code === z.ZodIssueCode.invalid_type && issue.received === 'null') {
+    return {message: 'Required'}
+  }
+  return {message: ctx.defaultError}
+}
+
+// sets global error map for all zod schemas
+z.setErrorMap(customErrorMap)
