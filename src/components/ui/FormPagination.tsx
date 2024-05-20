@@ -14,7 +14,7 @@ const Line = ({filled}: {filled: boolean}) => (
 )
 
 const Dot = ({filled, color}: {filled: boolean; color: string}) => (
-  <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full border border-black p-1">
+  <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full border border-white p-1">
     {filled && <div className={cn('h-full w-full rounded-full', color)} />}
   </div>
 )
@@ -47,7 +47,7 @@ const FormPagination = ({
             className="relative">
             <Dot
               filled={index <= Math.max(lastAllowedIndex, currentIndex)}
-              color={index <= currentIndex ? 'bg-black' : 'bg-slate-300'}
+              color={index <= currentIndex ? 'bg-white' : 'bg-slate-300'}
             />
             <span className="absolute -bottom-8 -translate-x-1/2 whitespace-nowrap text-sm">
               {title}

@@ -21,9 +21,7 @@ const VerifyWalletButton = () => {
     })
 
   return connected ? (
-    <Button size="lg" onClick={handleVerifyWallet}>
-      Verify wallet
-    </Button>
+    <Button onClick={handleVerifyWallet}>Verify wallet</Button>
   ) : (
     <ConnectWallet />
   )
