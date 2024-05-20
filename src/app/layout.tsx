@@ -1,15 +1,17 @@
 import type {Metadata} from 'next'
-import {Inter} from 'next/font/google'
-import Link from 'next/link'
+import localFont from 'next/font/local'
 
 import './globals.css'
 
 import Providers from '@/components/global/Providers'
 import {Toaster} from '@/components/ui/Toast'
 import {getServerAuthSession} from '@/server/utils/auth'
-import ConnectWallet from '@/components/sections/profile/ConnectWallet'
+import Navbar from '@/components/global/Navbar'
+import {cn} from '@/lib/utils/client/tailwind'
 
-const inter = Inter({subsets: ['latin']})
+const redditSans = localFont({
+  src: '../fonts/RedditSans-VariableFont_wght.ttf',
+})
 
 export const metadata: Metadata = {
   title: 'Cardano Bug Bounty',
@@ -25,15 +27,12 @@ const RootLayout = async ({
 
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={cn(redditSans.className, 'bg-black text-white')}>
         <Providers session={session}>
-          <nav className="fixed z-10 flex h-[90px] w-full items-center justify-between bg-slate-200 p-4 px-6">
-            <Link className="text-3xl font-semibold text-black" href="/">
-              Cardano Bug Bounty PoC
-            </Link>
-            <ConnectWallet />
-          </nav>
-          <div className="flex min-h-screen flex-col pt-[90px]">{children}</div>
+          <Navbar />
+          <div className="flex min-h-screen flex-col pt-[136px]">
+            {children}
+          </div>
         </Providers>
         <Toaster />
       </body>
