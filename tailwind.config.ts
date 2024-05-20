@@ -16,7 +16,24 @@ const config = {
       center: true,
       padding: '2rem',
     },
+    colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
+      black: '#0F0F10',
+      white: {
+        DEFAULT: '#FFFFFF',
+        '5': 'rgba(255, 255, 255, 0.05)',
+        '10': 'rgba(255, 255, 255, 0.1)',
+      },
+      green: '#9FFF9D',
+      blue: '#9DAFFF',
+      red: '#FF9D9D',
+      sky: '#9DE8FF',
+    },
     extend: {
+      fontSize: {
+        '5xl': ['3rem', '3.5rem'],
+      },
       keyframes: {
         'accordion-down': {
           from: {height: '0'},
