@@ -19,7 +19,7 @@ export type ApproveOrRejectFindingRequest = z.infer<
   typeof approveOrRejectFindingSchema
 >
 
-const approveOrRejectFindingAction = async (
+export const approveOrRejectFindingAction = async (
   request: ApproveOrRejectFindingRequest,
 ) => {
   await requireJudgeAuth()
@@ -48,7 +48,7 @@ const approveOrRejectFindingAction = async (
   }
 
   if (finding.status !== FindingStatus.PENDING) {
-    throw new ServerError('Only pending findings can be confirmed/rejected.')
+    throw new ServerError('Only pending findings can be approved/rejected.')
   }
 
   if (isFuture(finding.contest.endDate)) {

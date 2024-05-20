@@ -21,7 +21,7 @@ export type EditFindingRequest = {
 }
 
 // TODO: Edit finding attachments
-const editFindingAction = async (request: EditFindingRequest) => {
+export const editFindingAction = async (request: EditFindingRequest) => {
   const updatedFinding = editFindingSchema.parse(request.finding)
 
   await requireEditableFinding(updatedFinding.id)

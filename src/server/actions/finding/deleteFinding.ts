@@ -8,7 +8,7 @@ import {serializeServerErrors} from '@/lib/utils/common/error'
 
 export type DeleteFindingResponse = Awaited<ReturnType<typeof deleteFinding>>
 
-const deleteFindingAction = async (findingId: string) => {
+export const deleteFindingAction = async (findingId: string) => {
   await requireEditableFinding(findingId)
 
   return db

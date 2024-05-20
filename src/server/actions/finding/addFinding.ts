@@ -32,7 +32,7 @@ export type AddFindingResponse = Exclude<
   ApiZodError
 >
 
-const addFindingAction = async (request: AddFindingRequest) => {
+export const addFindingAction = async (request: AddFindingRequest) => {
   const session = await requireServerSession()
 
   if (isJudge(session)) {

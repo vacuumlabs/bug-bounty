@@ -12,7 +12,7 @@ export type AddFindingAttachmentRequest = z.infer<
   typeof insertFindingAttachmentSchema
 >
 
-const addFindingAttachmentAction = async (
+export const addFindingAttachmentAction = async (
   request: AddFindingAttachmentRequest,
 ) => {
   const session = await requireServerSession()
@@ -27,7 +27,7 @@ const addFindingAttachmentAction = async (
     throw new ServerError('Finding not found.')
   }
 
-  if (finding.authorId === session.user.id) {
+  if (finding.authorId !== session.user.id) {
     throw new ServerError('Only finding author can add attachments.')
   }
 
