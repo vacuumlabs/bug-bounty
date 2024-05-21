@@ -1,6 +1,7 @@
 import type {Config} from 'tailwindcss'
 import tailwindcssAnimate from 'tailwindcss-animate'
 import tailwindcssTypography from '@tailwindcss/typography'
+import colors from 'tailwindcss/colors'
 
 const config = {
   darkMode: ['class'],
@@ -24,11 +25,13 @@ const config = {
         DEFAULT: '#FFFFFF',
         '5': 'rgba(255, 255, 255, 0.05)',
         '10': 'rgba(255, 255, 255, 0.1)',
+        '70': 'rgba(255, 255, 255, 0.7)',
       },
       green: '#9FFF9D',
       blue: '#9DAFFF',
       red: '#FF9D9D',
       sky: '#9DE8FF',
+      slate: colors.slate,
     },
     extend: {
       fontSize: {

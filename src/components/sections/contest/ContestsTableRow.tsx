@@ -1,14 +1,17 @@
 import Link from 'next/link'
-import {cva} from 'class-variance-authority'
+import {VariantProps} from 'class-variance-authority'
 import {DateTime} from 'luxon'
+import {ArrowRight} from 'lucide-react'
 
 import {useSearchParamsContestType} from './utils'
 
 import {Button} from '@/components/ui/Button'
 import {Contest} from '@/server/db/schema/contest'
 import {formatAda} from '@/lib/utils/common/format'
-import {cn} from '@/lib/utils/client/tailwind'
 import {ContestOccurence} from '@/server/db/models'
+import {Avatar, AvatarImage} from '@/components/ui/Avatar'
+import cardanoLogo from '@public/images/cardano-logo.png'
+import {Badge, badgeVariants} from '@/components/ui/Badge'
 
 type ContestsTableRowProps = {
   contest: Contest
@@ -26,41 +29,49 @@ const timeTexts = {
   [ContestOccurence.PAST]: 'Ended ',
 }
 
-const indicatorVariants = cva('h-4 w-4 rounded-full', {
-  variants: {
-    type: {
-      [ContestOccurence.PRESENT]: 'bg-lime-500',
-      [ContestOccurence.FUTURE]: 'bg-cyan-500',
-      [ContestOccurence.PAST]: 'bg-fuchsia-500',
-    },
-  },
-})
+const badgeVariantsMap: Record<
+  ContestOccurence,
+  VariantProps<typeof badgeVariants>['variant']
+> = {
+  [ContestOccurence.PRESENT]: 'green',
+  [ContestOccurence.FUTURE]: 'sky',
+  [ContestOccurence.PAST]: 'blue',
+}
 
 const ContestsTableRow = ({contest}: ContestsTableRowProps) => {
   const [contestType] = useSearchParamsContestType()
 
   return (
-    <tr key={contest.id} className="flex items-center gap-4 bg-white px-8 py-4">
-      <td className="flex-grow font-semibold">{contest.title}</td>
-      <td className="flex items-center justify-end gap-3">
-        <div className={cn(indicatorVariants({type: contestType}))} />
-        <span className="font-semibold">{contestStatusTexts[contestType]}</span>
+    <tr key={contest.id} className="bg-white-5 flex items-center gap-4 p-4">
+      <td>
+        <Avatar>
+          <AvatarImage src={cardanoLogo.src} />
+        </Avatar>
       </td>
-      <td className="flex w-[15%] items-baseline justify-center gap-1.5">
-        <span className="text-sm">{timeTexts[contestType]}</span>
+      <td className="flex-grow text-xl font-semibold">{contest.title}</td>
+      <td className="flex items-center justify-end gap-3">
+        <Badge variant={badgeVariantsMap[contestType]}>
+          {contestStatusTexts[contestType]}
+        </Badge>
+      </td>
+      <td className="flex w-[15%] items-baseline justify-center">
+        <span className="text-white-70 whitespace-pre">{`${timeTexts[contestType]} `}</span>
         <span className="font-semibold">
           {DateTime.fromJSDate(contest.endDate).toRelative({locale: 'en'})}
         </span>
       </td>
-      <td className="flex w-[15%] items-baseline justify-center gap-4">
-        <span className="text-sm">Rewards</span>
+      <td className="flex w-[15%] items-baseline justify-center">
+        <span className="text-white-70 whitespace-pre">{'Rewards:  '}</span>
         <span className="font-semibold">
           {formatAda(contest.rewardsAmount)}
         </span>
       </td>
       <td>
-        <Button variant="outline" asChild>
-          <Link href={`/contests/${contest.id}`}>View Audit</Link>
+        <Button variant="outline" asChild className="text-sm normal-case">
+          <Link className="gap-2" href={`/contests/${contest.id}`}>
+            View Audit
+            <ArrowRight size={16} />
+          </Link>
         </Button>
       </td>
     </tr>
