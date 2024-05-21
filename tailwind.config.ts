@@ -23,9 +23,6 @@ const config = {
       black: '#0F0F10',
       white: {
         DEFAULT: '#FFFFFF',
-        '5': 'rgba(255, 255, 255, 0.05)',
-        '10': 'rgba(255, 255, 255, 0.1)',
-        '70': 'rgba(255, 255, 255, 0.7)',
       },
       green: '#9FFF9D',
       blue: '#9DAFFF',
