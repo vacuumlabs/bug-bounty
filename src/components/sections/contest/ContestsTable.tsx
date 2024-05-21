@@ -9,7 +9,7 @@ type ContestsTableProps = {
 const ContestsTable = ({contests}: ContestsTableProps) => {
   return (
     <table className="w-full">
-      <tbody className="flex flex-col gap-2">
+      <tbody className="flex flex-col gap-3">
         {contests.map((contest) => (
           <ContestsTableRow key={contest.id} contest={contest} />
         ))}
