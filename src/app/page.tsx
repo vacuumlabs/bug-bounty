@@ -13,6 +13,7 @@ import {Tabs, TabsList, TabsTrigger} from '@/components/ui/Tabs'
 import {Separator} from '@/components/ui/Separator'
 import Contests from '@/components/sections/contest/Contests'
 import HowItWorks from '@/components/sections/contest/HowItWorks'
+import Footer from '@/components/global/Footer'
 
 const CONTESTS_PER_PAGE = 7
 
@@ -74,13 +75,42 @@ const Home = async () => {
       <div className="relative overflow-hidden bg-white/5 p-24">
         <Image
           src={overlayImage}
-          className="absolute right-0 top-0"
+          className="absolute right-0 top-0 h-auto"
           alt="Overlay graphic"
           width={514}
-          height={700}
         />
         <HowItWorks />
       </div>
+      <div className="p-24">
+        <div className="bg-blue relative flex flex-col items-center overflow-hidden rounded-full p-11 text-black">
+          <Image
+            src={overlayImage}
+            className="absolute -right-24 top-0 h-auto"
+            alt="Overlay graphic"
+            width={514}
+          />
+          <h3 className="text-4xl font-bold uppercase">Still wondering?</h3>
+          {/*TODO: add text */}
+          <p className="mb-11 mt-6">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+            porttitor metus a felis bibendum, cursus dictum dolor pellentesque.
+            Proin aliquet in tellus vel vestibulum.
+          </p>
+          <div className="flex gap-3">
+            <Button asChild variant="outline">
+              {/*TODO: add link */}
+              <Link href="#">Talk with an expert</Link>
+            </Button>
+            <Button asChild variant="default">
+              <Link href="/contests" className="gap-2">
+                Explore bounties
+                <ArrowRight />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+      <Footer />
     </main>
   )
 }
