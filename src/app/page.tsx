@@ -1,52 +1,74 @@
 import Link from 'next/link'
+import Image from 'next/image'
+import {ArrowRight} from 'lucide-react'
 
-import {getServerAuthSession, isJudge} from '@/server/utils/auth'
+import backgroundImage from '@public/images/background-graphic.png'
 import {Button} from '@/components/ui/Button'
-import SignOutButton from '@/components/ui/SignOutButon'
-import JudgeRewardsList from '@/components/sections/judge/JudgeRewardsList'
-import {prefetchGetRewards} from '@/lib/queries/reward/getRewards'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
+import {prefetchGetPublicContests} from '@/lib/queries/contest/getContests'
+import {prefetchGetPublicContestCounts} from '@/lib/queries/contest/getPublicContestCounts'
+import {ContestOccurence} from '@/server/db/models'
+import {Tabs, TabsList, TabsTrigger} from '@/components/ui/Tabs'
+import {Separator} from '@/components/ui/Separator'
+import Contests from '@/components/sections/contest/Contests'
+
+const CONTESTS_PER_PAGE = 7
 
 const Home = async () => {
-  const session = await getServerAuthSession()
-  await prefetchGetRewards({limit: 20})
+  await Promise.all([
+    prefetchGetPublicContests({
+      type: ContestOccurence.PRESENT,
+      offset: 0,
+      limit: CONTESTS_PER_PAGE,
+    }),
+    prefetchGetPublicContestCounts(),
+  ])
 
   return (
-    <main className="flex flex-col items-center justify-between p-32">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <p className="pb-20 text-4xl font-semibold">
-          Welcome to the new Cardano Bug Bounty platform!
-        </p>
-        <p className="text-center text-2xl text-black">
-          {session && (
-            <span>Logged in as {session.user.name ?? session.user.email}</span>
-          )}
-        </p>
-        {session ? (
-          <div className="flex gap-2">
-            <Button asChild variant="outline">
-              <Link href={'/profile'}>My profile</Link>
-            </Button>
-            <SignOutButton variant="outline" callbackUrl="/">
-              Sign out
-            </SignOutButton>
-          </div>
-        ) : (
-          <div className="flex gap-2">
-            <Button asChild>
-              <Link href={'/api/auth/signin'}>Sign in</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href={'/auth/signup'}>Sign up</Link>
-            </Button>
-          </div>
-        )}
+    <main className="relative flex flex-col justify-between pt-[200px]">
+      <Image
+        src={backgroundImage}
+        alt="Background image"
+        width={514}
+        style={{
+          position: 'absolute',
+          right: 0,
+          top: -136,
+          zIndex: -1,
+        }}
+      />
+      <div className="flex flex-col px-24">
+        <div className="mb-[236px] flex flex-col items-start gap-6">
+          <h1 className="whitespace-pre-line text-5xl uppercase">
+            {'Join the Bounty Lab and\n'}
+            <span className="font-bold">
+              {'shape the future of\nCardano Security.'}
+            </span>
+          </h1>
+          <Button asChild>
+            <Link href="/contests">
+              {'Explore bounties'}
+              <ArrowRight className="ml-2" />
+            </Link>
+          </Button>
+        </div>
+        <Tabs value="hunters">
+          <TabsList>
+            <TabsTrigger className="text-base" value="hunters">
+              For hunters
+            </TabsTrigger>
+            <TabsTrigger className="text-base" value="projects">
+              For projects
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
-      {isJudge(session) && (
+      <Separator className="h-[0.5px]" />
+      <div className="bg-black px-24 pb-[108px] pt-16">
         <HydrationBoundary>
-          <JudgeRewardsList />
+          <Contests pageSize={CONTESTS_PER_PAGE} />
         </HydrationBoundary>
-      )}
+      </div>
     </main>
   )
 }
