@@ -83,7 +83,7 @@ const HowItWorks = () => {
         {items.map((item, index) => (
           <div
             key={index}
-            className="hover:bg-white-5 flex flex-grow basis-1/4 flex-col gap-4 border-b border-transparent p-4 hover:border-white">
+            className="flex flex-grow basis-1/4 flex-col gap-4 border-b border-transparent p-4 hover:border-white hover:bg-white/5">
             <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white text-2xl font-bold">
               {index + 1}
             </div>

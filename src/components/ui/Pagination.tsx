@@ -53,7 +53,7 @@ const PaginationLink = ({
     variant="link"
     className={cn(
       'h-[28px] w-[28px] rounded-full font-semibold normal-case',
-      isActive && 'bg-white-10',
+      isActive && 'bg-white/10',
       className,
     )}>
     <Link

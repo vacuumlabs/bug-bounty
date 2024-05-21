@@ -42,7 +42,7 @@ const ContestsTableRow = ({contest}: ContestsTableRowProps) => {
   const [contestType] = useSearchParamsContestType()
 
   return (
-    <tr key={contest.id} className="bg-white-5 flex items-center gap-4 p-4">
+    <tr key={contest.id} className="flex items-center gap-4 bg-white/5 p-4">
       <td>
         <Avatar>
           <AvatarImage src={cardanoLogo.src} />
@@ -55,13 +55,13 @@ const ContestsTableRow = ({contest}: ContestsTableRowProps) => {
         </Badge>
       </td>
       <td className="flex w-[15%] items-baseline justify-center">
-        <span className="text-white-70 whitespace-pre">{`${timeTexts[contestType]} `}</span>
+        <span className="whitespace-pre text-white/70">{`${timeTexts[contestType]} `}</span>
         <span className="font-semibold">
           {DateTime.fromJSDate(contest.endDate).toRelative({locale: 'en'})}
         </span>
       </td>
       <td className="flex w-[15%] items-baseline justify-center">
-        <span className="text-white-70 whitespace-pre">{'Rewards:  '}</span>
+        <span className="whitespace-pre text-white/70">{'Rewards:  '}</span>
         <span className="font-semibold">
           {formatAda(contest.rewardsAmount)}
         </span>
