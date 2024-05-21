@@ -3,6 +3,7 @@ import Image from 'next/image'
 import {ArrowRight} from 'lucide-react'
 
 import backgroundImage from '@public/images/background-graphic.png'
+import overlayImage from '@public/images/how-it-works-overlay.png'
 import {Button} from '@/components/ui/Button'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 import {prefetchGetPublicContests} from '@/lib/queries/contest/getContests'
@@ -11,6 +12,7 @@ import {ContestOccurence} from '@/server/db/models'
 import {Tabs, TabsList, TabsTrigger} from '@/components/ui/Tabs'
 import {Separator} from '@/components/ui/Separator'
 import Contests from '@/components/sections/contest/Contests'
+import HowItWorks from '@/components/sections/contest/HowItWorks'
 
 const CONTESTS_PER_PAGE = 7
 
@@ -68,6 +70,16 @@ const Home = async () => {
         <HydrationBoundary>
           <Contests pageSize={CONTESTS_PER_PAGE} />
         </HydrationBoundary>
+      </div>
+      <div className="relative overflow-hidden bg-white/5 p-24">
+        <Image
+          src={overlayImage}
+          className="absolute right-0 top-0"
+          alt="Overlay graphic"
+          width={514}
+          height={700}
+        />
+        <HowItWorks />
       </div>
     </main>
   )
