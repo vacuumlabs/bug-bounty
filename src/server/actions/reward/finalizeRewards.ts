@@ -13,7 +13,7 @@ export type FinalizeRewardsResponse = Awaited<
   ReturnType<typeof finalizeRewards>
 >
 
-const finalizeRewardsAction = async (contestId: string) => {
+export const finalizeRewardsAction = async (contestId: string) => {
   await requireJudgeAuth()
 
   const {totalRewards, rewards} = await calculateRewardsAction(contestId)
