@@ -9,7 +9,7 @@ import {requireServerSession} from '../../utils/auth'
 import {FormError} from '@/lib/types/error'
 import {serializeServerErrors} from '@/lib/utils/common/error'
 
-const setUserAliasAction = async (alias: string | null) => {
+export const setUserAliasAction = async (alias: string | null) => {
   const session = await requireServerSession()
   const id = session.user.id
 
