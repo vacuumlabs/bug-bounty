@@ -9,7 +9,7 @@ import {requireServerSession} from '../../utils/auth'
 
 import {serializeServerErrors} from '@/lib/utils/common/error'
 
-const setSignInPasswordAction = async (password: string) => {
+export const setSignInPasswordAction = async (password: string) => {
   const session = await requireServerSession()
 
   const id = session.user.id

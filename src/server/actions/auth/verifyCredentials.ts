@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 
 import {db} from '../../db'
 
-type Credentials = {
+export type Credentials = {
   email: string
   password: string
 }
