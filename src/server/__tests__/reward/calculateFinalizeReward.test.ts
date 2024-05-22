@@ -1,8 +1,8 @@
 import {describe, it, expect, vi, Mock, beforeEach} from 'vitest'
-import {subDays} from 'date-fns'
+import {addDays, subDays} from 'date-fns'
 import {getServerSession} from 'next-auth'
 import {v4 as uuidv4} from 'uuid'
-import {eq} from 'drizzle-orm'
+import {eq, inArray} from 'drizzle-orm'
 
 import {trunacateDb} from '../utils/db'
 
@@ -173,18 +173,8 @@ describe('calculateReward finalizeReward', () => {
       },
     ]
 
+    // Insert users
     await db.insert(schema.users).values(users)
-  })
-
-  it('calculates and finalizes rewards successfully', async () => {
-    ;(getServerSession as Mock).mockResolvedValue({
-      user: {
-        id: judgeId,
-        provider: 'github',
-        role: UserRole.JUDGE,
-      },
-      expires: new Date(Date.now() + 86_400_000).toISOString(),
-    })
 
     // Insert contest
     await db.insert(schema.contests).values([contestToInsert]).returning()
@@ -219,6 +209,17 @@ describe('calculateReward finalizeReward', () => {
       .update(schema.findings)
       .set({deduplicatedFindingId: deduplicatedFinding1Id})
       .where(eq(schema.findings.id, finding4Id))
+  })
+
+  it('calculates and finalizes rewards successfully', async () => {
+    ;(getServerSession as Mock).mockResolvedValue({
+      user: {
+        id: judgeId,
+        provider: 'github',
+        role: UserRole.JUDGE,
+      },
+      expires: new Date(Date.now() + 86_400_000).toISOString(),
+    })
 
     const result = await calculateRewardsAction(contestId)
 
@@ -295,5 +296,146 @@ describe('calculateReward finalizeReward', () => {
     expect(contestDb?.distributedRewardsAmount).toEqual(totalReward.toFixed(0))
 
     expect(finalize).toEqual(rewardsDb)
+  })
+
+  it('throws if there are pending findings', async () => {
+    ;(getServerSession as Mock).mockResolvedValue({
+      user: {
+        id: judgeId,
+        provider: 'github',
+        role: UserRole.JUDGE,
+      },
+      expires: new Date(Date.now() + 86_400_000).toISOString(),
+    })
+
+    const pendingFinding: InsertFinding = {
+      id: uuidv4(),
+      contestId,
+      authorId: finding1AuthorId,
+      description: 'This is a finding description.',
+      title: 'Finding title',
+      severity: FindingSeverity.HIGH,
+      status: FindingStatus.PENDING,
+      targetFileUrl: 'https://github.com/example-contest/filePending.js',
+    }
+
+    await db.insert(schema.findings).values(pendingFinding)
+
+    await expect(async () => {
+      await calculateRewardsAction(contestId)
+    }).rejects.toThrowError('There are still pending findings in this contest.')
+  })
+
+  it('throws if there are no approved findings', async () => {
+    ;(getServerSession as Mock).mockResolvedValue({
+      user: {
+        id: judgeId,
+        provider: 'github',
+        role: UserRole.JUDGE,
+      },
+      expires: new Date(Date.now() + 86_400_000).toISOString(),
+    })
+
+    const rejectedFinding: InsertFinding = {
+      id: uuidv4(),
+      contestId,
+      authorId: finding1AuthorId,
+      description: 'This is a finding description.',
+      title: 'Finding title',
+      severity: FindingSeverity.HIGH,
+      status: FindingStatus.REJECTED,
+      targetFileUrl: 'https://github.com/example-contest/filePending.js',
+    }
+
+    await db.insert(schema.findings).values(rejectedFinding)
+
+    await db
+      .delete(schema.findings)
+      .where(
+        inArray(schema.findings.id, [
+          finding1Id,
+          finding2Id,
+          finding3Id,
+          finding4Id,
+        ]),
+      )
+
+    await expect(async () => {
+      await calculateRewardsAction(contestId)
+    }).rejects.toThrowError('No approved findings found for this contest.')
+  })
+
+  it('throws if there are unassigned findings', async () => {
+    ;(getServerSession as Mock).mockResolvedValue({
+      user: {
+        id: judgeId,
+        provider: 'github',
+        role: UserRole.JUDGE,
+      },
+      expires: new Date(Date.now() + 86_400_000).toISOString(),
+    })
+
+    const unassignedFinding: InsertFinding = {
+      id: uuidv4(),
+      contestId,
+      authorId: finding1AuthorId,
+      description: 'This is a finding description.',
+      title: 'Finding title',
+      severity: FindingSeverity.HIGH,
+      status: FindingStatus.APPROVED,
+      targetFileUrl: 'https://github.com/example-contest/filePending.js',
+    }
+
+    await db.insert(schema.findings).values(unassignedFinding)
+
+    await expect(async () => {
+      await calculateRewardsAction(contestId)
+    }).rejects.toThrowError(
+      'Some approved findings are not assigned to a deduplicated finding.',
+    )
+  })
+
+  it('throws if contest has not ended', async () => {
+    ;(getServerSession as Mock).mockResolvedValue({
+      user: {
+        id: judgeId,
+        provider: 'github',
+        role: UserRole.JUDGE,
+      },
+      expires: new Date(Date.now() + 86_400_000).toISOString(),
+    })
+
+    await db
+      .update(schema.contests)
+      .set({
+        endDate: addDays(new Date(), 1),
+      })
+      .where(eq(schema.contests.id, contestId))
+
+    await expect(async () => {
+      await calculateRewardsAction(contestId)
+    }).rejects.toThrowError('Contest has not yet ended.')
+  })
+
+  it('throws if contest has already finished', async () => {
+    ;(getServerSession as Mock).mockResolvedValue({
+      user: {
+        id: judgeId,
+        provider: 'github',
+        role: UserRole.JUDGE,
+      },
+      expires: new Date(Date.now() + 86_400_000).toISOString(),
+    })
+
+    await db
+      .update(schema.contests)
+      .set({
+        status: ContestStatus.FINISHED,
+      })
+      .where(eq(schema.contests.id, contestId))
+
+    await expect(async () => {
+      await calculateRewardsAction(contestId)
+    }).rejects.toThrowError('Rewards for this contest were already calculated.')
   })
 })
