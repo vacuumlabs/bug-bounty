@@ -4,6 +4,7 @@ import {type GetRewardsParams} from '@/server/actions/reward/getReward'
 import {type GetPublicContestsParams} from '@/server/actions/contest/getContests'
 import {type GetDeduplicatedFindingsParams} from '@/server/actions/deduplicatedFinding/getDeduplicatedFinding'
 import {GetRepoFilesParams} from '@/server/actions/github/getGithub'
+import {GetPublicContestCountsParams} from '@/server/actions/contest/getPublicContestCounts'
 
 export const queryKeys = createQueryKeyStore({
   users: {
@@ -15,7 +16,7 @@ export const queryKeys = createQueryKeyStore({
   },
   contests: {
     public: (params: GetPublicContestsParams) => [params],
-    publicCounts: null,
+    publicCounts: (params: GetPublicContestCountsParams) => [params],
   },
   deduplicatedFindings: {
     all: (params: GetDeduplicatedFindingsParams) => [params],

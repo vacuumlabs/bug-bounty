@@ -8,9 +8,16 @@ import {useSearchParamsContestType} from './utils'
 import {Tabs, TabsList, TabsTrigger} from '@/components/ui/Tabs'
 import {useGetPublicContests} from '@/lib/queries/contest/getContests'
 import Skeleton from '@/components/ui/Skeleton'
-import {ContestOccurence} from '@/server/db/models'
+import {
+  ContestOccurence,
+  ProjectCategory,
+  ProjectLanguage,
+} from '@/server/db/models'
 import {useGetPublicContestCounts} from '@/lib/queries/contest/getPublicContestCounts'
-import {useSearchParamsNumericState} from '@/lib/hooks/useSearchParamsState'
+import {
+  useSearchParamsEnumArrayState,
+  useSearchParamsNumericState,
+} from '@/lib/hooks/useSearchParamsState'
 import TablePagination from '@/components/ui/TablePagination'
 
 const formatCount = (count: number | undefined) =>
@@ -22,14 +29,27 @@ type ContestsProps = {
 
 const Contests = ({pageSize}: ContestsProps) => {
   const [contestType, setContestType] = useSearchParamsContestType()
+  const [projectCategory] = useSearchParamsEnumArrayState(
+    'category',
+    ProjectCategory,
+  )
+  const [projectLanguage] = useSearchParamsEnumArrayState(
+    'language',
+    ProjectLanguage,
+  )
   const [page] = useSearchParamsNumericState('page', 1)
 
   const {data: contests, isLoading} = useGetPublicContests({
     type: contestType,
     offset: (page - 1) * pageSize,
     limit: pageSize,
+    projectCategory,
+    projectLanguage,
   })
-  const {data: contestCounts} = useGetPublicContestCounts()
+  const {data: contestCounts} = useGetPublicContestCounts({
+    projectCategory,
+    projectLanguage,
+  })
 
   const currentTotalCount = useMemo(() => {
     switch (contestType) {

@@ -103,3 +103,8 @@ export const isEnumMember = <T extends string>(
   enumObject: Record<string, T>,
   value: string,
 ): value is T => Object.values<string>(enumObject).includes(value)
+
+export const getEnumMemberFilter =
+  <T extends string>(enumObject: Record<string, T>) =>
+  (value: string): value is T =>
+    isEnumMember(enumObject, value)

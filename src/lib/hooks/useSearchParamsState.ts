@@ -1,6 +1,8 @@
 import {usePathname, useRouter, useSearchParams} from 'next/navigation'
 import {useCallback} from 'react'
 
+import {getEnumMemberFilter} from '../utils/common/enums'
+
 type UseSearchParamsStateFn<Value extends string[] | string | number> = {
   (
     key: string,
@@ -94,26 +96,14 @@ export const useSearchParamsNumericState: UseSearchParamsStateFn<number> = <
   return [value, setValue, getNewUrl]
 }
 
-export const useSearchParamsArrayState: UseSearchParamsStateFn<string[]> = <
-  DefaultValue extends string[] | undefined,
->(
+export const useSearchParamsArrayState = (
   key: string,
-  defaultValue: DefaultValue,
-): [
-  string[] | DefaultValue,
-  (value: string[]) => void,
-  (value: string[]) => string,
-] => {
+): [string[], (value: string[]) => void, (value: string[]) => string] => {
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
 
-  const rawSearchParamsValue = searchParams.getAll(key)
-
-  const searchParamsValue =
-    rawSearchParamsValue.length > 0 ? rawSearchParamsValue : defaultValue
-
-  const value: string[] | DefaultValue = searchParamsValue ?? defaultValue
+  const values = searchParams.getAll(key)
 
   const getNewUrl = useCallback(
     (newValue: string[]) => {
@@ -129,12 +119,23 @@ export const useSearchParamsArrayState: UseSearchParamsStateFn<string[]> = <
     [key, pathname, searchParams],
   )
 
-  const setValue = useCallback(
+  const setValues = useCallback(
     (newValue: string[]) => {
       router.push(getNewUrl(newValue), {scroll: false})
     },
     [router, getNewUrl],
   )
 
-  return [value, setValue, getNewUrl]
+  return [values, setValues, getNewUrl]
+}
+
+export const useSearchParamsEnumArrayState = <T extends string>(
+  key: string,
+  enumObject: Record<string, T>,
+): [T[], (values: T[]) => void] => {
+  const [values, setValues] = useSearchParamsArrayState(key)
+
+  const validValues = values.filter(getEnumMemberFilter(enumObject))
+
+  return [validValues, setValues]
 }
