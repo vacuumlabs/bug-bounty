@@ -80,7 +80,7 @@ const Home = async () => {
       <div className="relative overflow-hidden bg-white/5 p-24">
         <Image
           src={overlayImage}
-          className="absolute right-0 top-0 h-auto"
+          className="pointer-events-none absolute right-0 top-0 h-auto"
           alt="Overlay graphic"
           width={514}
         />
@@ -102,7 +102,7 @@ const Home = async () => {
             Proin aliquet in tellus vel vestibulum.
           </p>
           <div className="flex gap-3">
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" className="text-black">
               {/*TODO: add link */}
               <Link href="#">Talk with an expert</Link>
             </Button>
