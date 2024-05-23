@@ -65,7 +65,7 @@ const Contests = ({pageSize}: ContestsProps) => {
   return (
     <div className="flex flex-col">
       <div className="mb-11 flex items-center justify-between">
-        <h3 className="text-3xl font-bold uppercase">Bounties</h3>
+        <h3 className="text-headlineL font-bold uppercase">Bounties</h3>
       </div>
       <Tabs value={contestType} onValueChange={setContestType}>
         <TabsList className="mb-6">

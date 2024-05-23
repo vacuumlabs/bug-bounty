@@ -131,7 +131,6 @@ const Dropzone = forwardRef<HTMLDivElement, DropzoneProps>(
             <Button
               className="rounded-full"
               size="icon"
-              variant="ghost"
               onClick={() => removeFile(index)}>
               <X />
             </Button>
