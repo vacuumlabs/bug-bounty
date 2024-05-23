@@ -29,12 +29,15 @@ const MarkdownEditor = forwardRef<HTMLTextAreaElement, MarkdownEditorProps>(
           {isPreview ? 'Edit' : 'Preview'}
         </Button>
         {isPreview ? (
-          <MarkdownPreview className="min-h-[260px]" doc={value ?? ''} />
+          <MarkdownPreview
+            className="min-h-[260px] text-black"
+            doc={value ?? ''}
+          />
         ) : (
           <Textarea
             ref={ref}
             onBlur={onBlur}
-            className="min-h-[260px]"
+            className="min-h-[260px] text-black"
             onChange={(event) => onChange(event.target.value)}
             value={value ?? ''}
             name={name}
