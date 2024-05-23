@@ -120,7 +120,9 @@ const NewContestFormReviewPage = ({form}: NewContestFormPageProps) => {
       </div>
       <div className="flex flex-col gap-2">
         <h3>Audit period</h3>
-        <p className="text-sm font-bold">{timezone}</p>
+        <p className="text-sm font-bold" suppressHydrationWarning>
+          {timezone}
+        </p>
         <div className="flex gap-6">
           <p className="text-sm font-bold">{`Start: ${formatDate(startDate, timezone)}`}</p>
           <p className="text-sm font-bold">{`End: ${formatDate(endDate, timezone)}`}</p>
