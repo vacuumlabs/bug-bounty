@@ -3,7 +3,6 @@
 import {zodResolver} from '@hookform/resolvers/zod'
 import {UseFormReturn, useForm} from 'react-hook-form'
 import {z} from 'zod'
-import {useState} from 'react'
 import {DateTime} from 'luxon'
 import {useRouter} from 'next/navigation'
 
@@ -20,7 +19,6 @@ import {
 } from '@/server/utils/validations/schemas'
 import {Tabs, TabsContent} from '@/components/ui/Tabs'
 import {Button} from '@/components/ui/Button'
-import {toast} from '@/components/ui/Toast'
 import {ContestStatus} from '@/server/db/models'
 import FormPagination from '@/components/ui/FormPagination'
 import {ZodOutput} from '@/lib/types/zod'
@@ -78,7 +76,6 @@ type InputFormValues = Override<
     severityWeights: Nullable<SeverityWeights>
   }
 >
-type AddContestStatus = z.infer<typeof addContestSchema>['status']
 
 export type NewContestFormPageProps = {
   form: UseFormReturn<InputFormValues, unknown, FormValues>
@@ -96,7 +93,6 @@ const useNewContestFormSearchParamsPage = () => {
 
 const NewContestForm = () => {
   const [page, setPage] = useNewContestFormSearchParamsPage()
-  const [lastAllowedIndex, setLastAllowedIndex] = useState(0)
   const router = useRouter()
 
   const {mutate} = useAddContest()
@@ -126,33 +122,33 @@ const NewContestForm = () => {
 
   const {handleSubmit, trigger} = form
 
-  const getOnSubmit =
-    (status: AddContestStatus) =>
-    ({severityWeights, repository, timezone, ...values}: FormValues) => {
-      mutate(
-        {
-          contest: {...values, repoUrl: repository.url, status},
-          severityWeights,
+  const addContest = ({
+    severityWeights,
+    repository,
+    timezone,
+    ...values
+  }: FormValues) => {
+    mutate(
+      {
+        contest: {
+          ...values,
+          repoUrl: repository.url,
+          status: ContestStatus.PENDING,
         },
-        {
-          onSuccess: () => {
-            if (status === ContestStatus.DRAFT) {
-              toast({
-                title: 'Contest saved.',
-              })
-            } else {
-              router.push('/contests/new/success')
-            }
-          },
+        severityWeights,
+      },
+      {
+        onSuccess: () => {
+          router.push('/contests/new/success')
         },
-      )
-    }
+      },
+    )
+  }
 
   const onContinue = async () => {
     const isValid = await trigger(page === '1' ? page1fields : page2fields)
 
     if (isValid) {
-      setLastAllowedIndex((index) => Math.max(index, Number(page)))
       setPage((Number(page) + 1).toString())
     }
   }
@@ -161,7 +157,6 @@ const NewContestForm = () => {
     <Form {...form}>
       <Tabs value={page} onValueChange={setPage} className="flex flex-col">
         <FormPagination
-          lastAllowedIndex={lastAllowedIndex}
           currentIndex={Number(page) - 1}
           pages={formPages}
           className="mb-11"
@@ -176,17 +171,9 @@ const NewContestForm = () => {
           <NewContestFormReviewPage form={form} />{' '}
         </TabsContent>
       </Tabs>
-      <div className="flex justify-between">
-        <Button
-          variant="outline"
-          type="submit"
-          onClick={handleSubmit(getOnSubmit(ContestStatus.DRAFT))}>
-          Save as draft
-        </Button>
+      <div className="flex justify-end">
         {page === '3' ? (
-          <Button
-            type="submit"
-            onClick={handleSubmit(getOnSubmit(ContestStatus.PENDING))}>
+          <Button type="submit" onClick={handleSubmit(addContest)}>
             Submit for review
           </Button>
         ) : (

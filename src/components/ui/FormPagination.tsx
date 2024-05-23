@@ -22,14 +22,12 @@ const Dot = ({filled, color}: {filled: boolean; color: string}) => (
 type FormPaginationProps = {
   pages: string[]
   currentIndex: number
-  lastAllowedIndex: number
   className?: string
 }
 
 const FormPagination = ({
   pages,
   currentIndex,
-  lastAllowedIndex,
   className,
 }: FormPaginationProps) => {
   return (
@@ -42,13 +40,10 @@ const FormPagination = ({
         <Fragment key={index}>
           {!!index && <Line filled={index <= currentIndex} />}
           <TabsPrimitive.Trigger
-            disabled={index > lastAllowedIndex}
+            disabled
             value={(index + 1).toString()}
             className="relative">
-            <Dot
-              filled={index <= Math.max(lastAllowedIndex, currentIndex)}
-              color={index <= currentIndex ? 'bg-white' : 'bg-slate-300'}
-            />
+            <Dot filled={index <= currentIndex} color={'bg-white'} />
             <span className="absolute -bottom-8 -translate-x-1/2 whitespace-nowrap text-sm">
               {title}
             </span>
