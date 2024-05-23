@@ -48,7 +48,7 @@ const ContestsTableRow = ({contest}: ContestsTableRowProps) => {
           <AvatarImage src={cardanoLogo.src} />
         </Avatar>
       </td>
-      <td className="flex-grow text-xl font-semibold">{contest.title}</td>
+      <td className="flex-grow text-buttonL font-semibold">{contest.title}</td>
       <td className="flex items-center justify-end gap-3">
         <Badge variant={badgeVariantsMap[contestType]}>
           {contestStatusTexts[contestType]}
@@ -67,7 +67,7 @@ const ContestsTableRow = ({contest}: ContestsTableRowProps) => {
         </span>
       </td>
       <td>
-        <Button variant="outline" asChild className="text-sm normal-case">
+        <Button variant="outline" asChild size="small" className="normal-case">
           <Link className="gap-2" href={`/contests/${contest.id}`}>
             View Audit
             <ArrowRight size={16} />

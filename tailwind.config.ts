@@ -61,7 +61,21 @@ const config = {
     },
     extend: {
       fontSize: {
-        '5xl': ['3rem', '3.5rem'],
+        buttonS: ['0.8125rem', {lineHeight: '1.5rem', fontWeight: 700}], // 13px, 24px
+        buttonM: ['1rem', {lineHeight: '1.5rem', fontWeight: 700}], // 16px, 24px
+        buttonL: ['1.25rem', {lineHeight: '1.5rem', fontWeight: 700}], // 20px, 24px
+        bodyS: ['0.8125rem', {lineHeight: '1rem', fontWeight: 400}], // 13px, 16px
+        bodyM: ['1rem', {lineHeight: '1.5rem', fontWeight: 400}], // 16px, 24px
+        bodyL: ['1.25rem', {lineHeight: '2rem', fontWeight: 400}], // 20px, 32px
+        titleS: ['1.125rem', {lineHeight: '1.5rem', fontWeight: 600}], // 18px, 24px
+        titleM: ['1.5rem', {lineHeight: '2rem', fontWeight: 600}], // 24px, 32px
+        titleL: ['1.75rem', {lineHeight: '2.5rem', fontWeight: 600}], // 28px, 40px
+        headlineS: ['1.5rem', {lineHeight: '2rem', fontWeight: 600}], // 24px, 32px
+        headlineM: ['1.75rem', {lineHeight: '2rem', fontWeight: 600}], // 28px, 32px
+        headlineL: ['2rem', {lineHeight: '2.5rem', fontWeight: 600}], // 32px, 40px
+        displayS: ['2.5rem', {lineHeight: '3rem', fontWeight: 700}], // 40px, 48px
+        displayM: ['3rem', {lineHeight: '3.5rem', fontWeight: 700}], // 48px, 56px
+        displayL: ['3.75rem', {lineHeight: '4.5rem', fontWeight: 700}], // 60px, 72px
       },
       keyframes: {
         'accordion-down': {

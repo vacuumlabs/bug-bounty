@@ -5,11 +5,13 @@ import {ButtonHTMLAttributes, forwardRef} from 'react'
 import {cn} from '@/lib/utils/client/tailwind'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap font-bold uppercase ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grey-90 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:text-grey-60 aria-disabled:pointer-events-none aria-disabled:text-grey-60',
+  'inline-flex items-center justify-center whitespace-nowrap uppercase ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grey-90 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:text-grey-60 aria-disabled:pointer-events-none aria-disabled:text-grey-60',
   {
     variants: {
       size: {
-        default: 'h-12 px-4 py-3',
+        small: 'h-10 px-4 py-3 text-buttonS',
+        medium: 'h-12 px-4 py-3 text-buttonM',
+        large: 'h-14 px-4 py-3 text-buttonL',
         icon: 'h-10 w-10',
       },
       variant: {
@@ -24,7 +26,7 @@ const buttonVariants = cva(
     },
     defaultVariants: {
       variant: 'default',
-      size: 'default',
+      size: 'medium',
     },
   },
 )

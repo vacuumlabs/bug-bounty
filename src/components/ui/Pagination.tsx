@@ -73,7 +73,7 @@ const PaginationPrevious = ({
   <PaginationLink
     aria-label="Go to previous page"
     className={cn('w-fit gap-1 pl-2.5', className)}
-    size="default"
+    size="medium"
     {...props}>
     <ArrowLeft className="h-4 w-4" />
     <span>Previous</span>
@@ -88,7 +88,7 @@ const PaginationNext = ({
   <PaginationLink
     aria-label="Go to next page"
     className={cn('w-fit gap-1 pr-2.5', className)}
-    size="default"
+    size="medium"
     {...props}>
     <span>Next</span>
     <ArrowRight className="h-4 w-4" />
