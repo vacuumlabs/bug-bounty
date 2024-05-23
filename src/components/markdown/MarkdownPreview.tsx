@@ -17,7 +17,7 @@ const MarkdownPreview = ({doc, className}: MarkdownPreviewProps) => {
   return (
     <div
       className={cn(
-        'prose min-h-[80px] w-full max-w-none select-text rounded-md border border-slate-200 bg-white px-3 py-2 text-sm leading-6 ring-offset-white prose-pre:bg-transparent',
+        'prose min-h-[80px] w-full max-w-none select-text rounded-md border border-grey-20 bg-white px-3 py-2 text-sm leading-6 ring-offset-white prose-pre:bg-transparent',
         className,
       )}>
       <Markdown

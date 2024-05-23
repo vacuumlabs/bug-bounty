@@ -97,8 +97,8 @@ const Dropzone = forwardRef<HTMLDivElement, DropzoneProps>(
         <Card
           ref={ref}
           className={cn(
-            `border-2 border-dashed hover:cursor-pointer hover:border-slate-500 hover:bg-slate-100`,
-            isDraggedOver && 'border-slate-500 bg-slate-100',
+            `border-2 border-dashed hover:cursor-pointer hover:border-slate-500 hover:bg-grey-10`,
+            isDraggedOver && 'border-slate-500 bg-grey-10',
             className,
           )}>
           <CardContent

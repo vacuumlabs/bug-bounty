@@ -27,7 +27,7 @@ const ContestsPage = async () => {
     <main className="flex flex-grow flex-col">
       <div className="flex flex-col bg-white/10 px-20 pb-[60px] pt-[133px]">
         <div className="flex items-center gap-9">
-          <span className="bg-slate-200 px-5 py-2 text-3xl font-semibold text-black">
+          <span className="bg-grey-20 px-5 py-2 text-3xl font-semibold text-black">
             For Hunters
           </span>
           <Link className="text-3xl" href="/projects">
