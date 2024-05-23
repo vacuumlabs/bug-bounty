@@ -19,10 +19,7 @@ const Navbar = () => {
         </Link>
         <nav className="flex items-center gap-10">
           <Button asChild variant="link">
-            <Link href="/">For hunters</Link>
-          </Button>
-          <Button asChild variant="link">
-            <Link href="/projects">For projects</Link>
+            <Link href="/">Home</Link>
           </Button>
           <Button asChild variant="link">
             <Link href="/about-us">About us</Link>

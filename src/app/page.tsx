@@ -9,7 +9,7 @@ import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 import {prefetchGetPublicContests} from '@/lib/queries/contest/getContests'
 import {prefetchGetPublicContestCounts} from '@/lib/queries/contest/getPublicContestCounts'
 import {ContestOccurence} from '@/server/db/models'
-import {Tabs, TabsList, TabsTrigger} from '@/components/ui/Tabs'
+import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/Tabs'
 import {Separator} from '@/components/ui/Separator'
 import Contests from '@/components/sections/contest/Contests'
 import HowItWorks from '@/components/sections/contest/HowItWorks'
@@ -60,61 +60,63 @@ const Home = async () => {
             </Link>
           </Button>
         </div>
-        <Tabs value="hunters">
-          <TabsList>
-            <TabsTrigger className="text-base" value="hunters">
-              For hunters
-            </TabsTrigger>
-            <TabsTrigger className="text-base" value="projects">
-              For projects
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
       </div>
-      <Separator className="h-[0.5px]" />
-      <div className="bg-black px-24 pb-[108px] pt-16">
-        <HydrationBoundary>
-          <Contests pageSize={CONTESTS_PER_PAGE} />
-        </HydrationBoundary>
-      </div>
-      <div className="relative overflow-hidden bg-white/5 p-24">
-        <Image
-          src={overlayImage}
-          className="pointer-events-none absolute right-0 top-0 h-auto"
-          alt="Overlay graphic"
-          width={514}
-        />
-        <HowItWorks />
-      </div>
-      <div className="p-24">
-        <div className="bg-purple relative flex flex-col items-center overflow-hidden rounded-full p-11 text-black">
-          <Image
-            src={overlayImage}
-            className="absolute -right-24 top-0 h-auto"
-            alt="Overlay graphic"
-            width={514}
-          />
-          <h3 className="text-4xl font-bold uppercase">Still wondering?</h3>
-          {/*TODO: add text */}
-          <p className="mb-11 mt-6">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
-            porttitor metus a felis bibendum, cursus dictum dolor pellentesque.
-            Proin aliquet in tellus vel vestibulum.
-          </p>
-          <div className="flex gap-3">
-            <Button asChild variant="outline" className="text-black">
-              {/*TODO: add link */}
-              <Link href="#">Talk with an expert</Link>
-            </Button>
-            <Button asChild variant="default">
-              <Link href="/contests" className="gap-2">
-                Explore bounties
-                <ArrowRight />
-              </Link>
-            </Button>
+      <Tabs defaultValue="hunters">
+        <TabsList className="px-24">
+          <TabsTrigger className="text-base" value="hunters">
+            For hunters
+          </TabsTrigger>
+          <TabsTrigger className="text-base" value="projects">
+            For projects
+          </TabsTrigger>
+        </TabsList>
+        <Separator className="h-[0.5px]" />
+        <TabsContent value="hunters">
+          <div className="bg-black px-24 pb-[108px] pt-16">
+            <HydrationBoundary>
+              <Contests pageSize={CONTESTS_PER_PAGE} />
+            </HydrationBoundary>
           </div>
-        </div>
-      </div>
+          <div className="relative overflow-hidden bg-white/5 p-24">
+            <Image
+              src={overlayImage}
+              className="pointer-events-none absolute right-0 top-0 h-auto"
+              alt="Overlay graphic"
+              width={514}
+            />
+            <HowItWorks />
+          </div>
+          <div className="p-24">
+            <div className="bg-purple relative flex flex-col items-center overflow-hidden rounded-full p-11 text-black">
+              <Image
+                src={overlayImage}
+                className="absolute -right-24 top-0 h-auto"
+                alt="Overlay graphic"
+                width={514}
+              />
+              <h3 className="text-4xl font-bold uppercase">Still wondering?</h3>
+              {/*TODO: add text */}
+              <p className="mb-11 mt-6">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+                porttitor metus a felis bibendum, cursus dictum dolor
+                pellentesque. Proin aliquet in tellus vel vestibulum.
+              </p>
+              <div className="flex gap-3">
+                <Button asChild variant="outline" className="text-black">
+                  {/*TODO: add link */}
+                  <Link href="#">Talk with an expert</Link>
+                </Button>
+                <Button asChild variant="default">
+                  <Link href="/contests" className="gap-2">
+                    Explore bounties
+                    <ArrowRight />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
       <Footer />
     </main>
   )
