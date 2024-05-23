@@ -1,26 +1,58 @@
 'use server'
 
-import {and, count, gte, inArray, lte} from 'drizzle-orm'
+import {
+  and,
+  arrayOverlaps,
+  count,
+  gte,
+  ilike,
+  inArray,
+  lte,
+  or,
+} from 'drizzle-orm'
 
 import {db} from '@/server/db'
 import {contests} from '@/server/db/schema/contest'
-import {ContestOccurence, ContestStatus} from '@/server/db/models'
+import {
+  ContestOccurence,
+  ContestStatus,
+  ProjectCategory,
+  ProjectLanguage,
+} from '@/server/db/models'
 import {ServerError} from '@/lib/types/error'
 import {serializeServerErrors} from '@/lib/utils/common/error'
 
-export const getPublicContestCounts = serializeServerErrors(async () => {
+export type GetPublicContestCountsParams = {
+  searchQuery?: string
+  projectCategory?: ProjectCategory[]
+  projectLanguage?: ProjectLanguage[]
+}
+
+export const getPublicContestCountsAction = async ({
+  projectCategory,
+  projectLanguage,
+  searchQuery,
+}: GetPublicContestCountsParams) => {
+  const queryFilters = [
+    inArray(contests.status, [ContestStatus.APPROVED, ContestStatus.FINISHED]),
+    searchQuery
+      ? or(
+          ilike(contests.title, `%${searchQuery}%`),
+          ilike(contests.description, `%${searchQuery}%`),
+        )
+      : undefined,
+    projectCategory?.length
+      ? arrayOverlaps(contests.projectCategory, projectCategory)
+      : undefined,
+    projectLanguage?.length
+      ? arrayOverlaps(contests.projectLanguage, projectLanguage)
+      : undefined,
+  ]
+
   const pastCountPromise = db
     .select({count: count()})
     .from(contests)
-    .where(
-      and(
-        lte(contests.endDate, new Date()),
-        inArray(contests.status, [
-          ContestStatus.APPROVED,
-          ContestStatus.FINISHED,
-        ]),
-      ),
-    )
+    .where(and(lte(contests.endDate, new Date()), ...queryFilters))
 
   const presentCountPromise = db
     .select({count: count()})
@@ -29,25 +61,14 @@ export const getPublicContestCounts = serializeServerErrors(async () => {
       and(
         lte(contests.startDate, new Date()),
         gte(contests.endDate, new Date()),
-        inArray(contests.status, [
-          ContestStatus.APPROVED,
-          ContestStatus.FINISHED,
-        ]),
+        ...queryFilters,
       ),
     )
 
   const futureCountPromise = db
     .select({count: count()})
     .from(contests)
-    .where(
-      and(
-        gte(contests.startDate, new Date()),
-        inArray(contests.status, [
-          ContestStatus.APPROVED,
-          ContestStatus.FINISHED,
-        ]),
-      ),
-    )
+    .where(and(gte(contests.startDate, new Date()), ...queryFilters))
 
   const [pastCount, presentCount, futureCount] = await Promise.all([
     pastCountPromise,
@@ -64,4 +85,8 @@ export const getPublicContestCounts = serializeServerErrors(async () => {
     [ContestOccurence.PAST]: pastCount[0].count,
     [ContestOccurence.FUTURE]: futureCount[0].count,
   }
-})
+}
+
+export const getPublicContestCounts = serializeServerErrors(
+  getPublicContestCountsAction,
+)

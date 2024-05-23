@@ -23,8 +23,13 @@ const Home = async () => {
       type: ContestOccurence.PRESENT,
       offset: 0,
       limit: CONTESTS_PER_PAGE,
+      projectCategory: [],
+      projectLanguage: [],
     }),
-    prefetchGetPublicContestCounts(),
+    prefetchGetPublicContestCounts({
+      projectCategory: [],
+      projectLanguage: [],
+    }),
   ])
 
   return (

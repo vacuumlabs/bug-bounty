@@ -1,13 +1,22 @@
 'use server'
 
+import {arrayOverlaps} from 'drizzle-orm'
+
 import {db} from '@/server/db'
-import {ContestOccurence, ContestStatus} from '@/server/db/models'
+import {
+  ContestOccurence,
+  ContestStatus,
+  ProjectCategory,
+  ProjectLanguage,
+} from '@/server/db/models'
 
 export type GetPublicContestsParams = {
   limit?: number
   offset?: number
   type?: ContestOccurence
   searchQuery?: string
+  projectCategory?: ProjectCategory[]
+  projectLanguage?: ProjectLanguage[]
 }
 
 export const getPublicContests = async ({
@@ -15,6 +24,8 @@ export const getPublicContests = async ({
   offset,
   type,
   searchQuery,
+  projectCategory,
+  projectLanguage,
 }: GetPublicContestsParams) => {
   return db.query.contests.findMany({
     limit,
@@ -42,6 +53,12 @@ export const getPublicContests = async ({
               ilike(contests.title, `%${searchQuery}%`),
               ilike(contests.description, `%${searchQuery}%`),
             )
+          : undefined,
+        projectCategory?.length
+          ? arrayOverlaps(contests.projectCategory, projectCategory)
+          : undefined,
+        projectLanguage?.length
+          ? arrayOverlaps(contests.projectLanguage, projectLanguage)
           : undefined,
       ),
     orderBy: (contests, {desc}) => desc(contests.startDate),

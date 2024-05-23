@@ -14,8 +14,13 @@ const ContestsPage = async () => {
       type: ContestOccurence.PRESENT,
       limit: CONTESTS_PER_PAGE,
       offset: 0,
+      projectCategory: [],
+      projectLanguage: [],
     }),
-    prefetchGetPublicContestCounts(),
+    prefetchGetPublicContestCounts({
+      projectCategory: [],
+      projectLanguage: [],
+    }),
   ])
 
   return (
