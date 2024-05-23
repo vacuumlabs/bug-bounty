@@ -7,7 +7,7 @@ const Line = ({filled}: {filled: boolean}) => (
   <hr
     aria-orientation="horizontal"
     className={cn(
-      'h-1 w-[104px] justify-center rounded-full bg-slate-300',
+      'h-1 w-[104px] justify-center rounded-full bg-grey-30',
       filled && 'bg-black',
     )}
   />

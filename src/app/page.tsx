@@ -87,7 +87,7 @@ const Home = async () => {
         <HowItWorks />
       </div>
       <div className="p-24">
-        <div className="bg-blue relative flex flex-col items-center overflow-hidden rounded-full p-11 text-black">
+        <div className="bg-purple relative flex flex-col items-center overflow-hidden rounded-full p-11 text-black">
           <Image
             src={overlayImage}
             className="absolute -right-24 top-0 h-auto"

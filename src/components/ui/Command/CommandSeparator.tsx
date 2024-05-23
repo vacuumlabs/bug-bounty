@@ -11,7 +11,7 @@ const CommandSeparator = forwardRef<
 >(({className, ...props}, ref) => (
   <CommandPrimitive.Separator
     ref={ref}
-    className={cn('-mx-1 h-px bg-slate-200 dark:bg-slate-800', className)}
+    className={cn('-mx-1 h-px bg-grey-20', className)}
     {...props}
   />
 ))

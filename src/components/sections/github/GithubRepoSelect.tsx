@@ -46,14 +46,14 @@ const GithubRepoSelect = ({
     return (
       <Button
         onClick={signInWithGithub}
-        className="flex bg-gray-800 text-white">
+        className="bg-gray-800 flex text-white">
         Sign in with Github to select a repo
       </Button>
     )
   }
 
   return (
-    <div className="min-w-96 rounded-md border border-slate-200 p-2">
+    <div className="min-w-96 rounded-md border border-grey-20 p-2">
       {selectedRepo == null ? (
         <div>
           <span className="pb-2 font-bold">Select a repo</span>

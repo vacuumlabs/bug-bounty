@@ -5,7 +5,7 @@ import {ButtonHTMLAttributes, forwardRef} from 'react'
 import {cn} from '@/lib/utils/client/tailwind'
 
 const buttonVariants = cva(
-  'inline-flex uppercase items-center justify-center whitespace-nowrap font-bold ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 aria-disabled:pointer-events-none disabled:pointer-events-none disabled:opacity-50 aria-disabled:opacity-50',
+  'inline-flex items-center justify-center whitespace-nowrap font-bold uppercase ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-grey-90 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50',
   {
     variants: {
       size: {
@@ -13,12 +13,12 @@ const buttonVariants = cva(
         icon: 'h-10 w-10',
       },
       variant: {
-        default: 'bg-white text-black hover:bg-slate-200/90',
-        destructive: 'bg-red-500 text-slate-50 hover:bg-red-500/90',
-        outline: 'border-2 border-white bg-transparent hover:bg-slate-100',
+        default: 'bg-white text-black hover:bg-grey-20/90',
+        destructive: 'text-grey-100 bg-red hover:bg-red/90',
+        outline: 'border-2 border-white bg-transparent hover:bg-grey-10',
         secondary: 'bg-white/10',
         ghost: 'hover:bg-white/10',
-        link: 'underline-offset-4 hover:underline dark:text-slate-50 font-normal h-fit px-0',
+        link: 'h-fit px-0 font-normal underline-offset-4 hover:underline',
       },
     },
     defaultVariants: {
