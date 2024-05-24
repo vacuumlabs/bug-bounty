@@ -6,7 +6,6 @@ import './globals.css'
 import Providers from '@/components/global/Providers'
 import {Toaster} from '@/components/ui/Toast'
 import {getServerAuthSession} from '@/server/utils/auth'
-import Navbar from '@/components/global/Navbar'
 import {cn} from '@/lib/utils/client/tailwind'
 import Footer from '@/components/global/Footer'
 
@@ -30,10 +29,7 @@ const RootLayout = async ({
     <html lang="en">
       <body className={cn(redditSans.className, 'bg-black text-white')}>
         <Providers session={session}>
-          <Navbar />
-          <div className="flex min-h-screen flex-col pt-[136px]">
-            {children}
-          </div>
+          {children}
           <Footer />
         </Providers>
         <Toaster />

@@ -16,7 +16,7 @@ const NewContestSuccessPage = async () => {
         promptly.
       </p>
       <Button asChild variant="default">
-        <Link href="/contests">Go to dashboard</Link>
+        <Link href="/my-projects">Go to dashboard</Link>
       </Button>
     </main>
   )

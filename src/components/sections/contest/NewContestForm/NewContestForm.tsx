@@ -139,7 +139,7 @@ const NewContestForm = () => {
       },
       {
         onSuccess: () => {
-          router.push('/contests/new/success')
+          router.push('/my-projects/new/success')
         },
       },
     )
