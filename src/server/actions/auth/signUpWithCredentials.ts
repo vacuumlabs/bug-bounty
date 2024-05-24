@@ -12,7 +12,7 @@ import {FormError} from '@/lib/types/error'
 
 export type SignUpRequest = z.infer<typeof signUpSchema>
 
-const signUpWithCredentialsAction = async (request: SignUpRequest) => {
+export const signUpWithCredentialsAction = async (request: SignUpRequest) => {
   const {email, password, name} = signUpSchema.parse(request)
 
   const hashedPassword = await bcrypt.hash(password, 10)
