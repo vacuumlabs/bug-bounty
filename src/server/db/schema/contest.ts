@@ -30,6 +30,7 @@ export const contests = pgTable(
       .references(() => users.id),
     title: varchar('name', {length: 255}).notNull(),
     repoUrl: varchar('repoUrl', {length: 255}).notNull(),
+    repoBranch: varchar('repoBranch', {length: 255}).notNull(),
     filesInScope: varchar('filesInScope', {length: 255}).array(),
     description: text('description').notNull(),
     customConditions: text('customConditions'),
@@ -91,6 +92,8 @@ export const contestRelations = relations(contests, ({one, many}) => ({
 export const insertContestSchema = createInsertSchema(contests, {
   repoUrl: (schema) => schema.repoUrl.url('Invalid repository URL.'),
   title: (schema) => schema.title.min(1, 'Title must be at least 1 character.'),
+  repoBranch: (schema) =>
+    schema.repoBranch.min(1, 'Branch must be at least 1 character.'),
   rewardsAmount: (schema) => schema.rewardsAmount.min(1, 'Required'),
   description: (schema) =>
     schema.description.min(1, 'Description can’t be empty.'),

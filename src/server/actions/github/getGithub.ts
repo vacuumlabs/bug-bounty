@@ -35,6 +35,32 @@ const getPublicReposAction = async () => {
 
 export const getPublicRepos = serializeServerErrors(getPublicReposAction)
 
+const getRepoBranchesSchema = z.object({
+  owner: z.string(),
+  repo: z.string(),
+})
+
+export type GetRepoBranchesParams = z.infer<typeof getRepoBranchesSchema>
+
+const getRepoBranchesAction = async (request: GetRepoBranchesParams) => {
+  const {account} = await requireGitHubAuth()
+
+  const {owner, repo} = getRepoBranchesSchema.parse(request)
+
+  const octokit = new Octokit({
+    auth: account.access_token,
+  })
+
+  const {data} = await octokit.rest.repos.listBranches({
+    owner,
+    repo,
+  })
+
+  return data
+}
+
+export const getRepoBranches = serializeServerErrors(getRepoBranchesAction)
+
 export type GetRepoFilesResponse = Awaited<
   ReturnType<typeof getRepoFilesAction>
 >
@@ -42,7 +68,7 @@ export type GetRepoFilesResponse = Awaited<
 const getRepoFilesParamsSchema = z.object({
   repo: z.string(),
   owner: z.string(),
-  defaultBranch: z.string(),
+  branch: z.string(),
 })
 
 export type GetRepoFilesParams = z.infer<typeof getRepoFilesParamsSchema>
@@ -50,7 +76,7 @@ export type GetRepoFilesParams = z.infer<typeof getRepoFilesParamsSchema>
 const getRepoFilesAction = async (request: GetRepoFilesParams) => {
   const {account} = await requireGitHubAuth()
 
-  const {repo, owner, defaultBranch} = getRepoFilesParamsSchema.parse(request)
+  const {repo, owner, branch} = getRepoFilesParamsSchema.parse(request)
 
   const octokit = new Octokit({
     auth: account.access_token,
@@ -59,7 +85,7 @@ const getRepoFilesAction = async (request: GetRepoFilesParams) => {
   const tree = await octokit.rest.repos.getBranch({
     owner,
     repo,
-    branch: defaultBranch,
+    branch,
   })
 
   const {data} = await octokit.request(
