@@ -28,4 +28,4 @@ const Separator = forwardRef<
 )
 Separator.displayName = SeparatorPrimitive.Root.displayName
 
-export {Separator}
+export default Separator

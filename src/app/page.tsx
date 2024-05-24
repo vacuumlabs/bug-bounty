@@ -10,7 +10,7 @@ import {prefetchGetPublicContests} from '@/lib/queries/contest/getPublicContests
 import {prefetchGetPublicContestCounts} from '@/lib/queries/contest/getPublicContestCounts'
 import {ContestOccurence} from '@/server/db/models'
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/Tabs'
-import {Separator} from '@/components/ui/Separator'
+import Separator from '@/components/ui/Separator'
 import Contests from '@/components/sections/contest/Contests'
 import HowItWorks from '@/components/sections/contest/HowItWorks'
 
@@ -62,14 +62,10 @@ const Home = async () => {
       </div>
       <Tabs defaultValue="hunters">
         <TabsList className="px-24">
-          <TabsTrigger className="text-bodyM" value="hunters">
-            For hunters
-          </TabsTrigger>
-          <TabsTrigger className="text-bodyM" value="projects">
-            For projects
-          </TabsTrigger>
+          <TabsTrigger value="hunters">For hunters</TabsTrigger>
+          <TabsTrigger value="projects">For projects</TabsTrigger>
         </TabsList>
-        <Separator className="h-[0.5px]" />
+        <Separator />
         <TabsContent value="hunters">
           <div className="bg-black px-24 pb-[108px] pt-16">
             <HydrationBoundary>

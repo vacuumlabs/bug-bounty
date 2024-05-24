@@ -13,3 +13,6 @@ export const formatAda = (lovelaceAmount: string) => {
     maximumFractionDigits: 2,
   })}`
 }
+
+export const formatTabCount = (count: number | undefined) =>
+  count == null ? '' : ` (${count})`
