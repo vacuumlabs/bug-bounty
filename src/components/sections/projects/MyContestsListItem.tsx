@@ -23,11 +23,11 @@ const StyledValueText = ({label, value}: StyledValueTextProps) => (
   </span>
 )
 
-type MyContestListItemProps = {
+type MyContestsListItemProps = {
   contest: ContestWithFindingCounts
 }
 
-const MyContestListItem = ({contest}: MyContestListItemProps) => {
+const MyContestsListItem = ({contest}: MyContestsListItemProps) => {
   const leftValues = useMemo(() => {
     const isActiveContest =
       DateTime.fromJSDate(contest.startDate) < DateTime.now() &&
@@ -112,4 +112,4 @@ const MyContestListItem = ({contest}: MyContestListItemProps) => {
   )
 }
 
-export default MyContestListItem
+export default MyContestsListItem

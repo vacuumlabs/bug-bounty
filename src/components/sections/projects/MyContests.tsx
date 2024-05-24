@@ -3,7 +3,7 @@
 import {DateTime} from 'luxon'
 import {useMemo} from 'react'
 
-import MyContestListItem from './MyContestListItem'
+import MyContestsList from './MyContestsList'
 
 import Skeleton from '@/components/ui/Skeleton'
 import {Tabs, TabsList, TabsTrigger} from '@/components/ui/Tabs'
@@ -83,11 +83,7 @@ const MyContests = () => {
               <Skeleton className="h-[240px]" />
             </div>
           ) : (
-            <div className="flex flex-col gap-6">
-              {currentContests?.map((contest) => (
-                <MyContestListItem key={contest.id} contest={contest} />
-              ))}
-            </div>
+            <MyContestsList contests={currentContests} />
           )}
         </div>
       </Tabs>
