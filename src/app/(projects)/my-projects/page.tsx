@@ -17,7 +17,7 @@ const MyProjectsPage = async () => {
   ])
 
   return (
-    <main className="flex flex-col pb-24 pt-12">
+    <main className="mt-12 flex flex-col pb-24">
       <Image
         src={backgroundImage}
         alt="Background image"
