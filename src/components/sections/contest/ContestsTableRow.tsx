@@ -1,9 +1,8 @@
 import Link from 'next/link'
-import {VariantProps} from 'class-variance-authority'
 import {DateTime} from 'luxon'
 import {ArrowRight} from 'lucide-react'
 
-import {useSearchParamsContestType} from './utils'
+import ContestStatusBadge from './ContestStatusBadge'
 
 import {Button} from '@/components/ui/Button'
 import {Contest} from '@/server/db/schema/contest'
@@ -11,16 +10,10 @@ import {formatAda} from '@/lib/utils/common/format'
 import {ContestOccurence} from '@/server/db/models'
 import {Avatar, AvatarImage} from '@/components/ui/Avatar'
 import cardanoLogo from '@public/images/cardano-logo.png'
-import {Badge, badgeVariants} from '@/components/ui/Badge'
+import {useSearchParamsEnumState} from '@/lib/hooks/useSearchParamsState'
 
 type ContestsTableRowProps = {
   contest: Contest
-}
-
-const contestStatusTexts: Record<string, string> = {
-  [ContestOccurence.PRESENT]: 'Live',
-  [ContestOccurence.FUTURE]: 'Upcoming',
-  [ContestOccurence.PAST]: 'Completed',
 }
 
 const timeTexts = {
@@ -29,17 +22,12 @@ const timeTexts = {
   [ContestOccurence.PAST]: 'Ended ',
 }
 
-const badgeVariantsMap: Record<
-  ContestOccurence,
-  VariantProps<typeof badgeVariants>['variant']
-> = {
-  [ContestOccurence.PRESENT]: 'green',
-  [ContestOccurence.FUTURE]: 'sky',
-  [ContestOccurence.PAST]: 'blue',
-}
-
 const ContestsTableRow = ({contest}: ContestsTableRowProps) => {
-  const [contestType] = useSearchParamsContestType()
+  const [contestType] = useSearchParamsEnumState(
+    'type',
+    ContestOccurence,
+    ContestOccurence.PRESENT,
+  )
 
   return (
     <tr key={contest.id} className="flex items-center gap-4 bg-white/5 p-4">
@@ -50,9 +38,7 @@ const ContestsTableRow = ({contest}: ContestsTableRowProps) => {
       </td>
       <td className="flex-grow text-buttonL font-semibold">{contest.title}</td>
       <td className="flex items-center justify-end gap-3">
-        <Badge variant={badgeVariantsMap[contestType]}>
-          {contestStatusTexts[contestType]}
-        </Badge>
+        <ContestStatusBadge contest={contest} />
       </td>
       <td className="flex w-[15%] items-baseline justify-center">
         <span className="whitespace-pre text-white/70">{`${timeTexts[contestType]} `}</span>
