@@ -8,6 +8,7 @@ import {Toaster} from '@/components/ui/Toast'
 import {getServerAuthSession} from '@/server/utils/auth'
 import Navbar from '@/components/global/Navbar'
 import {cn} from '@/lib/utils/client/tailwind'
+import Footer from '@/components/global/Footer'
 
 const redditSans = localFont({
   src: '../fonts/RedditSans-VariableFont_wght.ttf',
@@ -33,6 +34,7 @@ const RootLayout = async ({
           <div className="flex min-h-screen flex-col pt-[136px]">
             {children}
           </div>
+          <Footer />
         </Providers>
         <Toaster />
       </body>
