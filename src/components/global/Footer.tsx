@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import {Separator} from '../ui/Separator'
+import Separator from '../ui/Separator'
 import {Button} from '../ui/Button'
 
 import vacuumlabsLogo from '@public/images/vacuumlabs-logo-light.png'
@@ -40,7 +40,7 @@ const footerLinks = [
 const Footer = () => {
   return (
     <div>
-      <Separator className="h-[0.5px]" />
+      <Separator />
       <div className="flex flex-col items-center gap-10 p-24">
         <div className="flex items-end gap-3">
           <span className="relative top-1 uppercase text-white/60">

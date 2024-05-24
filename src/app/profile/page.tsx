@@ -6,7 +6,7 @@ import {prefetchGetUser} from '@/lib/queries/user/getUser'
 import Profile from '@/components/sections/profile/Profile'
 import {Button} from '@/components/ui/Button'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
-import {Separator} from '@/components/ui/Separator'
+import Separator from '@/components/ui/Separator'
 
 const ProfilePage = async () => {
   const session = await requirePageSession()

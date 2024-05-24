@@ -19,9 +19,7 @@ import {
   useSearchParamsNumericState,
 } from '@/lib/hooks/useSearchParamsState'
 import TablePagination from '@/components/ui/TablePagination'
-
-const formatCount = (count: number | undefined) =>
-  count == null ? '' : ` (${count})`
+import {formatTabCount} from '@/lib/utils/common/format'
 
 type ContestsProps = {
   pageSize: number
@@ -70,17 +68,20 @@ const Contests = ({pageSize}: ContestsProps) => {
       <Tabs value={contestType} onValueChange={setContestType}>
         <TabsList className="mb-6">
           <TabsTrigger
+            className="text-bodyS"
             value={
               ContestOccurence.PRESENT
-            }>{`Active${formatCount(contestCounts?.present)}`}</TabsTrigger>
+            }>{`Active${formatTabCount(contestCounts?.present)}`}</TabsTrigger>
           <TabsTrigger
+            className="text-bodyS"
             value={
               ContestOccurence.FUTURE
-            }>{`Upcoming${formatCount(contestCounts?.future)}`}</TabsTrigger>
+            }>{`Upcoming${formatTabCount(contestCounts?.future)}`}</TabsTrigger>
           <TabsTrigger
+            className="text-bodyS"
             value={
               ContestOccurence.PAST
-            }>{`Completed${formatCount(contestCounts?.past)}`}</TabsTrigger>
+            }>{`Completed${formatTabCount(contestCounts?.past)}`}</TabsTrigger>
         </TabsList>
         {isLoading ? (
           <div className="flex flex-col gap-2">
