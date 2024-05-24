@@ -6,7 +6,7 @@ import getServerQueryClient from '@/server/utils/queryClient'
 import {
   getPublicContests,
   type GetPublicContestsParams,
-} from '@/server/actions/contest/getContests'
+} from '@/server/actions/contest/getPublicContests'
 import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 const getQueryOptions = (params: GetPublicContestsParams) => ({
