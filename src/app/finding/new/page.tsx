@@ -1,6 +1,6 @@
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 import NewFindingForm from '@/components/sections/finding/NewFindingForm'
-import {prefetchGetPublicContests} from '@/lib/queries/contest/getContests'
+import {prefetchGetPublicContests} from '@/lib/queries/contest/getPublicContests'
 import {ContestOccurence} from '@/server/db/models'
 import {requirePageSession} from '@/server/utils/auth'
 

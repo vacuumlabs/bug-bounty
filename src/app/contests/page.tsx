@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
-import {prefetchGetPublicContests} from '@/lib/queries/contest/getContests'
+import {prefetchGetPublicContests} from '@/lib/queries/contest/getPublicContests'
 import Contests from '@/components/sections/contest/Contests'
 import {ContestOccurence} from '@/server/db/models'
 import {prefetchGetPublicContestCounts} from '@/lib/queries/contest/getPublicContestCounts'

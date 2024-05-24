@@ -6,7 +6,7 @@ import ContestsTable from './ContestsTable'
 import {useSearchParamsContestType} from './utils'
 
 import {Tabs, TabsList, TabsTrigger} from '@/components/ui/Tabs'
-import {useGetPublicContests} from '@/lib/queries/contest/getContests'
+import {useGetPublicContests} from '@/lib/queries/contest/getPublicContests'
 import Skeleton from '@/components/ui/Skeleton'
 import {
   ContestOccurence,

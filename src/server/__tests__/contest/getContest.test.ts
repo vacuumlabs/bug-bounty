@@ -14,7 +14,7 @@ import {
 import {db, schema} from '@/server/db'
 import {InsertUser} from '@/server/db/schema/user'
 import {InsertContest} from '@/server/db/schema/contest'
-import {getPublicContests} from '@/server/actions/contest/getContests'
+import {getPublicContests} from '@/server/actions/contest/getPublicContests'
 
 const userId = uuidv4()
 
