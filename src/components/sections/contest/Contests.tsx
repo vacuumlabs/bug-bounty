@@ -3,7 +3,6 @@
 import {useMemo} from 'react'
 
 import ContestsTable from './ContestsTable'
-import {useSearchParamsContestType} from './utils'
 
 import {Tabs, TabsList, TabsTrigger} from '@/components/ui/Tabs'
 import {useGetPublicContests} from '@/lib/queries/contest/getPublicContests'
@@ -16,6 +15,7 @@ import {
 import {useGetPublicContestCounts} from '@/lib/queries/contest/getPublicContestCounts'
 import {
   useSearchParamsEnumArrayState,
+  useSearchParamsEnumState,
   useSearchParamsNumericState,
 } from '@/lib/hooks/useSearchParamsState'
 import TablePagination from '@/components/ui/TablePagination'
@@ -26,7 +26,11 @@ type ContestsProps = {
 }
 
 const Contests = ({pageSize}: ContestsProps) => {
-  const [contestType, setContestType] = useSearchParamsContestType()
+  const [contestType, setContestType] = useSearchParamsEnumState(
+    'type',
+    ContestOccurence,
+    ContestOccurence.PRESENT,
+  )
   const [projectCategory] = useSearchParamsEnumArrayState(
     'category',
     ProjectCategory,

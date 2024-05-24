@@ -29,6 +29,11 @@ const ContestsTableRow = ({contest}: ContestsTableRowProps) => {
     ContestOccurence.PRESENT,
   )
 
+  const relevantContestDate =
+    contestType === ContestOccurence.FUTURE
+      ? contest.startDate
+      : contest.endDate
+
   return (
     <tr key={contest.id} className="flex items-center gap-4 bg-white/5 p-4">
       <td>
@@ -43,7 +48,7 @@ const ContestsTableRow = ({contest}: ContestsTableRowProps) => {
       <td className="flex w-[15%] items-baseline justify-center">
         <span className="whitespace-pre text-white/70">{`${timeTexts[contestType]} `}</span>
         <span className="font-semibold">
-          {DateTime.fromJSDate(contest.endDate).toRelative({locale: 'en'})}
+          {DateTime.fromJSDate(relevantContestDate).toRelative({locale: 'en'})}
         </span>
       </td>
       <td className="flex w-[15%] items-baseline justify-center">

@@ -1,7 +1,7 @@
 import {usePathname, useRouter, useSearchParams} from 'next/navigation'
 import {useCallback} from 'react'
 
-import {getEnumMemberFilter} from '../utils/common/enums'
+import {getEnumMemberFilter, isEnumMember} from '../utils/common/enums'
 
 type UseSearchParamsStateFn<Value extends string[] | string | number> = {
   (
@@ -132,10 +132,22 @@ export const useSearchParamsArrayState = (
 export const useSearchParamsEnumArrayState = <T extends string>(
   key: string,
   enumObject: Record<string, T>,
-): [T[], (values: T[]) => void] => {
-  const [values, setValues] = useSearchParamsArrayState(key)
+): [T[], (values: T[]) => void, (values: T[]) => void] => {
+  const [values, setValues, getNewUrl] = useSearchParamsArrayState(key)
 
   const validValues = values.filter(getEnumMemberFilter(enumObject))
 
-  return [validValues, setValues]
+  return [validValues, setValues, getNewUrl]
+}
+
+export const useSearchParamsEnumState = <T extends string>(
+  key: string,
+  enumObject: Record<string, T>,
+  defaultValue: T,
+): [T, (value: T) => void, (value: T) => string] => {
+  const [value, setValue, getNewUrl] = useSearchParamsState(key, defaultValue)
+
+  const currentValue = isEnumMember(enumObject, value) ? value : defaultValue
+
+  return [currentValue, setValue, getNewUrl]
 }
