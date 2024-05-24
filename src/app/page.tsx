@@ -3,7 +3,7 @@ import Image from 'next/image'
 import {ArrowRight} from 'lucide-react'
 
 import backgroundImage from '@public/images/background-graphic.png'
-import overlayImage from '@public/images/how-it-works-overlay.png'
+import overlayImage from '@public/images/transparent-thin-overlay.png'
 import {Button} from '@/components/ui/Button'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 import {prefetchGetPublicContests} from '@/lib/queries/contest/getPublicContests'
@@ -13,7 +13,6 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/Tabs'
 import {Separator} from '@/components/ui/Separator'
 import Contests from '@/components/sections/contest/Contests'
 import HowItWorks from '@/components/sections/contest/HowItWorks'
-import Footer from '@/components/global/Footer'
 
 const CONTESTS_PER_PAGE = 7
 
@@ -117,7 +116,6 @@ const Home = async () => {
           </div>
         </TabsContent>
       </Tabs>
-      <Footer />
     </main>
   )
 }
