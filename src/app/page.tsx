@@ -46,7 +46,7 @@ const Home = async () => {
       />
       <div className="flex flex-col px-24">
         <div className="mb-[236px] flex flex-col items-start gap-6">
-          <h1 className="whitespace-pre-line text-displayM font-normal uppercase">
+          <h1 className="whitespace-pre-line text-headlineL font-normal uppercase">
             {'Join the Bounty Lab and\n'}
             <span className="font-bold">
               {'shape the future of\nCardano Security.'}
@@ -89,7 +89,7 @@ const Home = async () => {
                 alt="Overlay graphic"
                 width={514}
               />
-              <h3 className="text-displayS uppercase">Still wondering?</h3>
+              <h3 className="text-headlineM uppercase">Still wondering?</h3>
               {/*TODO: add text */}
               <p className="mb-11 mt-6">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce

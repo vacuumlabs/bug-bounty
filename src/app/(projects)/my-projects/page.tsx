@@ -29,7 +29,7 @@ const MyProjectsPage = async () => {
           zIndex: -1,
         }}
       />
-      <h1 className="mx-24 mb-6 text-headlineL uppercase">Projects overview</h1>
+      <h1 className="mx-24 mb-6 text-headlineS uppercase">Projects overview</h1>
       <HydrationBoundary>
         <ProjectsDashboardOverview className="mx-24 mb-10" />
         <MyContests />
