@@ -41,8 +41,9 @@ const GithubBranchSelect = ({
 }: GithubBranchSelectProps) => {
   const session = useSession()
 
-  const {data: branchesData, isLoading: publicReposIsLoading} =
-    useGetRepoBranches({owner: selectedRepo.owner, repo: selectedRepo.name})
+  const {data: branchesData, isLoading: branchesIsLoading} = useGetRepoBranches(
+    {owner: selectedRepo.owner, repo: selectedRepo.name},
+  )
 
   if (session.data?.user.provider !== 'github') {
     return (
@@ -63,7 +64,7 @@ const GithubBranchSelect = ({
             <div className="flex flex-col items-start gap-2">
               <BranchList
                 branches={branchesData?.map((branch) => branch.name)}
-                isLoading={publicReposIsLoading}
+                isLoading={branchesIsLoading}
                 selectBranch={onSelectBranch}
               />
             </div>
