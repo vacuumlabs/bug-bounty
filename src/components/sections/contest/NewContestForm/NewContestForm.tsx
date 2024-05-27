@@ -134,7 +134,7 @@ const NewContestForm = () => {
         contest: {
           ...values,
           repoUrl: repository.url,
-          status: ContestStatus.PENDING,
+          status: ContestStatus.IN_REVIEW,
         },
         severityWeights,
       },

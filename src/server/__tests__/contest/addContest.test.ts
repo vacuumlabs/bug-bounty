@@ -31,7 +31,7 @@ const request: AddContestRequest = {
     customConditions: 'There are four custom conditions.',
     projectCategory: [ProjectCategory.DEFI, ProjectCategory.INFRASTRUCTURE],
     projectLanguage: [ProjectLanguage.AIKEN],
-    status: ContestStatus.PENDING,
+    status: ContestStatus.IN_REVIEW,
     startDate: addDays(new Date(), 1),
     endDate: addDays(new Date(), 2),
   },

@@ -21,7 +21,7 @@ export const addContestSchema = insertContestSchema
     rewardsTransferTxHash: true,
   })
   .extend({
-    status: z.enum([ContestStatus.PENDING, ContestStatus.DRAFT]),
+    status: z.enum([ContestStatus.IN_REVIEW, ContestStatus.DRAFT]),
   })
   .strict()
 

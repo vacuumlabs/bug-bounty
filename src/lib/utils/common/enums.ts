@@ -32,9 +32,11 @@ const translations = {
   },
   contestStatus: {
     [ContestStatus.DRAFT]: 'Draft',
+    [ContestStatus.IN_REVIEW]: 'In review',
     [ContestStatus.PENDING]: 'Pending',
     [ContestStatus.APPROVED]: 'Approved',
     [ContestStatus.REJECTED]: 'Rejected',
+    [ContestStatus.FINISHED]: 'Finished',
   },
   projectLanguage: {
     [ProjectLanguage.AIKEN]: 'Aiken',

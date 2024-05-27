@@ -12,7 +12,11 @@ import {ServerError} from '@/lib/types/error'
 const approveOrRejectContestSchema = z
   .object({
     contestId: z.string().uuid(),
-    newStatus: z.enum([ContestStatus.APPROVED, ContestStatus.REJECTED]),
+    newStatus: z.enum([
+      ContestStatus.APPROVED,
+      ContestStatus.REJECTED,
+      ContestStatus.PENDING,
+    ]),
   })
   .strict()
 
@@ -36,8 +40,13 @@ export const approveOrRejectContestAction = async (
     throw new ServerError('Contest not found.')
   }
 
-  if (contest.status !== ContestStatus.PENDING) {
-    throw new ServerError('Only pending contests can be approved/rejected.')
+  if (
+    contest.status !== ContestStatus.PENDING &&
+    contest.status !== ContestStatus.IN_REVIEW
+  ) {
+    throw new ServerError(
+      'Only pending and in review contests can be approved/rejected.',
+    )
   }
 
   return db
