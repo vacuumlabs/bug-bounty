@@ -10,6 +10,7 @@ import bountyLabLogo from '@public/images/bounty-lab-icon.png'
 import {cn} from '@/lib/utils/client/tailwind'
 import {UserAvatar} from '@/components/ui/Avatar'
 import {PATHS} from '@/lib/utils/common/paths'
+import SignOutButton from '@/components/ui/SignOutButon'
 
 const ProjectsNavbar = () => {
   const pathname = usePathname()
@@ -49,11 +50,9 @@ const ProjectsNavbar = () => {
             </Button>
           )}
           <UserAvatar />
-          <Button asChild variant="link" className="font-bold">
-            <Link href={PATHS.signOut}>
-              <LogOut />
-            </Link>
-          </Button>
+          <SignOutButton variant="link">
+            <LogOut />
+          </SignOutButton>
         </div>
       </div>
     </div>

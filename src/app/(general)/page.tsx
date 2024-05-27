@@ -1,9 +1,6 @@
-import Link from 'next/link'
 import Image from 'next/image'
-import {ArrowRight} from 'lucide-react'
 
 import backgroundImage from '@public/images/background-graphic.png'
-import {Button} from '@/components/ui/Button'
 import {prefetchGetPublicContests} from '@/lib/queries/contest/getPublicContests'
 import {prefetchGetPublicContestCounts} from '@/lib/queries/contest/getPublicContestCounts'
 import {ContestOccurence} from '@/server/db/models'
@@ -11,6 +8,7 @@ import HomePageTabs, {
   HOMEPAGE_CONTESTS_PAGE_SIZE,
 } from '@/components/sections/home/HomePageTabs'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
+import HomePageCtaButton from '@/components/sections/home/HomePageCtaButton'
 
 const Home = async () => {
   await Promise.all([
@@ -48,12 +46,7 @@ const Home = async () => {
               {'shape the future of\nCardano Security.'}
             </span>
           </h1>
-          <Button asChild>
-            <Link href="/contests">
-              {'Explore bounties'}
-              <ArrowRight className="ml-2" />
-            </Link>
-          </Button>
+          <HomePageCtaButton />
         </div>
       </div>
       <HydrationBoundary>
