@@ -20,6 +20,7 @@ import {
 } from '@/lib/hooks/useSearchParamsState'
 import TablePagination from '@/components/ui/TablePagination'
 import {formatTabCount} from '@/lib/utils/common/format'
+import Anchor from '@/components/ui/Anchor'
 
 type ContestsProps = {
   pageSize: number
@@ -66,6 +67,7 @@ const Contests = ({pageSize}: ContestsProps) => {
 
   return (
     <div className="flex flex-col">
+      <Anchor id="contests" />
       <div className="mb-11 flex items-center justify-between">
         <h3 className="text-headlineM font-bold uppercase">Bounties</h3>
       </div>

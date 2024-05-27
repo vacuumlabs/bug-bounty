@@ -9,7 +9,7 @@ const huntersItems = [
     description: (
       <span>
         Explore our list of{' '}
-        <Link className="underline" href="/contests">
+        <Link className="underline" href="/#contests">
           Active Bounties
         </Link>{' '}
         and read its details and terms.

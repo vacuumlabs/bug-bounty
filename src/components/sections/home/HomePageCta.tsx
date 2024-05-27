@@ -18,7 +18,7 @@ const data = {
     },
     rightButton: {
       title: 'Explore bounties',
-      href: '#',
+      href: '/#contests',
     },
   },
   [HomePageTab.PROJECTS]: {
