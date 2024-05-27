@@ -5,6 +5,7 @@ import {requirePageSession} from '@/server/utils/auth'
 import {prefetchGetUser} from '@/lib/queries/user/getUser'
 import RegisterWalletAddress from '@/components/sections/profile/RegisterWalletAddress'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
+import {PATHS} from '@/lib/utils/common/paths'
 
 const ConnectWalletPage = async () => {
   const session = await requirePageSession()
@@ -17,7 +18,7 @@ const ConnectWalletPage = async () => {
         <RegisterWalletAddress />
       </HydrationBoundary>
       <Button asChild variant="link">
-        <Link href="/profile">Go home</Link>
+        <Link href={PATHS.profile}>Go home</Link>
       </Button>
     </main>
   )

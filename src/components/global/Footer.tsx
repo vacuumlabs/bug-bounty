@@ -5,23 +5,16 @@ import Separator from '../ui/Separator'
 import {Button} from '../ui/Button'
 
 import vacuumlabsLogo from '@public/images/vacuumlabs-logo-light.png'
+import {PATHS} from '@/lib/utils/common/paths'
 
 const footerLinks = [
   {
-    title: 'For hunters',
-    url: '/contests',
-  },
-  {
-    title: 'For projects',
-    url: '/projects',
-  },
-  {
     title: 'About us',
-    url: '/about-us',
+    url: PATHS.aboutUs,
   },
   {
     title: 'Login',
-    url: '/api/auth/signin',
+    url: PATHS.signIn,
   },
   {
     title: 'Privacy policy',

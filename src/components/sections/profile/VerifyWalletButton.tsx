@@ -7,6 +7,7 @@ import ConnectWallet from './ConnectWallet'
 
 import {Button} from '@/components/ui/Button'
 import {useAddWalletAddress} from '@/lib/queries/user/addWalletAddress'
+import {PATHS} from '@/lib/utils/common/paths'
 
 const VerifyWalletButton = () => {
   const {connected} = useWallet()
@@ -16,7 +17,7 @@ const VerifyWalletButton = () => {
   const handleVerifyWallet = () =>
     mutate(undefined, {
       onSuccess: () => {
-        router.push('/profile')
+        router.push(PATHS.profile)
       },
     })
 

@@ -2,6 +2,7 @@ import Link from 'next/link'
 
 import {Button} from '@/components/ui/Button'
 import {requirePageSession} from '@/server/utils/auth'
+import {PATHS} from '@/lib/utils/common/paths'
 
 const NewContestSuccessPage = async () => {
   await requirePageSession()
@@ -16,7 +17,7 @@ const NewContestSuccessPage = async () => {
         promptly.
       </p>
       <Button asChild variant="default">
-        <Link href="/my-projects">Go to dashboard</Link>
+        <Link href={PATHS.myProjects}>Go to dashboard</Link>
       </Button>
     </main>
   )

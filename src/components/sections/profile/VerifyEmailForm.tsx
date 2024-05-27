@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/Form'
 import {Button} from '@/components/ui/Button'
+import {PATHS} from '@/lib/utils/common/paths'
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -40,7 +41,7 @@ const VerifyEmailForm = () => {
   const onSubmit = () =>
     signIn('email', {
       email: email ?? getValues('email'),
-      callbackUrl: '/profile/connect-wallet',
+      callbackUrl: PATHS.connectWallet,
     })
 
   return (

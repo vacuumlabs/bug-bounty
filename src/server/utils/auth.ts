@@ -7,6 +7,7 @@ import {UserRole} from '../db/models'
 import {db} from '../db'
 
 import {ServerError} from '@/lib/types/error'
+import {PATHS} from '@/lib/utils/common/paths'
 
 export const getServerAuthSession = () => getServerSession(authOptions)
 
@@ -31,7 +32,7 @@ export const requirePageSession = async () => {
   const pathName = headersList.get('x-url')
 
   if (!session) {
-    redirect(`/api/auth/signin?error=SessionRequired&callbackUrl=${pathName}`)
+    redirect(`${PATHS.signIn}?error=SessionRequired&callbackUrl=${pathName}`)
   }
 
   return session

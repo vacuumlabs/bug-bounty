@@ -25,6 +25,7 @@ import {ZodOutput} from '@/lib/types/zod'
 import {GithubRepository} from '@/server/actions/github/getGithub'
 import {Nullable, Override} from '@/lib/types/general'
 import type {SeverityWeights} from '@/server/actions/reward/calculateRewards'
+import {PATHS} from '@/lib/utils/common/paths'
 
 const formPages = ['Basic information', 'Parameter settings', 'Review']
 
@@ -139,7 +140,7 @@ const NewContestForm = () => {
       },
       {
         onSuccess: () => {
-          router.push('/my-projects/new/success')
+          router.push(PATHS.newProjectSuccess)
         },
       },
     )

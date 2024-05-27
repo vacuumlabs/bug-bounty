@@ -7,6 +7,7 @@ import Profile from '@/components/sections/profile/Profile'
 import {Button} from '@/components/ui/Button'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 import Separator from '@/components/ui/Separator'
+import {PATHS} from '@/lib/utils/common/paths'
 
 const ProfilePage = async () => {
   const session = await requirePageSession()
@@ -21,12 +22,12 @@ const ProfilePage = async () => {
       </HydrationBoundary>
       <Separator className="mt-10" />
       <Button asChild variant="outline">
-        <Link href="/">Home</Link>
+        <Link href={PATHS.home}>Home</Link>
       </Button>
       <Button asChild variant="outline">
         <Link href="/finding/new">Add finding</Link>
       </Button>
-      <SignOutButton variant="outline" callbackUrl="/">
+      <SignOutButton variant="outline" callbackUrl={PATHS.home}>
         Sign out
       </SignOutButton>
     </main>

@@ -5,6 +5,7 @@ import MyContestsListItem from './MyContestsListItem'
 
 import type {ContestWithFindingCounts} from '@/server/actions/contest/getMyContests'
 import {Button} from '@/components/ui/Button'
+import {PATHS} from '@/lib/utils/common/paths'
 
 type MyContestsListProps = {
   contests: ContestWithFindingCounts[] | undefined
@@ -17,7 +18,7 @@ const MyContestsList = ({contests}: MyContestsListProps) => {
         <p className="text-titleL uppercase">There is nothing yet...</p>
         <p className="mb-12 mt-3">Create your first audit</p>
         <Button asChild>
-          <Link href="/my-projects/new" className="gap-3">
+          <Link href={PATHS.newProject} className="gap-3">
             Create audit
             <ArrowRight />
           </Link>
