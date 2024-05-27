@@ -25,6 +25,7 @@ const request: AddContestRequest = {
   contest: {
     title: 'Example Contest',
     description: 'This is an example contest.',
+    repoBranch: 'main',
     repoUrl: 'https://github.com/example-contest',
     rewardsAmount: '1000',
     customConditions: 'There are four custom conditions.',
