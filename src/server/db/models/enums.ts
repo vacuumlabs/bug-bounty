@@ -5,8 +5,9 @@ export enum UserRole {
 
 export enum ContestStatus {
   DRAFT = 'DRAFT',
-  APPROVED = 'APPROVED',
+  IN_REVIEW = 'IN_REVIEW',
   PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
   REJECTED = 'REJECTED',
   FINISHED = 'FINISHED',
 }

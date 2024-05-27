@@ -51,6 +51,7 @@ export const contests = pgTable(
       precision: 20,
       scale: 0,
     }),
+    knownIssuesDescription: text('knownIssuesDescription'),
     startDate: timestamp('startDate', {
       mode: 'date',
     }).notNull(),
@@ -58,7 +59,7 @@ export const contests = pgTable(
       mode: 'date',
     }).notNull(),
     status: varchar('status', {
-      length: 8,
+      length: 32,
       enum: getDrizzleEnum(ContestStatus),
     }).notNull(),
     createdAt: timestamp('createdAt', {

@@ -101,7 +101,9 @@ describe('approveOrRejectContest', () => {
 
     await expect(async () => {
       await approveOrRejectContestAction(approveRequest)
-    }).rejects.toThrowError('Only pending contests can be approved/rejected.')
+    }).rejects.toThrowError(
+      'Only pending and in review contests can be approved/rejected.',
+    )
   })
 
   it('approves a contest successfully', async () => {

@@ -100,7 +100,7 @@ const getContestsToInsert = (projectOwnerUserId: string): InsertContest[] => [
     ...getBasicContestData(projectOwnerUserId),
     startDate: faker.date.soon(),
     endDate: faker.date.future(),
-    status: ContestStatus.PENDING,
+    status: ContestStatus.IN_REVIEW,
   },
 ]
 

@@ -8,30 +8,33 @@ import {Badge} from '@/components/ui/Badge'
 
 type BadgeStatus =
   | 'draft'
-  | 'live'
-  | 'judging'
+  | 'inReview'
   | 'pending'
   | 'rejected'
   | 'approved'
+  | 'live'
+  | 'judging'
   | 'finished'
 
 const contestStatusTexts: Record<BadgeStatus, string> = {
   draft: 'Draft',
-  live: 'Live',
-  judging: 'Judging',
+  inReview: 'In Review',
   pending: 'Pending',
   rejected: 'Rejected',
   approved: 'Approved',
+  live: 'Live',
+  judging: 'Judging',
   finished: 'Finished',
 }
 
 const backgroundColorMap = {
   draft: 'bg-grey-40',
-  live: 'bg-green',
-  judging: 'bg-blue',
+  inReview: 'bg-yellow-light',
   pending: 'bg-yellow',
   rejected: 'bg-red',
   approved: 'bg-green-light',
+  live: 'bg-green',
+  judging: 'bg-blue',
   finished: 'bg-purple',
 } satisfies Record<BadgeStatus, string>
 
@@ -50,6 +53,9 @@ const ContestStatusBadge = ({contest, className}: ContestStatusBadgeProps) => {
     }
     if (contest.status === ContestStatus.FINISHED) {
       return 'finished'
+    }
+    if (contest.status === ContestStatus.IN_REVIEW) {
+      return 'inReview'
     }
     if (contest.status === ContestStatus.PENDING) {
       return 'pending'
