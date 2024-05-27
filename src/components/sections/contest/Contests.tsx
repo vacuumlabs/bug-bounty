@@ -96,7 +96,7 @@ const Contests = ({pageSize}: ContestsProps) => {
             <Skeleton className="h-[60px]" />
           </div>
         ) : (
-          <ContestsTable contests={contests ?? []} />
+          <ContestsTable contestType={contestType} contests={contests ?? []} />
         )}
       </Tabs>
       {!!currentTotalCount && (
