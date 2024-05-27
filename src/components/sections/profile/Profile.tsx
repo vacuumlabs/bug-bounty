@@ -6,6 +6,7 @@ import SetUserAliasForm from './SetUserAliasForm'
 
 import {Button} from '@/components/ui/Button'
 import {useGetUser} from '@/lib/queries/user/getUser'
+import {PATHS} from '@/lib/utils/common/paths'
 
 type WalletAddressProps = {
   address: string | null | undefined
@@ -16,12 +17,12 @@ const WalletAddress = ({address}: WalletAddressProps) =>
     <div>
       <span>{`Wallet address: ${address}`}</span>
       <Button asChild variant="link">
-        <Link href="/profile/connect-wallet">Change</Link>
+        <Link href={PATHS.connectWallet}>Change</Link>
       </Button>
     </div>
   ) : (
     <Button asChild>
-      <Link href="/profile/connect-wallet">Connect your wallet</Link>
+      <Link href={PATHS.connectWallet}>Connect your wallet</Link>
     </Button>
   )
 

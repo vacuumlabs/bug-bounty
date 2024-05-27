@@ -6,6 +6,7 @@ import {
   SignUpRequest,
   signUpWithCredentials,
 } from '@/server/actions/auth/signUpWithCredentials'
+import {PATHS} from '@/lib/utils/common/paths'
 
 export const useSignUp = (
   options?: MutateOptions<void, Error, SignUpRequest>,
@@ -19,7 +20,7 @@ export const useSignUp = (
 
       await signIn('email', {
         email: values.email,
-        callbackUrl: '/profile/connect-wallet',
+        callbackUrl: PATHS.connectWallet,
       })
     },
   })

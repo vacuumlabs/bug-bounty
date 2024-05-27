@@ -9,6 +9,7 @@ import {Button} from '@/components/ui/Button'
 import bountyLabLogo from '@public/images/bounty-lab-icon.png'
 import {cn} from '@/lib/utils/client/tailwind'
 import {UserAvatar} from '@/components/ui/Avatar'
+import {PATHS} from '@/lib/utils/common/paths'
 
 const ProjectsNavbar = () => {
   const pathname = usePathname()
@@ -17,7 +18,7 @@ const ProjectsNavbar = () => {
     <div className="pointer-events-none fixed z-10 flex w-full flex-col bg-black px-24 py-6">
       <div className="pointer-events-auto flex flex-row items-center justify-between">
         <nav className="flex items-center gap-10">
-          <Link href="/">
+          <Link href={PATHS.home}>
             <Image
               width={42}
               height={42}
@@ -28,20 +29,20 @@ const ProjectsNavbar = () => {
           <Button
             asChild
             variant="link"
-            className={cn(pathname === '/my-projects' && 'font-bold')}>
-            <Link href="/my-projects">Projects</Link>
+            className={cn(pathname === PATHS.myProjects && 'font-bold')}>
+            <Link href={PATHS.myProjects}>Projects</Link>
           </Button>
           <Button
             asChild
             variant="link"
-            className={cn(pathname === '/my-projects/rewards' && 'font-bold')}>
-            <Link href="/my-projects/rewards">Rewards</Link>
+            className={cn(pathname === PATHS.myProjectsRewards && 'font-bold')}>
+            <Link href={PATHS.myProjectsRewards}>Rewards</Link>
           </Button>
         </nav>
         <div className="flex items-center gap-10">
-          {pathname !== '/my-projects/new' && (
+          {pathname !== PATHS.newProject && (
             <Button asChild>
-              <Link href="/my-projects/new" className="gap-3">
+              <Link href={PATHS.newProject} className="gap-3">
                 Create audit
                 <ArrowRight />
               </Link>
@@ -49,7 +50,7 @@ const ProjectsNavbar = () => {
           )}
           <UserAvatar />
           <Button asChild variant="link" className="font-bold">
-            <Link href="/api/auth/signout">
+            <Link href={PATHS.signOut}>
               <LogOut />
             </Link>
           </Button>

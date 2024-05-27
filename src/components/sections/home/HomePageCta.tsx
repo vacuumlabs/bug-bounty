@@ -7,6 +7,7 @@ import Link from 'next/link'
 import {Button} from '@/components/ui/Button'
 import overlayImage from '@public/images/transparent-thin-overlay.png'
 import {HomePageTab} from '@/lib/types/enums'
+import {PATHS} from '@/lib/utils/common/paths'
 
 const data = {
   [HomePageTab.HUNTERS]: {
@@ -30,7 +31,7 @@ const data = {
     },
     rightButton: {
       title: 'Submit my project',
-      href: '/my-projects/new',
+      href: PATHS.newProject,
     },
   },
 }

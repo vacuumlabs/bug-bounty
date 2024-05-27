@@ -33,9 +33,6 @@ declare module 'next-auth/jwt' {
 }
 
 export const authOptions: NextAuthOptions = {
-  pages: {
-    newUser: '/profile/connect-wallet',
-  },
   callbacks: {
     jwt: async ({token, user, trigger, account}) => {
       if (trigger !== 'signIn' && trigger !== 'signUp') {

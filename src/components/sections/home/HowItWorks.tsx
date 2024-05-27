@@ -2,6 +2,7 @@ import Link from 'next/link'
 import {cva} from 'class-variance-authority'
 
 import {HomePageTab} from '@/lib/types/enums'
+import {PATHS} from '@/lib/utils/common/paths'
 
 const huntersItems = [
   {
@@ -21,7 +22,7 @@ const huntersItems = [
     description: (
       <span>
         {'To submit a report, '}
-        <Link className="underline" href="/api/auth/signin">
+        <Link className="underline" href={PATHS.signIn}>
           login
         </Link>
         {' with your account on Google, Twitter or Github.'}
@@ -53,7 +54,7 @@ const projectsItems = [
     title: 'Login',
     description: (
       <span>
-        <Link className="underline" href="/api/auth/signin">
+        <Link className="underline" href={PATHS.signIn}>
           Login
         </Link>
         {' through your Google, Twitter or Github account.'}
