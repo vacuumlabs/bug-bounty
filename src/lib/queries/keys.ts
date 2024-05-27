@@ -3,7 +3,10 @@ import {createQueryKeyStore} from '@lukemorales/query-key-factory'
 import {type GetRewardsParams} from '@/server/actions/reward/getReward'
 import {type GetPublicContestsParams} from '@/server/actions/contest/getContests'
 import {type GetDeduplicatedFindingsParams} from '@/server/actions/deduplicatedFinding/getDeduplicatedFinding'
-import {GetRepoFilesParams} from '@/server/actions/github/getGithub'
+import {
+  GetRepoBranchesParams,
+  GetRepoFilesParams,
+} from '@/server/actions/github/getGithub'
 import {GetPublicContestCountsParams} from '@/server/actions/contest/getPublicContestCounts'
 
 export const queryKeys = createQueryKeyStore({
@@ -23,6 +26,7 @@ export const queryKeys = createQueryKeyStore({
   },
   gitHub: {
     publicRepos: (userId: string | undefined) => [userId],
+    repoBranches: (params: GetRepoBranchesParams | undefined) => [params],
     repoFiles: (params: GetRepoFilesParams | undefined) => [params],
   },
 })

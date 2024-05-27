@@ -18,6 +18,7 @@ const contestToInsert: InsertContest = {
   title: 'Example Contest',
   description: 'This is an example contest.',
   repoUrl: 'https://github.com/example-contest',
+  repoBranch: 'main',
   rewardsAmount: '1000',
   customConditions: 'There are four custom conditions.',
   status: ContestStatus.PENDING,

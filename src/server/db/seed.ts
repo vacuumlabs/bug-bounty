@@ -62,6 +62,7 @@ const getBasicContestData = (projectOwnerUserId: string) => ({
   title: faker.company.name(),
   description: faker.lorem.paragraphs(),
   repoUrl: faker.internet.url(),
+  repoBranch: 'main',
   filesInScope: faker.helpers.multiple(() => faker.internet.url()),
   projectCategory: faker.helpers.uniqueArray(
     () => faker.helpers.enumValue(ProjectCategory),

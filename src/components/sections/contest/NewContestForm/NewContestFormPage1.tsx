@@ -1,6 +1,7 @@
 import {type NewContestFormPageProps} from './NewContestForm'
 import GithubRepoSelect from '../../github/GithubRepoSelect'
 import GithubFileSelect from '../../github/GithubFileSelect'
+import GithubBranchSelect from '../../github/GithhubBranchSelect'
 
 import {
   FormControl,
@@ -27,6 +28,7 @@ const NewContestFormPage1 = ({form}: NewContestFormPageProps) => {
   const {control, watch, setValue} = form
 
   const selectedRepo = watch('repository')
+  const selectedBranch = watch('repoBranch')
 
   return (
     <div className="flex flex-col gap-5">
@@ -65,6 +67,26 @@ const NewContestFormPage1 = ({form}: NewContestFormPageProps) => {
       {selectedRepo && (
         <FormField
           control={control}
+          name="repoBranch"
+          disabled={!selectedRepo}
+          render={({field}) => (
+            <FormItem>
+              <FormLabel>Select the repo branch to use</FormLabel>
+              <FormControl>
+                <GithubBranchSelect
+                  selectedRepo={selectedRepo}
+                  selectedBranch={field.value}
+                  onSelectBranch={field.onChange}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
+      {selectedRepo && selectedBranch && (
+        <FormField
+          control={control}
           name="filesInScope"
           disabled={!selectedRepo}
           render={({field}) => (
@@ -73,6 +95,7 @@ const NewContestFormPage1 = ({form}: NewContestFormPageProps) => {
               <FormControl>
                 <GithubFileSelect
                   selectedRepo={selectedRepo}
+                  selectedBranch={selectedBranch}
                   selectedFiles={field.value}
                   onSelectFiles={field.onChange}
                 />

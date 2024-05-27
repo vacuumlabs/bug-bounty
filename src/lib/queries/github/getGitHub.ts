@@ -4,8 +4,10 @@ import {useSession} from 'next-auth/react'
 import {queryKeys} from '../keys'
 
 import {
+  GetRepoBranchesParams,
   GetRepoFilesParams,
   getPublicRepos,
+  getRepoBranches,
   getRepoFiles,
 } from '@/server/actions/github/getGithub'
 import {useUserId} from '@/lib/hooks/useUserId'
@@ -23,6 +25,30 @@ export const useGetPublicRepos = () => {
   return useQuery({
     ...getPublicReposQueryOptions(userId),
     enabled: !!userId && session.data?.user.provider === 'github',
+  })
+}
+
+const getRepoBranchesQueryOptions = (
+  params: GetRepoBranchesParams | undefined,
+) => ({
+  queryKey: queryKeys.gitHub.repoBranches(params).queryKey,
+  queryFn: withApiErrorHandler(() => {
+    if (!params) {
+      throw new Error('GetRepoBranchesParams is required.')
+    }
+
+    return getRepoBranches(params)
+  }),
+})
+
+export const useGetRepoBranches = (
+  params: GetRepoBranchesParams | undefined,
+) => {
+  const session = useSession()
+
+  return useQuery({
+    ...getRepoBranchesQueryOptions(params),
+    enabled: !!params && session.data?.user.provider === 'github',
   })
 }
 

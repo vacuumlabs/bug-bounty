@@ -60,33 +60,37 @@ const FileTree = ({
   ))
 }
 
-type SelectedRepo = Pick<GithubRepository, 'owner' | 'defaultBranch' | 'name'>
+type SelectedRepo = Pick<GithubRepository, 'owner' | 'name'>
 
 type GithubFileSelectProps = {
   selectedRepo: SelectedRepo | null
+  selectedBranch: string | null
   selectedFiles: string[] | null | undefined
   onSelectFiles: (files: string[]) => void
 }
 
 const getRepoFilesParams = (
   selectedRepo: SelectedRepo | null,
+  selectedBranch: string | null,
 ): GetRepoFilesParams | undefined => {
-  if (!selectedRepo) {
+  if (!selectedRepo || !selectedBranch) {
     return
   }
-  const {name, owner, defaultBranch} = selectedRepo
-  return {repo: name, owner, defaultBranch}
+
+  const {name, owner} = selectedRepo
+  return {repo: name, owner, branch: selectedBranch}
 }
 
 const GithubFileSelect = ({
   selectedRepo,
+  selectedBranch,
   selectedFiles,
   onSelectFiles,
 }: GithubFileSelectProps) => {
   const session = useSession()
 
   const {data: repoFilesData, isLoading: repoFilesIsLoading} = useGetRepoFiles(
-    getRepoFilesParams(selectedRepo),
+    getRepoFilesParams(selectedRepo, selectedBranch),
   )
 
   if (session.data?.user.provider !== 'github') {
