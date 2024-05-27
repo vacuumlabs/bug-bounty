@@ -1,5 +1,6 @@
 import {redirect} from 'next/navigation'
 import {Session, getServerSession} from 'next-auth'
+import {headers} from 'next/headers'
 
 import {authOptions} from '../authOptions'
 import {UserRole} from '../db/models'
@@ -26,9 +27,11 @@ export const requireServerSession = async () => {
 
 export const requirePageSession = async () => {
   const session = await getServerAuthSession()
+  const headersList = headers()
+  const pathName = headersList.get('x-url')
 
   if (!session) {
-    redirect('/api/auth/error?error=AccessDenied')
+    redirect(`/api/auth/signin?error=SessionRequired&callbackUrl=${pathName}`)
   }
 
   return session
