@@ -7,7 +7,7 @@ import Link from 'next/link'
 import {Button} from '@/components/ui/Button'
 import overlayImage from '@public/images/transparent-thin-overlay.png'
 import {HomePageTab} from '@/lib/types/enums'
-import {PATHS} from '@/lib/utils/common/paths'
+import {DISCORD_URL, PATHS} from '@/lib/utils/common/paths'
 
 const data = {
   [HomePageTab.HUNTERS]: {
@@ -15,7 +15,7 @@ const data = {
     text: "The future of DeFi hinges on your expertise. Join our elite bug bounty program & become a guardian of Cardano's security. Uncover vulnerabilities & safeguard the Cardano ecosystem - while earning rewards in ADA.",
     leftButton: {
       title: 'Join the community',
-      href: '#', // TODO: add discord link
+      href: DISCORD_URL,
     },
     rightButton: {
       title: 'Explore bounties',
@@ -27,7 +27,7 @@ const data = {
     text: 'Uncover vulnerabilities before they exploit you. Submit your Cardano project to our Bug Bounty program and gain access to a pool of skilled blockchain hunters. Secure your future and help to build a stronger Cardano ecosystem.',
     leftButton: {
       title: 'Join the community',
-      href: '#', // TODO: add discord link
+      href: DISCORD_URL,
     },
     rightButton: {
       title: 'Submit my project',

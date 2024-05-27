@@ -11,3 +11,5 @@ export const PATHS = {
   signIn: '/api/auth/signin',
   signOut: '/api/auth/signout',
 } as const
+
+export const DISCORD_URL = '#' // TODO
