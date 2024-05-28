@@ -10,7 +10,7 @@ const ProjectsLayout = ({children}: ProjectsLayoutProps) => {
   return (
     <>
       <ProjectsNavbar />
-      <div className="flex min-h-screen flex-col pt-[96px]">{children}</div>
+      <div className="flex flex-grow flex-col pt-[96px]">{children}</div>
     </>
   )
 }
