@@ -48,4 +48,4 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 # Architecture Diagram
 
-![use-as-template](https://raw.githubusercontent.com/vacuumlabs/bug-bounty/8a496f6ce64dcd3f5721e078c866996efbef824d/architecture-diagram.png)
+![use-as-template](https://raw.githubusercontent.com/vacuumlabs/bug-bounty/5155e89050bd70c3064b2fbb68eccafbc66e79d8/architecture-diagram.png)
