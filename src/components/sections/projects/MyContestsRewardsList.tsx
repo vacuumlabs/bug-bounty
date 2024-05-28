@@ -1,17 +1,18 @@
-import Link from 'next/link'
 import {ArrowRight} from 'lucide-react'
+import Link from 'next/link'
 
-import MyContestsListItem from './MyContestsListItem'
+import MyContestsRewardsListItem from './MyContestsRewardsListItem'
 
-import type {ContestWithFindingCounts} from '@/server/actions/contest/getMyContests'
 import {Button} from '@/components/ui/Button'
 import {PATHS} from '@/lib/utils/common/paths'
+import type {ContestWithFindingCounts} from '@/server/actions/contest/getMyContests'
 
-type MyContestsListProps = {
+
+type MyContestsRewardsListProps = {
   contests: ContestWithFindingCounts[] | undefined
 }
 
-const MyContestsList = ({contests}: MyContestsListProps) => {
+const MyContestsRewardsList = ({contests}: MyContestsRewardsListProps) => {
   if (!contests?.length) {
     return (
       <div className="flex h-[450px] flex-col items-center justify-center">
@@ -29,10 +30,10 @@ const MyContestsList = ({contests}: MyContestsListProps) => {
   return (
     <div className="flex flex-col gap-6">
       {contests.map((contest) => (
-        <MyContestsListItem key={contest.id} contest={contest} />
+        <MyContestsRewardsListItem key={contest.id} contest={contest} />
       ))}
     </div>
   )
 }
 
-export default MyContestsList
+export default MyContestsRewardsList

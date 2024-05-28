@@ -5,23 +5,12 @@ import {useMemo} from 'react'
 import {DateTime} from 'luxon'
 
 import ContestStatusBadge from '../contest/ContestStatusBadge'
+import ListItemStyledValueText from './ListItemStyledValueText'
 
 import {Button} from '@/components/ui/Button'
 import {ContestStatus} from '@/server/db/models'
 import {ellipsizeText, formatAda} from '@/lib/utils/common/format'
 import type {ContestWithFindingCounts} from '@/server/actions/contest/getMyContests'
-
-type StyledValueTextProps = {
-  label: string
-  value: string | number | null
-}
-
-const StyledValueText = ({label, value}: StyledValueTextProps) => (
-  <span className="text-bodyM text-grey-30">
-    {`${label}: `}
-    <span className="text-white">{value}</span>
-  </span>
-)
 
 type MyContestsListItemProps = {
   contest: ContestWithFindingCounts
@@ -99,12 +88,12 @@ const MyContestsListItem = ({contest}: MyContestsListItemProps) => {
       <div className="mt-10 flex items-center justify-between">
         <div className="flex items-center gap-6">
           {leftValues.map((value) => (
-            <StyledValueText key={value.label} {...value} />
+            <ListItemStyledValueText key={value.label} {...value} />
           ))}
         </div>
         <div className="flex items-center gap-6">
           {rightValues.map((value) => (
-            <StyledValueText key={value.label} {...value} />
+            <ListItemStyledValueText key={value.label} {...value} />
           ))}
         </div>
       </div>
