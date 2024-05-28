@@ -10,7 +10,7 @@ const GeneralLayout = ({children}: GeneralLayoutProps) => {
   return (
     <>
       <Navbar />
-      <div className="flex min-h-screen flex-col pt-[136px]">{children}</div>
+      <div className="flex flex-grow flex-col pt-[136px]">{children}</div>
     </>
   )
 }

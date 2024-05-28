@@ -60,9 +60,12 @@ const MyContests = () => {
   }, [contestType, liveContests, futureContests, pastContests])
 
   return (
-    <div className="flex flex-col">
-      <Tabs value={contestType} onValueChange={setContestType}>
-        <TabsList className="px-24">
+    <div className="flex flex-grow flex-col">
+      <Tabs
+        value={contestType}
+        onValueChange={setContestType}
+        className="flex flex-grow flex-col">
+        <TabsList className="self-start px-24">
           <TabsTrigger
             value={
               ContestOccurence.PRESENT
@@ -77,7 +80,7 @@ const MyContests = () => {
             }>{`Future${formatTabCount(futureContests?.length)}`}</TabsTrigger>
         </TabsList>
         <Separator />
-        <div className="flex flex-col bg-black px-24 pt-12">
+        <div className="flex flex-grow flex-col bg-black px-24 pb-24 pt-12">
           {isLoading ? (
             <div className="flex flex-col gap-2">
               <Skeleton className="h-[240px]" />

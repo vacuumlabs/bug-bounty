@@ -29,8 +29,10 @@ const RootLayout = async ({
     <html lang="en">
       <body className={cn(redditSans.className, 'bg-black text-white')}>
         <Providers session={session}>
-          {children}
-          <Footer />
+          <div className="flex min-h-screen flex-col">
+            <div className="flex flex-grow flex-col">{children}</div>
+            <Footer />
+          </div>
         </Providers>
         <Toaster />
       </body>
