@@ -2,6 +2,8 @@
 
 import {useMemo} from 'react'
 
+import ProjectsOverviewTile from './ProjectsOverviewTile'
+
 import {cn} from '@/lib/utils/client/tailwind'
 import {useGetMyContestsReportCounts} from '@/lib/queries/contest/getMyContestsReportCounts'
 
@@ -14,26 +16,26 @@ const ProjectsDashboardOverview = ({
 }: ProjectsDashboardOverviewProps) => {
   const {data} = useGetMyContestsReportCounts()
 
-  const cards = useMemo(
+  const tiles = useMemo(
     () => [
       {
-        label: 'Total received reports',
+        title: 'Total received reports',
         count: data?.total ?? '-',
       },
       {
-        label: 'Open reports',
+        title: 'Open reports',
         count: data?.open ?? '-',
       },
       {
-        label: 'Approved reports',
+        title: 'Approved reports',
         count: data?.approved ?? '-',
       },
       {
-        label: 'Rejected reports',
+        title: 'Rejected reports',
         count: data?.rejected ?? '-',
       },
       {
-        label: 'Unique reports',
+        title: 'Unique reports',
         count: data?.unique ?? '-',
       },
     ],
@@ -42,13 +44,12 @@ const ProjectsDashboardOverview = ({
 
   return (
     <div className={cn('flex gap-6', className)}>
-      {cards.map((card, index) => (
-        <div
+      {tiles.map((tile, index) => (
+        <ProjectsOverviewTile
           key={index}
-          className="flex basis-1/5 flex-col gap-4 bg-grey-90 p-6">
-          <p className="text-titleM">{card.label}</p>
-          <p className="text-headlineS">{card.count}</p>
-        </div>
+          title={tile.title}
+          value={tile.count}
+        />
       ))}
     </div>
   )
