@@ -27,7 +27,7 @@ export const finalizeRewardsAction = async (contestId: string) => {
       })
       .where(eq(schema.contests.id, contestId))
 
-    return tx.insert(schema.rewards).values(rewards).returning()
+    return rewards.length === 0 ? [] : tx.insert(schema.rewards).values(rewards).returning();
   })
 }
 

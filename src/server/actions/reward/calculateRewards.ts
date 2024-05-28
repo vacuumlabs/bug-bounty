@@ -83,9 +83,6 @@ export const calculateRewardsAction = async (contestId: string) => {
   if (hasPendingFindings) {
     throw new ServerError('There are still pending findings in this contest.')
   }
-  if (hasNoApprovedFindings) {
-    throw new ServerError('No approved findings found for this contest.')
-  }
   if (hasUnassignedFindings) {
     throw new ServerError(
       'Some approved findings are not assigned to a deduplicated finding.',
@@ -124,6 +121,13 @@ export const calculateRewardsAction = async (contestId: string) => {
   }
   if (contest.status === ContestStatus.FINISHED) {
     throw new ServerError(`Rewards for this contest were already calculated.`)
+  }
+
+  if (hasNoApprovedFindings) {
+    return {
+      rewards: [],
+      totalRewards: 0,
+    }
   }
 
   const severityWeights = getSeverityWeights(contest.contestSeverityWeights)
