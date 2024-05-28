@@ -82,9 +82,7 @@ const MyContests = () => {
         <Separator />
         <div className="flex flex-grow flex-col bg-black px-24 pb-24 pt-12">
           {isLoading ? (
-            <div className="flex flex-col gap-2">
-              <Skeleton className="h-[240px]" />
-            </div>
+            <Skeleton className="h-[240px]" />
           ) : (
             <MyContestsList contests={currentContests} />
           )}

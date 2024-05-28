@@ -6,6 +6,7 @@ import {requirePageSession} from '@/server/utils/auth'
 import {prefetchGetMyContests} from '@/lib/queries/contest/getMyContests'
 import ProjectsRewardsOverview from '@/components/sections/projects/ProjectsRewardsOverview'
 import Separator from '@/components/ui/Separator'
+import MyContestsRewards from '@/components/sections/projects/MyContestsRewards'
 
 const MyProjectsRewardsPage = async () => {
   await requirePageSession()
@@ -28,6 +29,7 @@ const MyProjectsRewardsPage = async () => {
       <HydrationBoundary>
         <ProjectsRewardsOverview className="mx-24 mb-12" />
         <Separator />
+        <MyContestsRewards />
       </HydrationBoundary>
     </main>
   )
