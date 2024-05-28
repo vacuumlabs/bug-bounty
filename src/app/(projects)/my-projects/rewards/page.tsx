@@ -1,20 +1,15 @@
 import Image from 'next/image'
 
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
-import ProjectsDashboardOverview from '@/components/sections/projects/ProjectsDashboardOverview'
 import backgroundImage from '@public/images/thin-overlay.png'
 import {requirePageSession} from '@/server/utils/auth'
 import {prefetchGetMyContests} from '@/lib/queries/contest/getMyContests'
-import {prefetchGetMyContestsReportCounts} from '@/lib/queries/contest/getMyContestsReportCounts'
-import MyContests from '@/components/sections/projects/MyContests'
+import ProjectsRewardsOverview from '@/components/sections/projects/ProjectsRewardsOverview'
+import Separator from '@/components/ui/Separator'
 
-const MyProjectsPage = async () => {
+const MyProjectsRewardsPage = async () => {
   await requirePageSession()
-
-  await Promise.all([
-    prefetchGetMyContestsReportCounts(),
-    prefetchGetMyContests({}),
-  ])
+  await prefetchGetMyContests({})
 
   return (
     <main className="mt-12 flex flex-grow flex-col">
@@ -29,13 +24,13 @@ const MyProjectsPage = async () => {
           zIndex: -1,
         }}
       />
-      <h1 className="mx-24 mb-6 text-headlineS uppercase">Projects overview</h1>
+      <h1 className="mx-24 mb-6 text-headlineS uppercase">Rewards overview</h1>
       <HydrationBoundary>
-        <ProjectsDashboardOverview className="mx-24 mb-12" />
-        <MyContests />
+        <ProjectsRewardsOverview className="mx-24 mb-12" />
+        <Separator />
       </HydrationBoundary>
     </main>
   )
 }
 
-export default MyProjectsPage
+export default MyProjectsRewardsPage
