@@ -327,7 +327,7 @@ describe('calculateReward finalizeReward', () => {
     }).rejects.toThrowError('There are still pending findings in this contest.')
   })
 
-  it('throws if there are no approved findings', async () => {
+  it('calculates and finalizes rewards successfully if there are no approved findings', async () => {
     ;(getServerSession as Mock).mockResolvedValue({
       user: {
         id: judgeId,
@@ -361,9 +361,25 @@ describe('calculateReward finalizeReward', () => {
         ]),
       )
 
-    await expect(async () => {
-      await calculateRewardsAction(contestId)
-    }).rejects.toThrowError('No approved findings found for this contest.')
+    const result = await calculateRewardsAction(contestId)
+
+    expect(result).toEqual({
+      totalRewards: 0,
+      rewards: [],
+    })
+
+    const finalizeResult = await finalizeRewardsAction(contestId)
+
+    const contestDb = await db.query.contests.findFirst({
+      where: (contests, {eq}) => eq(contests.id, contestId),
+    })
+
+    const rewardsDb = await db.query.rewards.findMany()
+
+    expect(contestDb?.status).toEqual(ContestStatus.FINISHED)
+    expect(contestDb?.distributedRewardsAmount).toEqual('0')
+
+    expect(finalizeResult).toEqual(rewardsDb)
   })
 
   it('throws if there are unassigned findings', async () => {

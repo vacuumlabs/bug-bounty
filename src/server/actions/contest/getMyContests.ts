@@ -38,16 +38,20 @@ export const getMyContestAction = async ({type}: GetMyContestsParams) => {
     orderBy: (contests, {desc}) => desc(contests.startDate),
     extras: {
       pendingFindingsCount:
-        sql<number>`(SELECT count(*) from finding where finding.status = ${FindingStatus.PENDING} and "finding"."contestId" = contests.id)`.as(
+        sql<number>`(SELECT count(*)::int from finding where finding.status = ${FindingStatus.PENDING} and "finding"."contestId" = contests.id)`.as(
           'pendingFindingsCount',
         ),
       approvedFindingsCount:
-        sql<number>`(SELECT count(*) from finding where finding.status = ${FindingStatus.APPROVED} and "finding"."contestId" = contests.id)`.as(
+        sql<number>`(SELECT count(*)::int from finding where finding.status = ${FindingStatus.APPROVED} and "finding"."contestId" = contests.id)`.as(
           'approvedFindingsCount',
         ),
       rejectedFindingsCount:
-        sql<number>`(SELECT count(*) from finding where finding.status = ${FindingStatus.REJECTED} and "finding"."contestId" = contests.id)`.as(
+        sql<number>`(SELECT count(*)::int from finding where finding.status = ${FindingStatus.REJECTED} and "finding"."contestId" = contests.id)`.as(
           'rejectedFindingsCount',
+        ),
+      rewardedAuditorsCount:
+        sql<number>`(SELECT count(distinct "finding"."authorId")::int from finding where finding.status = ${FindingStatus.APPROVED} and "finding"."contestId" = contests.id)`.as(
+          'rewardedAuditorsCount',
         ),
     },
   })
