@@ -20,6 +20,7 @@ export const page2fields = [
   'rewardsAmount',
   'severityWeights',
   'customConditions',
+  'knownIssuesDescription',
   'timezone',
   'startDate',
   'endDate',

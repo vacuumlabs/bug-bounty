@@ -1,9 +1,9 @@
 'use client'
 
-import {useRouter} from 'next/navigation'
 import {ArrowLeft} from 'lucide-react'
 
 import {Button} from './Button'
+import {useNewContestFormPageSearchParams} from '../sections/contest/NewContestForm/hooks'
 
 import {cn} from '@/lib/utils/client/tailwind'
 
@@ -12,13 +12,17 @@ type FormBackButtonProps = {
 }
 
 const FormBackButton = ({className}: FormBackButtonProps) => {
-  const router = useRouter()
+  const [page, setValue] = useNewContestFormPageSearchParams()
+
+  if (page === 1) {
+    return null
+  }
 
   return (
     <Button
       variant="outline"
       size="small"
-      onClick={() => router.back()}
+      onClick={() => setValue(page - 1)}
       className={cn('gap-3', className)}>
       <ArrowLeft />
       Go back
