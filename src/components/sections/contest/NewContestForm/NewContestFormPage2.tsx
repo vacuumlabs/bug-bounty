@@ -3,7 +3,6 @@ import {DateTime} from 'luxon'
 import {type NewContestFormPageProps} from './NewContestForm'
 import SeverityWeightsSelect from './SeverityWeightsSelect'
 
-import DateTimeInput from '@/components/ui/DateTimeInput'
 import {
   FormControl,
   FormDescription,
@@ -15,6 +14,7 @@ import {
 import {Input} from '@/components/ui/Input'
 import TimezoneSelect from '@/components/ui/TimezoneSelect'
 import Textarea from '@/components/ui/Textarea'
+import DateTimePicker from '@/components/ui/DateTimePicker/DateTimePicker'
 
 export const page2fields = [
   'rewardsAmount',
@@ -115,7 +115,7 @@ const NewContestFormPage2 = ({form}: NewContestFormPageProps) => {
           </FormItem>
         )}
       />
-      <div className="flex gap-4">
+      <div className="flex gap-12">
         <FormField
           control={control}
           name="startDate"
@@ -123,12 +123,14 @@ const NewContestFormPage2 = ({form}: NewContestFormPageProps) => {
             <FormItem>
               <FormLabel>Start</FormLabel>
               <FormControl>
-                <DateTimeInput
+                <DateTimePicker
                   zonename={watch('timezone') ?? undefined}
-                  min={DateTime.now().set({millisecond: 0, second: 0}).toISO({
-                    includeOffset: false,
-                  })}
-                  {...field}
+                  fromDate={DateTime.now()
+                    .set({millisecond: 0, second: 0})
+                    .toJSDate()}
+                  nullDateText="Choose start date"
+                  value={field.value}
+                  onChange={field.onChange}
                 />
               </FormControl>
               <FormMessage />
@@ -142,12 +144,14 @@ const NewContestFormPage2 = ({form}: NewContestFormPageProps) => {
             <FormItem>
               <FormLabel>End</FormLabel>
               <FormControl>
-                <DateTimeInput
+                <DateTimePicker
                   zonename={watch('timezone') ?? undefined}
-                  min={DateTime.now().set({millisecond: 0, second: 0}).toISO({
-                    includeOffset: false,
-                  })}
-                  {...field}
+                  fromDate={DateTime.now()
+                    .set({millisecond: 0, second: 0})
+                    .toJSDate()}
+                  nullDateText="Choose end date"
+                  value={field.value}
+                  onChange={field.onChange}
                 />
               </FormControl>
               <FormMessage />
