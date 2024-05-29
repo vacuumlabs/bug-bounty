@@ -49,3 +49,7 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 # Architecture Diagram
 
 ![use-as-template](https://raw.githubusercontent.com/vacuumlabs/bug-bounty/5155e89050bd70c3064b2fbb68eccafbc66e79d8/architecture-diagram.png)
+
+# Entity Relationship Diagram
+
+![Alt text](./src/server/db/diagram/db-diagram.svg)
