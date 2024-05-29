@@ -1,0 +1,205 @@
+table account {
+  userId uuid [not null]
+  type varchar(255) [not null]
+  provider varchar(255) [not null]
+  providerAccountId varchar(255) [not null]
+  refresh_token text
+  access_token text
+  expires_at integer
+  token_type varchar(255)
+  oauth_token text
+  oauth_token_secret text
+  scope varchar(255)
+  id_token text
+  session_state varchar(255)
+  createdAt timestamp [default: `CURRENT_TIMESTAMP`]
+  updatedAt timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (provider, providerAccountId) [pk]
+    userId [name: 'account_userId_idx']
+  }
+}
+
+table contest {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  authorId uuid [not null]
+  name varchar(255) [not null]
+  repoUrl varchar(255) [not null]
+  repoBranch varchar(255) [not null]
+  filesInScope "varchar(255)[]"
+  description text [not null]
+  customConditions text
+  projectLanguage "varchar(32)[]"
+  projectCategory "varchar(32)[]"
+  rewardsAmount "numeric(20, 0)" [not null]
+  rewardsTransferTxHash char(64)
+  distributedRewardsAmount "numeric(20, 0)"
+  knownIssuesDescription text
+  startDate timestamp [not null]
+  endDate timestamp [not null]
+  status varchar(32) [not null]
+  createdAt timestamp [default: `CURRENT_TIMESTAMP`]
+  updatedAt timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    authorId [name: 'contest_authordId_idx']
+    status [name: 'contest_status_idx']
+    startDate [name: 'contest_startDate_idx']
+    endDate [name: 'contest_endDate_idx']
+  }
+}
+
+table contestSeverityWeights {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  contestId uuid [not null]
+  info integer [not null]
+  low integer [not null]
+  medium integer [not null]
+  high integer [not null]
+  critical integer [not null]
+  createdAt timestamp [default: `CURRENT_TIMESTAMP`]
+  updatedAt timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+table deduplicatedFinding {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  contestId uuid [not null]
+  bestFindingId uuid
+  name varchar(255) [not null]
+  description text [not null]
+  severity varchar(8) [not null]
+  createdAt timestamp [default: `CURRENT_TIMESTAMP`]
+  updatedAt timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    contestId [name: 'deduplicatedFinding_contestId_idx']
+    bestFindingId [name: 'deduplicatedFinding_bestFindingId_idx']
+    severity [name: 'deduplicatedFinding_severity_idx']
+  }
+}
+
+table finding {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  authorId uuid [not null]
+  contestId uuid [not null]
+  deduplicatedFindingId uuid
+  name varchar(255) [not null]
+  description text [not null]
+  targetFileUrl varchar(255) [not null]
+  severity varchar(8) [not null]
+  status varchar(8) [not null]
+  createdAt timestamp [default: `CURRENT_TIMESTAMP`]
+  updatedAt timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    authorId [name: 'finding_authorId_idx']
+    contestId [name: 'finding_contestId_idx']
+    deduplicatedFindingId [name: 'finding_deduplicatedFindingId_idx']
+    severity [name: 'finding_severity_idx']
+    status [name: 'finding_status_idx']
+  }
+}
+
+table findingAttachment {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  findingId uuid [not null]
+  url varchar(255) [not null]
+  mimeType varchar(255)
+  createdAt timestamp [default: `CURRENT_TIMESTAMP`]
+  updatedAt timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (findingId, url) [name: 'findingIdAttachmentUrlIdx', unique]
+  }
+}
+
+table knownIssue {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  contestId uuid [not null]
+  title varchar(255) [not null]
+  description text [not null]
+  fileUrl varchar(255) [not null]
+  createdAt timestamp [default: `CURRENT_TIMESTAMP`]
+  updatedAt timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    contestId [name: 'knownIssue_contestId_idx']
+  }
+}
+
+table reward {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  findingId uuid [not null]
+  userId uuid [not null]
+  amount "numeric(20, 0)" [not null]
+  transferTxHash char(64)
+  payoutDate timestamp
+  createdAt timestamp [default: `CURRENT_TIMESTAMP`]
+  updatedAt timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    findingId [name: 'reward_findingId_idx']
+    userId [name: 'reward_userId_idx']
+  }
+}
+
+table session {
+  sessionToken varchar(255) [pk, not null]
+  userId uuid [not null]
+  expires timestamp [not null]
+  createdAt timestamp [default: `CURRENT_TIMESTAMP`]
+  updatedAt timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    userId [name: 'session_userId_idx']
+  }
+}
+
+table user {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  name varchar(255)
+  alias varchar(255) [unique]
+  role varchar(8) [not null, default: 'auditor']
+  walletAddress varchar(255)
+  email varchar(255) [not null]
+  emailVerified timestamp [default: `CURRENT_TIMESTAMP`]
+  image varchar(255)
+  password text
+  createdAt timestamp [default: `CURRENT_TIMESTAMP`]
+  updatedAt timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+table verificationToken {
+  identifier varchar(255) [not null]
+  token varchar(255) [not null]
+  expires timestamp [not null]
+
+  indexes {
+    (identifier, token) [pk]
+  }
+}
+
+ref: account.userId > user.id
+
+ref: contest.authorId > user.id
+
+ref: contestSeverityWeights.contestId - contest.id
+
+ref: finding.deduplicatedFindingId > deduplicatedFinding.id
+
+ref: deduplicatedFinding.contestId > contest.id
+
+ref: finding.contestId > contest.id
+
+ref: finding.authorId > user.id
+
+ref: findingAttachment.findingId > finding.id
+
+ref: knownIssue.contestId > contest.id
+
+ref: reward.findingId - finding.id
+
+ref: reward.userId > user.id
+
+ref: session.userId - user.id
