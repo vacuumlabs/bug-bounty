@@ -2,7 +2,6 @@
 
 import {Settings2} from 'lucide-react'
 import {useMemo, useState} from 'react'
-import {useSearchParams} from 'next/navigation'
 
 import {Button} from '../Button'
 import FilterSelect, {FilterSelectProps} from './FilterSelect'
@@ -10,12 +9,12 @@ import FilterSelect, {FilterSelectProps} from './FilterSelect'
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/Popover'
 import {getUpdatedArray} from '@/lib/utils/common/arrays'
 import {
-  SearchParamsUpdater,
-  usePushUpdatedSearchParams,
+  SearchParamsUpdaterFactory,
+  useUpdateSearchParams,
 } from '@/lib/hooks/useSearchParamsState'
 
 export type Filter = Pick<FilterSelectProps, 'label' | 'options' | 'values'> & {
-  updateSearchParams: SearchParamsUpdater<string[]>
+  getSearchParamsUpdater: SearchParamsUpdaterFactory<string[]>
 }
 
 type FilterControlsProps = {
@@ -23,8 +22,7 @@ type FilterControlsProps = {
 }
 
 const FilterControls = ({filters}: FilterControlsProps) => {
-  const searchParams = useSearchParams()
-  const pushUpdatedSearchParams = usePushUpdatedSearchParams()
+  const updateSearchParams = useUpdateSearchParams()
 
   const [filterValues, setFilterValues] = useState(() =>
     filters.map(({values}) => values),
@@ -35,28 +33,19 @@ const FilterControls = ({filters}: FilterControlsProps) => {
   }
 
   const applyFilters = () => {
-    const currentSearchParams = new URLSearchParams(searchParams.toString())
-
-    const updatedSearchParams = filters.reduce(
-      (params, {updateSearchParams}, index) =>
-        updateSearchParams(params, filterValues[index] ?? []),
-      currentSearchParams,
+    const updaters = filters.map(({getSearchParamsUpdater}, index) =>
+      getSearchParamsUpdater(filterValues[index] ?? []),
     )
 
-    pushUpdatedSearchParams(updatedSearchParams)
+    updateSearchParams(updaters)
   }
 
   const onReset = () => {
     setFilterValues(filters.map(() => []))
 
-    const currentSearchParams = new URLSearchParams(searchParams.toString())
-
-    const updatedSearchParams = filters.reduce(
-      (params, {updateSearchParams}) => updateSearchParams(params, []),
-      currentSearchParams,
+    updateSearchParams(
+      filters.map(({getSearchParamsUpdater}) => getSearchParamsUpdater([])),
     )
-
-    pushUpdatedSearchParams(updatedSearchParams)
   }
 
   const onOpenChange = (isOpen: boolean) => {
