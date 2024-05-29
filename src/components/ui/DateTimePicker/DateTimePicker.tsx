@@ -20,6 +20,10 @@ const DateTimePicker = ({
   zonename,
   nullDateText,
 }: DateTimePickerProps) => {
+  const inputValue = value
+    ? DateTime.fromJSDate(value, {zone: zonename}).toJSDate()
+    : null
+
   const handleChange = (value: Date | null | undefined) => {
     if (value) {
       onChange(DateTime.fromJSDate(value, {zone: zonename}).toJSDate())
@@ -31,7 +35,7 @@ const DateTimePicker = ({
   return (
     <div className="flex items-center gap-4">
       <DatePicker
-        selected={value}
+        selected={inputValue}
         onSelect={handleChange}
         fromDate={fromDate}
         toDate={toDate}
@@ -39,7 +43,7 @@ const DateTimePicker = ({
       />
       <TimePicker
         // take locale date time string in format that the input expects (24hr time)
-        value={value?.toLocaleTimeString([], {
+        value={inputValue?.toLocaleTimeString([], {
           hourCycle: 'h23',
           hour: '2-digit',
           minute: '2-digit',
