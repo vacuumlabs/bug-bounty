@@ -21,12 +21,12 @@ const DateTimePicker = ({
   nullDateText,
 }: DateTimePickerProps) => {
   const inputValue = value
-    ? DateTime.fromJSDate(value, {zone: zonename}).toJSDate()
+    ? DateTime.fromJSDate(value).setZone(zonename).toJSDate()
     : null
 
   const handleChange = (value: Date | null | undefined) => {
     if (value) {
-      onChange(DateTime.fromJSDate(value, {zone: zonename}).toJSDate())
+      onChange(DateTime.fromJSDate(value, {zone: zonename}).toUTC().toJSDate())
     } else {
       onChange(null)
     }
@@ -43,7 +43,7 @@ const DateTimePicker = ({
       />
       <TimePicker
         // take locale date time string in format that the input expects (24hr time)
-        value={inputValue?.toLocaleTimeString([], {
+        value={value?.toLocaleTimeString([], {
           hourCycle: 'h23',
           hour: '2-digit',
           minute: '2-digit',
