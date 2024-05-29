@@ -1,7 +1,7 @@
 'use client'
 
-import {Check, ChevronsUpDown} from 'lucide-react'
-import {Ref, useState} from 'react'
+import {Check, ChevronDown, ChevronUp} from 'lucide-react'
+import {ReactNode, Ref, useState} from 'react'
 
 import {cn} from '@/lib/utils/client/tailwind'
 import {Button} from '@/components/ui/Button'
@@ -23,7 +23,7 @@ export type CommonComboboxProps<T extends string> = {
   emptyListText?: string
   placeholder?: string
   searchPlaceholder?: string
-  suppressHydrationWarning?: boolean
+  renderValue?: (value: string | null | undefined) => ReactNode
   value: T | null | undefined
   onBlur?: () => void
   onChange: (value: T | null) => void
@@ -47,13 +47,13 @@ const Combobox = <T extends string>(
     className,
     emptyListText = 'No items found.',
     isLoading,
+    renderValue = (value) => value,
     options,
     placeholder = 'Select an option',
     searchPlaceholder = 'Search...',
     searchQuery,
     setSearchQuery,
     shouldFilter,
-    suppressHydrationWarning,
     value,
     onBlur,
     onChange,
@@ -71,23 +71,29 @@ const Combobox = <T extends string>(
     setIsOpen(false)
   }
 
+  const ChevronIcon = isOpen ? ChevronUp : ChevronDown
+
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button
-          suppressHydrationWarning={suppressHydrationWarning}
           ref={ref}
           variant="outline"
           role="combobox"
           aria-expanded={isOpen}
-          className={cn('flex w-[250px] justify-between', className)}>
-          {value
-            ? selectedLabel ?? getLabelForValue(options, value)
-            : placeholder}
-          <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
+          className={cn(
+            'flex w-[320px] justify-between border p-3 font-normal normal-case active:-mx-[2px]',
+            className,
+          )}>
+          {renderValue(
+            value
+              ? selectedLabel ?? getLabelForValue(options, value)
+              : placeholder,
+          )}
+          <ChevronIcon className="ml-auto shrink-0" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent onBlur={onBlur} className="w-[250px] p-0">
+      <PopoverContent onBlur={onBlur} className="w-[320px] p-0">
         <Command shouldFilter={shouldFilter}>
           <CommandInput
             value={searchQuery}

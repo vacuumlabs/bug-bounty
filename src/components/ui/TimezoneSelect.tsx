@@ -1,9 +1,11 @@
 import {DateTime} from 'luxon'
 import {Ref, forwardRef} from 'react'
+import {Globe} from 'lucide-react'
 
 import Combobox, {type ComboboxProps} from './Combobox/Combobox'
+import NoSSR from '../helpers/NoSsr'
 
-type TimezoneSelectProps = Omit<ComboboxProps, 'options'>
+type TimezoneSelectProps = Omit<ComboboxProps, 'options' | 'renderValue'>
 
 const options = Intl.supportedValuesOf('timeZone').map((zone) => ({
   value: zone,
@@ -15,7 +17,17 @@ const TimezoneSelect = (
   ref: Ref<HTMLButtonElement>,
 ) => {
   return (
-    <Combobox options={options} {...props} suppressHydrationWarning ref={ref} />
+    <Combobox
+      ref={ref}
+      options={options}
+      {...props}
+      renderValue={(value) => (
+        <NoSSR>
+          <Globe className="mr-2" />
+          {value}
+        </NoSSR>
+      )}
+    />
   )
 }
 
