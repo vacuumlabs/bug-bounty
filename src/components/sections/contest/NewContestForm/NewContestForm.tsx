@@ -10,9 +10,9 @@ import {ArrowRight} from 'lucide-react'
 import NewContestFormPage1, {page1fields} from './NewContestFormPage1'
 import NewContestFormPage2, {page2fields} from './NewContestFormPage2'
 import NewContestFormReviewPage from './NewContestFormReviewPage'
+import {useNewContestFormPageSearchParams} from './hooks'
 
 import {Form} from '@/components/ui/Form'
-import {useSearchParamsState} from '@/lib/hooks/useSearchParamsState'
 import {useAddContest} from '@/lib/queries/contest/addContest'
 import {
   addContestSchema,
@@ -83,18 +83,8 @@ export type NewContestFormPageProps = {
   form: UseFormReturn<InputFormValues, unknown, FormValues>
 }
 
-const useNewContestFormSearchParamsPage = () => {
-  const [page, setPage] = useSearchParamsState('page', '1')
-
-  const parsedPage = Number.parseInt(page)
-  const actualPage =
-    Number.isNaN(parsedPage) || parsedPage < 1 || parsedPage > 3 ? '1' : page
-
-  return [actualPage, setPage] as const
-}
-
 const NewContestForm = () => {
-  const [page, {setValue: setPage}] = useNewContestFormSearchParamsPage()
+  const [page, setPage] = useNewContestFormPageSearchParams()
   const router = useRouter()
 
   const {mutate} = useAddContest()
@@ -149,33 +139,36 @@ const NewContestForm = () => {
   }
 
   const onContinue = async () => {
-    const isValid = await trigger(page === '1' ? page1fields : page2fields)
+    const isValid = await trigger(page === 1 ? page1fields : page2fields)
 
     if (isValid) {
-      setPage((Number(page) + 1).toString())
+      setPage(page + 1)
     }
   }
 
   return (
     <Form className="space-y-12" {...form}>
-      <Tabs value={page} onValueChange={setPage} className="flex flex-col">
+      <Tabs
+        value={page.toString()}
+        onValueChange={(value) => setPage(Number(value))}
+        className="flex flex-col">
         <FormPagination
-          currentIndex={Number(page) - 1}
+          currentIndex={page - 1}
           pages={formPages}
           className="mb-24"
         />
-        <TabsContent forceMount hidden={page !== '1'} value="1">
+        <TabsContent forceMount hidden={page !== 1} value="1">
           <NewContestFormPage1 form={form} />
         </TabsContent>
-        <TabsContent forceMount hidden={page !== '2'} value="2">
+        <TabsContent forceMount hidden={page !== 2} value="2">
           <NewContestFormPage2 form={form} />
         </TabsContent>
         <TabsContent value="3">
-          <NewContestFormReviewPage form={form} />{' '}
+          <NewContestFormReviewPage form={form} />
         </TabsContent>
       </Tabs>
       <div className="flex justify-end">
-        {page === '3' ? (
+        {page === 3 ? (
           <Button type="submit" onClick={handleSubmit(addContest)}>
             Submit for review
           </Button>
