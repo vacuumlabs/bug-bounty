@@ -1,9 +1,10 @@
 import {DateTime} from 'luxon'
+import {File, Link as LinkIcon} from 'lucide-react'
+import Link from 'next/link'
 
 import {NewContestFormPageProps} from './NewContestForm'
 
 import {translateEnum} from '@/lib/utils/common/enums'
-import MaybeLink from '@/components/ui/MaybeLink'
 import MarkdownPreview from '@/components/markdown/MarkdownPreview'
 
 const formatDate = (date: Date | null, timezone: string | null) =>
@@ -25,6 +26,7 @@ const NewContestFormReviewPage = ({form}: NewContestFormPageProps) => {
     description,
     rewardsAmount,
     severityWeights,
+    knownIssuesDescription,
     customConditions,
     timezone,
     startDate,
@@ -32,100 +34,112 @@ const NewContestFormReviewPage = ({form}: NewContestFormPageProps) => {
   } = getValues()
 
   return (
-    <div className="flex flex-col gap-7">
-      <div className="flex flex-col gap-2">
-        <h3>Project name</h3>
-        <p className="text-sm font-bold">{title}</p>
+    <div className="flex flex-col gap-12">
+      <div className="flex flex-col gap-3">
+        <h3 className="text-bodyL text-purple-light">Project name</h3>
+        <p>{title}</p>
       </div>
-      <div className="flex flex-col gap-2">
-        <h3>Link to the Github repository</h3>
-        <MaybeLink className="text-sm font-bold" href={repository?.url}>
-          {repository?.url ?? 'No repository'}
-        </MaybeLink>
+      <div className="flex flex-col gap-3">
+        <h3 className="text-bodyL text-purple-light">
+          Link to the Github repository
+        </h3>
+        {repository?.url ? (
+          <Link href={repository.url} className="inline-flex gap-2">
+            <LinkIcon />
+            {repository.url}
+          </Link>
+        ) : (
+          'No repository'
+        )}
       </div>
-      <div className="flex flex-col gap-2">
-        <h3>Scope definition</h3>
+      <div className="flex flex-col gap-3">
+        <h3 className="text-bodyL text-purple-light">Scope definition</h3>
         {filesInScope?.length ? (
           filesInScope.map((file) => (
-            <p className="text-sm font-bold" key={file}>
-              {file}
-            </p>
+            <div className="flex gap-2" key={file}>
+              <File /> {file}
+            </div>
           ))
         ) : (
-          <p className="text-sm font-bold">Whole repository</p>
+          <p>Whole repository</p>
         )}
       </div>
-      <div className="flex flex-col gap-2">
-        <h3>Project categories</h3>
-        {projectCategory?.length ? (
-          projectCategory.map((category) => (
-            <p className="text-sm font-bold" key={category}>
-              {translateEnum.projectCategory(category)}
-            </p>
-          ))
-        ) : (
-          <p className="text-sm font-bold">No category selected</p>
-        )}
-      </div>
-      <div className="flex flex-col gap-2">
-        <h3>Project languages</h3>
-        {projectLanguage?.length ? (
-          projectLanguage.map((language) => (
-            <p className="text-sm font-bold" key={language}>
-              {translateEnum.projectLanguage(language)}
-            </p>
-          ))
-        ) : (
-          <p className="text-sm font-bold">No language selected</p>
-        )}
-      </div>
-      <div className="flex flex-col gap-2">
-        <h3>Description</h3>
-        <MarkdownPreview doc={description ?? ''} />
-      </div>
-      <div className="flex flex-col gap-2">
-        <h3>{`Total rewards (in ADA)`}</h3>
-        <p className="text-sm font-bold">
-          {Number(rewardsAmount).toLocaleString()}
+      <div className="flex flex-col gap-3">
+        <h3 className="text-bodyL text-purple-light">Project categories</h3>
+        <p>
+          {translateEnum.projectCategory(projectCategory) ||
+            'No category selected'}
         </p>
       </div>
-      <div className="flex flex-col gap-2">
-        <h3>Severity rewards</h3>
-        <div className="flex w-[100px] flex-col gap-2 text-sm font-bold">
-          <div className="item-center flex justify-between">
-            <span>Critical</span>
+      <div className="flex flex-col gap-3">
+        <h3 className="text-bodyL text-purple-light">Project languages</h3>
+        <p>
+          {translateEnum.projectLanguage(projectLanguage) ||
+            'No language selected'}
+        </p>
+      </div>
+      <div className="flex flex-col gap-3">
+        <h3 className="text-bodyL text-purple-light">Description</h3>
+        <MarkdownPreview doc={description ?? ''} />
+      </div>
+      <div className="flex flex-col gap-3">
+        <h3 className="text-bodyL text-purple-light">{`Total rewards (in ADA)`}</h3>
+        <p>{Number(rewardsAmount).toLocaleString()}</p>
+      </div>
+      <div className="flex flex-col gap-3">
+        <h3 className="text-bodyL text-purple-light">Severity rewards</h3>
+        <div className="flex gap-6">
+          <div>
+            <span className="text-grey-30">Critical: </span>
             <span>{severityWeights.critical}</span>
           </div>
-          <div className="item-center flex justify-between">
-            <span>High</span>
+          <span>|</span>
+          <div>
+            <span className="text-grey-30">High: </span>
             <span>{severityWeights.high}</span>
           </div>
-          <div className="item-center flex justify-between">
-            <span>Medium</span>
+          <span>|</span>
+          <div>
+            <span className="text-grey-30">Medium: </span>
             <span>{severityWeights.medium}</span>
           </div>
-          <div className="item-center flex justify-between">
-            <span>Low</span>
+          <span>|</span>
+          <div>
+            <span className="text-grey-30">Low: </span>
             <span>{severityWeights.low}</span>
           </div>
-          <div className="item-center flex justify-between">
-            <span>Info</span>
+          <span>|</span>
+          <div>
+            <span className="text-grey-30">Info: </span>
             <span>{severityWeights.info}</span>
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-2">
-        <h3>Custom conditions</h3>
-        <p className="text-sm font-bold">{customConditions || 'None'}</p>
+      <div className="flex flex-col gap-3">
+        <h3 className="text-bodyL text-purple-light">Custom conditions</h3>
+        <p>{customConditions || 'None'}</p>
       </div>
-      <div className="flex flex-col gap-2">
-        <h3>Audit period</h3>
-        <p className="text-sm font-bold" suppressHydrationWarning>
-          {timezone}
-        </p>
+      <div className="flex flex-col gap-3">
+        <h3 className="text-bodyL text-purple-light">Known issues</h3>
+        <p>{knownIssuesDescription || 'None'}</p>
+      </div>
+      <div className="flex flex-col gap-3">
+        <h3 className="text-bodyL text-purple-light">Audit period</h3>
         <div className="flex gap-6">
-          <p className="text-sm font-bold">{`Start: ${formatDate(startDate, timezone)}`}</p>
-          <p className="text-sm font-bold">{`End: ${formatDate(endDate, timezone)}`}</p>
+          <div>
+            <span className="text-grey-30">Timezone: </span>
+            <span suppressHydrationWarning>{timezone}</span>
+          </div>
+          <span>|</span>
+          <div>
+            <span className="text-grey-30">Start: </span>
+            <span>{formatDate(startDate, timezone)}</span>
+          </div>
+          <span>|</span>
+          <div>
+            <span className="text-grey-30">End: </span>
+            <span>{formatDate(endDate, timezone)}</span>
+          </div>
         </div>
       </div>
     </div>

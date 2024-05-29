@@ -16,7 +16,8 @@ const FormBackButton = ({className}: FormBackButtonProps) => {
 
   return (
     <Button
-      variant="link"
+      variant="outline"
+      size="small"
       onClick={() => router.back()}
       className={cn('gap-3', className)}>
       <ArrowLeft />

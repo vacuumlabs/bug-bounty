@@ -5,6 +5,7 @@ import GithubBranchSelect from '../../github/GithhubBranchSelect'
 
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -31,7 +32,7 @@ const NewContestFormPage1 = ({form}: NewContestFormPageProps) => {
   const selectedBranch = watch('repoBranch')
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-12">
       <FormField
         control={control}
         name="title"
@@ -100,6 +101,10 @@ const NewContestFormPage1 = ({form}: NewContestFormPageProps) => {
                   onSelectFiles={field.onChange}
                 />
               </FormControl>
+              <FormDescription>
+                Select, which files from the Github repository should be
+                considered in scope.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

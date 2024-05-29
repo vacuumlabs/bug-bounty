@@ -22,7 +22,11 @@ const BranchList = ({branches, isLoading, selectBranch}: BranchListProps) => {
   if (!branches || branches.length === 0) return <span>No branches found</span>
 
   return branches.map((branch) => (
-    <Button variant="link" key={branch} onClick={() => selectBranch(branch)}>
+    <Button
+      variant="link"
+      className="normal-case"
+      key={branch}
+      onClick={() => selectBranch(branch)}>
       {branch}
     </Button>
   ))
@@ -47,35 +51,30 @@ const GithubBranchSelect = ({
 
   if (session.data?.user.provider !== 'github') {
     return (
-      <Button
-        onClick={signInWithGithub}
-        className="bg-gray-800 flex text-white">
+      <Button onClick={signInWithGithub}>
         Sign in with Github to select a repo
       </Button>
     )
   }
 
   return (
-    <div className="min-w-96 rounded-md border border-grey-20 p-2">
+    <div className="min-w-96 border border-white p-2">
       {selectedBranch == null ? (
-        <div>
-          <span className="pb-2 font-bold">Select a branch</span>
-          <ScrollArea className="h-96 w-full" thumbClassname="bg-gray-400">
-            <div className="flex flex-col items-start gap-2">
-              <BranchList
-                branches={branchesData?.map((branch) => branch.name)}
-                isLoading={branchesIsLoading}
-                selectBranch={onSelectBranch}
-              />
-            </div>
-          </ScrollArea>
-        </div>
+        <ScrollArea className="h-96 w-full" thumbClassname="bg-gray-20">
+          <div className="flex flex-col items-start">
+            <BranchList
+              branches={branchesData?.map((branch) => branch.name)}
+              isLoading={branchesIsLoading}
+              selectBranch={onSelectBranch}
+            />
+          </div>
+        </ScrollArea>
       ) : (
         <div>
           <Button variant="outline" onClick={() => onSelectBranch(null)}>
             <X className="h-4 w-4" />
           </Button>
-          <span className="pl-2 font-bold">{selectedBranch}</span>
+          <span className="pl-2">{selectedBranch}</span>
         </div>
       )}
     </div>
