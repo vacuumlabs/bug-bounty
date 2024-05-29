@@ -32,6 +32,23 @@ const DateTimePicker = ({
     }
   }
 
+  const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!value) return
+
+    const [hours, minutes] = event.target.value.split(':').map(Number)
+    if (Number.isNaN(hours) || Number.isNaN(minutes)) return
+
+    const dateTimeInUserZone = DateTime.fromJSDate(value, {
+      zone: zonename,
+    }).set({
+      hour: hours,
+      minute: minutes,
+      second: 0,
+    })
+
+    handleChange(dateTimeInUserZone.toJSDate())
+  }
+
   return (
     <div className="flex items-center gap-4">
       <DatePicker
@@ -43,21 +60,15 @@ const DateTimePicker = ({
       />
       <TimePicker
         // take locale date time string in format that the input expects (24hr time)
-        value={value?.toLocaleTimeString([], {
-          hourCycle: 'h23',
-          hour: '2-digit',
-          minute: '2-digit',
-        })}
+        value={
+          inputValue
+            ? DateTime.fromJSDate(inputValue)
+                .setZone(zonename)
+                .toFormat('HH:mm')
+            : undefined
+        }
         // take hours and minutes and update our Date object then change date object to our new value
-        onChange={(selectedTime) => {
-          const currentTime = value
-          currentTime?.setHours(
-            Number.parseInt(selectedTime.target.value.split(':')[0] ?? ''),
-            Number.parseInt(selectedTime.target.value.split(':')[1] ?? ''),
-            0,
-          )
-          handleChange(currentTime)
-        }}
+        onChange={handleTimeChange}
       />
     </div>
   )
