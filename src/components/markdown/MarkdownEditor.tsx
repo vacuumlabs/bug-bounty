@@ -2,7 +2,7 @@
 
 import {forwardRef, useState} from 'react'
 
-import {Textarea} from '../ui/Textarea'
+import Textarea from '../ui/Textarea'
 import {Button} from '../ui/Button'
 import MarkdownPreview from './MarkdownPreview'
 
@@ -29,15 +29,12 @@ const MarkdownEditor = forwardRef<HTMLTextAreaElement, MarkdownEditorProps>(
           {isPreview ? 'Edit' : 'Preview'}
         </Button>
         {isPreview ? (
-          <MarkdownPreview
-            className="min-h-[260px] text-black"
-            doc={value ?? ''}
-          />
+          <MarkdownPreview className="min-h-[400px]" doc={value ?? ''} />
         ) : (
           <Textarea
             ref={ref}
             onBlur={onBlur}
-            className="min-h-[260px] text-black"
+            className="min-h-[400px]"
             onChange={(event) => onChange(event.target.value)}
             value={value ?? ''}
             name={name}

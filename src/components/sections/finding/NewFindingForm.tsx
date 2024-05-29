@@ -16,7 +16,7 @@ import {
 import {Input} from '@/components/ui/Input'
 import {addFindingSchema} from '@/server/utils/validations/schemas'
 import {useAddFinding} from '@/lib/queries/finding/addFinding'
-import {Textarea} from '@/components/ui/Textarea'
+import Textarea from '@/components/ui/Textarea'
 import {Select} from '@/components/ui/Select'
 import {selectOptions} from '@/lib/utils/common/enums'
 import {Button} from '@/components/ui/Button'

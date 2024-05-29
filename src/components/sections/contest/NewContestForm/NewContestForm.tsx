@@ -5,6 +5,7 @@ import {UseFormReturn, useForm} from 'react-hook-form'
 import {z} from 'zod'
 import {DateTime} from 'luxon'
 import {useRouter} from 'next/navigation'
+import {ArrowRight} from 'lucide-react'
 
 import NewContestFormPage1, {page1fields} from './NewContestFormPage1'
 import NewContestFormPage2, {page2fields} from './NewContestFormPage2'
@@ -108,6 +109,7 @@ const NewContestForm = () => {
       projectLanguage: [],
       rewardsAmount: null,
       customConditions: '',
+      knownIssuesDescription: null,
       timezone: DateTime.local().zoneName,
       startDate: null,
       endDate: null,
@@ -155,12 +157,12 @@ const NewContestForm = () => {
   }
 
   return (
-    <Form {...form}>
+    <Form className="space-y-12" {...form}>
       <Tabs value={page} onValueChange={setPage} className="flex flex-col">
         <FormPagination
           currentIndex={Number(page) - 1}
           pages={formPages}
-          className="mb-11"
+          className="mb-24"
         />
         <TabsContent forceMount hidden={page !== '1'} value="1">
           <NewContestFormPage1 form={form} />
@@ -178,7 +180,10 @@ const NewContestForm = () => {
             Submit for review
           </Button>
         ) : (
-          <Button onClick={onContinue}>Continue</Button>
+          <Button onClick={onContinue} className="gap-2">
+            Continue
+            <ArrowRight />
+          </Button>
         )}
       </div>
     </Form>

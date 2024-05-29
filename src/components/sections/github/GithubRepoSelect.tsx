@@ -22,7 +22,11 @@ const RepoList = ({repos, isLoading, selectRepo}: RepoListProps) => {
   if (!repos || repos.length === 0) return <span>No public repos found</span>
 
   return repos.map((repo) => (
-    <Button variant="link" key={repo.id} onClick={() => selectRepo(repo)}>
+    <Button
+      variant="link"
+      className="normal-case"
+      key={repo.id}
+      onClick={() => selectRepo(repo)}>
       {repo.fullName}
     </Button>
   ))
@@ -44,21 +48,18 @@ const GithubRepoSelect = ({
 
   if (session.data?.user.provider !== 'github') {
     return (
-      <Button
-        onClick={signInWithGithub}
-        className="bg-gray-800 flex text-white">
+      <Button onClick={signInWithGithub}>
         Sign in with Github to select a repo
       </Button>
     )
   }
 
   return (
-    <div className="min-w-96 rounded-md border border-grey-20 p-2">
+    <div className="min-w-96 border border-white p-2">
       {selectedRepo == null ? (
         <div>
-          <span className="pb-2 font-bold">Select a repo</span>
-          <ScrollArea className="h-96 w-full" thumbClassname="bg-gray-400">
-            <div className="flex flex-col items-start gap-2">
+          <ScrollArea className="h-96 w-full" thumbClassname="bg-gray-20">
+            <div className="flex flex-col items-start">
               <RepoList
                 repos={publicReposData}
                 isLoading={publicReposIsLoading}
@@ -72,7 +73,7 @@ const GithubRepoSelect = ({
           <Button variant="outline" onClick={() => onSelectRepo(null)}>
             <X className="h-4 w-4" />
           </Button>
-          <span className="pl-2 font-bold">{`${selectedRepo.owner}/${selectedRepo.name}`}</span>
+          <span className="pl-2">{`${selectedRepo.owner}/${selectedRepo.name}`}</span>
         </div>
       )}
     </div>

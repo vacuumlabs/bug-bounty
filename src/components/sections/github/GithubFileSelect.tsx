@@ -95,30 +95,25 @@ const GithubFileSelect = ({
 
   if (session.data?.user.provider !== 'github') {
     return (
-      <Button
-        onClick={signInWithGithub}
-        className="bg-gray-800 flex text-white">
+      <Button onClick={signInWithGithub}>
         Sign in with Github to select files
       </Button>
     )
   }
 
   return (
-    <div className="min-w-96 rounded-md border border-grey-20 p-2">
+    <div className="min-w-96 border border-white p-2">
       {selectedRepo == null ? (
         <span>No repo selected</span>
       ) : (
-        <ScrollArea className="h-96 w-full" thumbClassname="bg-gray-400">
+        <ScrollArea className="h-96 w-full" thumbClassname="bg-gray-20">
           <div className="flex flex-col items-start gap-2">
-            <div className="flex flex-col">
-              <span className="pb-2 font-bold">Select files to include</span>
-              <FileTree
-                fileTree={repoFilesData}
-                isLoading={repoFilesIsLoading}
-                selectedFilePaths={selectedFiles ?? []}
-                onSelectFilePaths={onSelectFiles}
-              />
-            </div>
+            <FileTree
+              fileTree={repoFilesData}
+              isLoading={repoFilesIsLoading}
+              selectedFilePaths={selectedFiles ?? []}
+              onSelectFilePaths={onSelectFiles}
+            />
           </div>
         </ScrollArea>
       )}
