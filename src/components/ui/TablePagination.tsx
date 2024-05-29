@@ -26,7 +26,7 @@ const TablePagination = ({
   totalCount,
 }: TablePaginationProps) => {
   const numberOfPages = Math.ceil(totalCount / pageSize)
-  const [currentPage, _, getNewUrl] = useSearchParamsNumericState('page', 1)
+  const [currentPage, {getUpdatedUrl}] = useSearchParamsNumericState('page', 1)
 
   const pages: (typeof ELLIPSIS | number)[] = useMemo(() => {
     if (numberOfPages <= 6) {
@@ -68,7 +68,7 @@ const TablePagination = ({
         <PaginationItem>
           <PaginationPrevious
             disabled={currentPage === 1}
-            href={getNewUrl(currentPage - 1)}
+            href={getUpdatedUrl(currentPage - 1)}
             scroll={false}
           />
         </PaginationItem>
@@ -81,7 +81,7 @@ const TablePagination = ({
             <PaginationItem key={`page-${page}`}>
               <PaginationLink
                 isActive={page === currentPage}
-                href={getNewUrl(page)}
+                href={getUpdatedUrl(page)}
                 scroll={false}>
                 {page}
               </PaginationLink>
@@ -91,7 +91,7 @@ const TablePagination = ({
         <PaginationItem>
           <PaginationNext
             disabled={currentPage === numberOfPages}
-            href={getNewUrl(currentPage + 1)}
+            href={getUpdatedUrl(currentPage + 1)}
             scroll={false}
           />
         </PaginationItem>

@@ -3,15 +3,65 @@ import {useCallback} from 'react'
 
 import {getEnumMemberFilter, isEnumMember} from '../utils/common/enums'
 
+export type SearchParamsUpdater<T> = (
+  params: URLSearchParams,
+  newValue: T | null,
+) => URLSearchParams
+
+type SearchParamsSetters<T> = ReturnType<typeof useSearchParamsSetters<T>>
+
+const useSearchParamsSetters = <T>(
+  getUpdatedSearchParams: SearchParamsUpdater<T>,
+) => {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
+
+  const getUpdatedUrl = useCallback(
+    (newValue: T | null) => {
+      const updatedParams = getUpdatedSearchParams(
+        new URLSearchParams(searchParams.toString()),
+        newValue,
+      )
+
+      return `${pathname}?${updatedParams.toString()}`
+    },
+    [pathname, searchParams, getUpdatedSearchParams],
+  )
+
+  const setValue = useCallback(
+    (newValue: T | null) => {
+      router.push(getUpdatedUrl(newValue), {scroll: false})
+    },
+    [router, getUpdatedUrl],
+  )
+
+  return {setValue, getUpdatedUrl, getUpdatedSearchParams}
+}
+
+export const usePushUpdatedSearchParams = () => {
+  const router = useRouter()
+  const pathname = usePathname()
+
+  return useCallback(
+    (updatedSearchParams: URLSearchParams) => {
+      router.push(`${pathname}?${updatedSearchParams.toString()}`, {
+        scroll: false,
+      })
+    },
+    [pathname, router],
+  )
+}
+
 type UseSearchParamsStateFn<Value extends string[] | string | number> = {
   (
     key: string,
     defaultValue?: undefined,
-  ): [Value | undefined, (value: Value) => void, (value: Value) => string]
+  ): [Value | undefined, SearchParamsSetters<Value>]
   <DefaultValue extends Value>(
     key: string,
     defaultValue: DefaultValue,
-  ): [Value | DefaultValue, (value: Value) => void, (value: Value) => string]
+  ): [Value | DefaultValue, SearchParamsSetters<Value>]
 }
 
 export const useSearchParamsState: UseSearchParamsStateFn<string> = <
@@ -19,35 +69,26 @@ export const useSearchParamsState: UseSearchParamsStateFn<string> = <
 >(
   key: string,
   defaultValue: DefaultValue,
-): [
-  string | DefaultValue,
-  (value: string) => void,
-  (value: string) => string,
-] => {
+): [string | DefaultValue, SearchParamsSetters<string>] => {
   const searchParams = useSearchParams()
-  const router = useRouter()
-  const pathname = usePathname()
 
   const value: string | DefaultValue = searchParams.get(key) ?? defaultValue
 
-  const getNewUrl = useCallback(
-    (newValue: string) => {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set(key, newValue)
-
-      return `${pathname}?${params.toString()}`
+  const updateSearchParams = useCallback(
+    (params: URLSearchParams, newValue: string | null) => {
+      if (newValue === null) {
+        params.delete(key)
+      } else {
+        params.set(key, newValue)
+      }
+      return params
     },
-    [key, pathname, searchParams],
+    [key],
   )
 
-  const setValue = useCallback(
-    (newValue: string) => {
-      router.push(getNewUrl(newValue), {scroll: false})
-    },
-    [router, getNewUrl],
-  )
+  const setters = useSearchParamsSetters(updateSearchParams)
 
-  return [value, setValue, getNewUrl]
+  return [value, setters]
 }
 
 export const useSearchParamsNumericState: UseSearchParamsStateFn<number> = <
@@ -55,14 +96,8 @@ export const useSearchParamsNumericState: UseSearchParamsStateFn<number> = <
 >(
   key: string,
   defaultValue: DefaultValue,
-): [
-  number | DefaultValue,
-  (value: number) => void,
-  (value: number) => string,
-] => {
+): [number | DefaultValue, SearchParamsSetters<number>] => {
   const searchParams = useSearchParams()
-  const router = useRouter()
-  const pathname = usePathname()
 
   const searchParamsValue = searchParams.get(key)
 
@@ -76,78 +111,83 @@ export const useSearchParamsNumericState: UseSearchParamsStateFn<number> = <
 
   const value: number | DefaultValue = numericSearchParamsValue ?? defaultValue
 
-  const getNewUrl = useCallback(
-    (newValue: number) => {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set(key, newValue.toString())
-
-      return `${pathname}?${params.toString()}`
+  const updateSearchParams = useCallback(
+    (params: URLSearchParams, newValue: number | null) => {
+      if (newValue === null) {
+        params.delete(key)
+      } else {
+        params.set(key, newValue.toString())
+      }
+      return params
     },
-    [key, pathname, searchParams],
+    [key],
   )
 
-  const setValue = useCallback(
-    (newValue: number) => {
-      router.push(getNewUrl(newValue), {scroll: false})
-    },
-    [router, getNewUrl],
-  )
+  const setters = useSearchParamsSetters(updateSearchParams)
 
-  return [value, setValue, getNewUrl]
+  return [value, setters]
 }
 
 export const useSearchParamsArrayState = (
   key: string,
-): [string[], (value: string[]) => void, (value: string[]) => string] => {
+): [string[], SearchParamsSetters<string[]>] => {
   const searchParams = useSearchParams()
-  const router = useRouter()
-  const pathname = usePathname()
 
   const values = searchParams.getAll(key)
 
-  const getNewUrl = useCallback(
-    (newValue: string[]) => {
-      const params = new URLSearchParams(searchParams.toString())
+  const updateSearchParams = useCallback(
+    (params: URLSearchParams, newValue: string[] | null) => {
       params.delete(key)
 
-      newValue.forEach((item) => {
+      newValue?.forEach((item) => {
         params.append(key, item)
       })
 
-      return `${pathname}?${params.toString()}`
+      return params
     },
-    [key, pathname, searchParams],
+    [key],
   )
 
-  const setValues = useCallback(
-    (newValue: string[]) => {
-      router.push(getNewUrl(newValue), {scroll: false})
-    },
-    [router, getNewUrl],
-  )
+  const setters = useSearchParamsSetters(updateSearchParams)
 
-  return [values, setValues, getNewUrl]
+  return [values, setters]
 }
 
 export const useSearchParamsEnumArrayState = <T extends string>(
   key: string,
   enumObject: Record<string, T>,
-): [T[], (values: T[]) => void, (values: T[]) => void] => {
-  const [values, setValues, getNewUrl] = useSearchParamsArrayState(key)
+) => {
+  const [values, setters] = useSearchParamsArrayState(key)
 
   const validValues = values.filter(getEnumMemberFilter(enumObject))
 
-  return [validValues, setValues, getNewUrl]
+  return [validValues, setters] as const
 }
 
 export const useSearchParamsEnumState = <T extends string>(
   key: string,
   enumObject: Record<string, T>,
   defaultValue: T,
-): [T, (value: T) => void, (value: T) => string] => {
-  const [value, setValue, getNewUrl] = useSearchParamsState(key, defaultValue)
+) => {
+  const [value, setters] = useSearchParamsState(key, defaultValue)
 
   const currentValue = isEnumMember(enumObject, value) ? value : defaultValue
 
-  return [currentValue, setValue, getNewUrl]
+  return [currentValue, setters] as const
+}
+
+export const useResetSearchParamsKeys = () => {
+  const searchParams = useSearchParams()
+  const pushUpdatedSearchParams = usePushUpdatedSearchParams()
+
+  return useCallback(
+    (keys: string[]) => {
+      const params = new URLSearchParams(searchParams.toString())
+
+      keys.forEach((key) => params.delete(key))
+
+      pushUpdatedSearchParams(params)
+    },
+    [searchParams, pushUpdatedSearchParams],
+  )
 }
