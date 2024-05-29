@@ -1,4 +1,4 @@
-import {DateTime} from 'luxon'
+import {DateTime, Duration} from 'luxon'
 
 import DatePicker from './DatePicker'
 import TimePicker from './TimePicker'
@@ -20,55 +20,68 @@ const DateTimePicker = ({
   zonename,
   nullDateText,
 }: DateTimePickerProps) => {
-  const inputValue = value
-    ? DateTime.fromJSDate(value).setZone(zonename).toJSDate()
+  const parsedValue = value
+    ? DateTime.fromJSDate(value, {zone: zonename})
     : null
 
-  const handleChange = (value: Date | null | undefined) => {
-    if (value) {
-      onChange(DateTime.fromJSDate(value, {zone: zonename}).toUTC().toJSDate())
-    } else {
+  const datePickerValue = parsedValue
+    ?.setZone('local', {keepLocalTime: true})
+    .toJSDate()
+
+  const timePickerValue =
+    parsedValue?.toISOTime({
+      includeOffset: false,
+    }) ?? ''
+
+  const handleDatePickerChange = (date: Date | undefined) => {
+    if (!date) {
       onChange(null)
+      return
     }
+
+    const newDate = DateTime.fromJSDate(date)
+      .setZone(zonename, {keepLocalTime: true})
+      .set({
+        hour: parsedValue?.hour,
+        minute: parsedValue?.minute,
+        second: 0,
+        millisecond: 0,
+      })
+      .toJSDate()
+
+    onChange(newDate)
   }
 
-  const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!value) return
+  const handleTimePickerChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const newParsedTime = Duration.fromISOTime(event.target.value).toObject()
 
-    const [hours, minutes] = event.target.value.split(':').map(Number)
-    if (Number.isNaN(hours) || Number.isNaN(minutes)) return
+    const newDate = (parsedValue ?? DateTime.local({zone: zonename}))
+      .set({
+        hour: newParsedTime.hours,
+        minute: newParsedTime.minutes,
+        second: 0,
+        millisecond: 0,
+      })
+      .toJSDate()
 
-    const dateTimeInUserZone = DateTime.fromJSDate(value, {
-      zone: zonename,
-    }).set({
-      hour: hours,
-      minute: minutes,
-      second: 0,
-    })
-
-    handleChange(dateTimeInUserZone.toJSDate())
+    onChange(newDate)
   }
 
   return (
     <div className="flex items-center gap-4">
       <DatePicker
-        selected={inputValue}
-        onSelect={handleChange}
+        selected={datePickerValue}
+        onSelect={handleDatePickerChange}
         fromDate={fromDate}
         toDate={toDate}
         nullText={nullDateText}
       />
       <TimePicker
         // take locale date time string in format that the input expects (24hr time)
-        value={
-          inputValue
-            ? DateTime.fromJSDate(inputValue)
-                .setZone(zonename)
-                .toFormat('HH:mm')
-            : undefined
-        }
-        // take hours and minutes and update our Date object then change date object to our new value
-        onChange={handleTimeChange}
+        value={timePickerValue}
+        onChange={handleTimePickerChange}
       />
     </div>
   )
