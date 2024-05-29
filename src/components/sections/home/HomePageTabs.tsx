@@ -15,7 +15,7 @@ import {HomePageTab} from '@/lib/types/enums'
 export const HOMEPAGE_CONTESTS_PAGE_SIZE = 7
 
 const HomePageTabs = () => {
-  const [currentTab, setCurrentTab] = useSearchParamsEnumState(
+  const [currentTab, {setValue: setCurrentTab}] = useSearchParamsEnumState(
     'tab',
     HomePageTab,
     HomePageTab.HUNTERS,

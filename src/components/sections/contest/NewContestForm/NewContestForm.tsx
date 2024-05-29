@@ -93,7 +93,7 @@ const useNewContestFormSearchParamsPage = () => {
 }
 
 const NewContestForm = () => {
-  const [page, setPage] = useNewContestFormSearchParamsPage()
+  const [page, {setValue: setPage}] = useNewContestFormSearchParamsPage()
   const router = useRouter()
 
   const {mutate} = useAddContest()

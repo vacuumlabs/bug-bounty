@@ -14,7 +14,7 @@ import {ContestOccurence} from '@/server/db/models'
 import Separator from '@/components/ui/Separator'
 
 const MyContests = () => {
-  const [contestType, setContestType] = useSearchParamsEnumState(
+  const [contestType, {setValue: setContestType}] = useSearchParamsEnumState(
     'type',
     ContestOccurence,
     ContestOccurence.PRESENT,
