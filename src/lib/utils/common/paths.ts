@@ -12,4 +12,4 @@ export const PATHS = {
   signOut: '/api/auth/signout',
 } as const
 
-export const DISCORD_URL = '#' // TODO
+export const DISCORD_URL = 'https://discord.gg/EkwDJ3X5Hd'
