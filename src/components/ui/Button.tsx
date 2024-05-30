@@ -20,7 +20,7 @@ const buttonVariants = cva(
         purple:
           'border-2 border-transparent bg-purple text-black hover:bg-purple-dark active:border-white aria-disabled:bg-purple-light aria-disabled:bg-purple-light',
         outline:
-          'border-2 border-white bg-transparent text-white hover:border-grey-10 active:-mx-[1px] active:border-[3px] active:border-white disabled:border-grey-20 disabled:text-grey-20 aria-disabled:border-grey-20 aria-disabled:text-grey-20',
+          'border-2 border-white bg-transparent text-white ring-transparent hover:border-grey-10 active:outline-none active:ring-1 active:ring-offset-1 disabled:border-grey-20 disabled:text-grey-20 aria-disabled:border-grey-20 aria-disabled:text-grey-20',
         link: 'h-fit px-0 font-normal underline-offset-4 hover:underline',
       },
     },

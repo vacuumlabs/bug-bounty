@@ -9,7 +9,7 @@ const NewContestPage = async () => {
   return (
     <main className="flex flex-grow flex-col items-center px-24 pb-20 pt-6">
       <FormBackButton className="self-start" />
-      <div className="flex w-full max-w-2xl flex-col">
+      <div className="flex w-full max-w-3xl flex-col">
         <h1 className="mb-12 self-center text-headlineS uppercase">
           Set up a new audit
         </h1>

@@ -8,10 +8,11 @@ import {SelectSingleEventHandler} from 'react-day-picker'
 import {Button} from '../Button'
 import {Popover, PopoverContent, PopoverTrigger} from '../Popover'
 
-import {Calendar} from '@/components/ui/calendar'
+import Calendar from '@/components/ui/Calendar'
 import {cn} from '@/lib/utils/client/tailwind'
 
 type DatePickerProps = {
+  className?: string
   selected: Date | null | undefined
   onSelect: SelectSingleEventHandler
   fromDate?: Date
@@ -20,6 +21,7 @@ type DatePickerProps = {
 }
 
 const DatePicker = ({
+  className,
   selected,
   onSelect,
   fromDate,
@@ -32,8 +34,9 @@ const DatePicker = ({
         <Button
           variant={'outline'}
           className={cn(
-            'justify-start text-left font-normal',
+            'justify-start border text-left font-normal',
             !selected && 'text-muted-foreground',
+            className,
           )}>
           <CalendarIcon className="mr-2 h-4 w-4" />
           {selected ? (

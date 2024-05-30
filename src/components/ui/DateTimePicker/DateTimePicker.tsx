@@ -77,6 +77,7 @@ const DateTimePicker = ({
         fromDate={fromDate}
         toDate={toDate}
         nullText={nullDateText}
+        className="w-[250px]"
       />
       <TimePicker
         // take locale date time string in format that the input expects (24hr time)

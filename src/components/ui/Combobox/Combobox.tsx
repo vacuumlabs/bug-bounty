@@ -82,7 +82,7 @@ const Combobox = <T extends string>(
           role="combobox"
           aria-expanded={isOpen}
           className={cn(
-            'flex w-[320px] justify-between border p-3 font-normal normal-case active:-mx-[2px]',
+            'flex w-[320px] justify-between border p-3 font-normal normal-case',
             className,
           )}>
           {renderValue(
