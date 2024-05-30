@@ -24,8 +24,10 @@ import TablePagination from '@/components/ui/TablePagination'
 import {formatTabCount} from '@/lib/utils/common/format'
 import Anchor from '@/components/ui/Anchor'
 import {selectOptions} from '@/lib/utils/common/enums'
-import {FilterControls} from '@/components/ui/Filter'
-import {Filter} from '@/components/ui/Filter/FilterControls'
+import {Filter, FilterControls, SortControls} from '@/components/ui/Filter'
+import {useSortingSearchParams} from '@/lib/hooks/useSortingSearchParams'
+import {contestSortOptions} from '@/lib/utils/common/sorting'
+import {ContestSorting} from '@/lib/types/enums'
 
 type ContestsProps = {
   pageSize: number
@@ -36,16 +38,21 @@ const Contests = ({pageSize}: ContestsProps) => {
 
   const [contestType, {getSearchParamsUpdater: updateContestTypeSearchParams}] =
     useSearchParamsEnumState('type', ContestOccurence, ContestOccurence.PRESENT)
+
   const [
     projectCategory,
     {getSearchParamsUpdater: updateCategorySearchParams},
   ] = useSearchParamsEnumArrayState('category', ProjectCategory)
+
   const [
     projectLanguage,
     {getSearchParamsUpdater: updateLanguageSearchParams},
   ] = useSearchParamsEnumArrayState('language', ProjectLanguage)
+
   const [page, {getSearchParamsUpdater: updatePageSearchParams}] =
     useSearchParamsNumericState('page', 1)
+
+  const [sortParams, setSortParams] = useSortingSearchParams(ContestSorting)
 
   const {data: contests, isLoading} = useGetPublicContests({
     type: contestType,
@@ -53,6 +60,7 @@ const Contests = ({pageSize}: ContestsProps) => {
     limit: pageSize,
     projectCategory,
     projectLanguage,
+    sort: sortParams,
   })
   const {data: contestCounts} = useGetPublicContestCounts({
     projectCategory,
@@ -114,7 +122,14 @@ const Contests = ({pageSize}: ContestsProps) => {
       <Anchor id="contests" />
       <div className="mb-11 flex items-center justify-between">
         <h3 className="text-headlineM font-bold uppercase">Bounties</h3>
-        <FilterControls filters={filters} />
+        <div className="flex gap-3">
+          <FilterControls filters={filters} />
+          <SortControls
+            options={contestSortOptions}
+            sortParams={sortParams}
+            setSortParams={setSortParams}
+          />
+        </div>
       </div>
       <Tabs value={contestType} onValueChange={onContestTypeChange}>
         <TabsList className="mb-6">
