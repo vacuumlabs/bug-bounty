@@ -69,7 +69,7 @@ const FilterControls = ({filters}: FilterControlsProps) => {
       <PopoverTrigger asChild>
         <Button variant="outline" className="gap-2" size="small">
           Filter
-          <Settings2 className="rotate-90" />
+          <Settings2 className="rotate-90" size={16} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[520px] p-8" align="end">
