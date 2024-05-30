@@ -39,10 +39,28 @@ const githubRepoSchema = z.object({
   fullName: z.string(),
 }) satisfies ZodOutput<GithubRepository>
 
+const datesSchema = addContestSchema
+  .pick({
+    startDate: true,
+    endDate: true,
+  })
+  .extend({
+    timezone: z.string(),
+    startDate: z
+      .date()
+      .min(new Date(), {message: 'Start date must be in the future'}),
+  })
+  .refine((data) => data.endDate > data.startDate, {
+    message: 'End date must be after the start date',
+    path: ['endDate'],
+  })
+
 const formSchema = addContestSchema
   .omit({
     status: true,
     repoUrl: true,
+    startDate: true,
+    endDate: true,
   })
   .extend({
     rewardsAmount: z
@@ -57,15 +75,8 @@ const formSchema = addContestSchema
         {message: 'At least one severity weight must be greater than 0'},
       ),
     repository: githubRepoSchema,
-    timezone: z.string(),
-    startDate: z
-      .date()
-      .min(new Date(), {message: 'Start date must be in the future'}),
   })
-  .refine((data) => data.endDate > data.startDate, {
-    message: 'End date must be after the start date',
-    path: ['endDate'],
-  })
+  .and(datesSchema)
   .transform(({rewardsAmount, ...data}) => ({
     ...data,
     rewardsAmount: Math.round(Number(rewardsAmount) * 1e6).toString(),
@@ -75,7 +86,7 @@ type FormValues = z.infer<typeof formSchema>
 type InputFormValues = Override<
   Nullable<FormValues>,
   {
-    severityWeights: Nullable<SeverityWeights>
+    severityWeights: SeverityWeights
   }
 >
 
