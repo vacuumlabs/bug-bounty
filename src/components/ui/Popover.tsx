@@ -7,7 +7,20 @@ import {cn} from '@/lib/utils/client/tailwind'
 
 const Popover = PopoverPrimitive.Root
 
-const PopoverTrigger = PopoverPrimitive.Trigger
+const PopoverTrigger = forwardRef<
+  ElementRef<typeof PopoverPrimitive.Trigger>,
+  ComponentPropsWithoutRef<typeof PopoverPrimitive.Trigger>
+>(({className, ...props}, ref) => (
+  <PopoverPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      'ring-transparent ring-offset-white data-[state=open]:outline-none data-[state=open]:ring-2 data-[state=open]:ring-offset-2',
+      className,
+    )}
+    {...props}
+  />
+))
+PopoverTrigger.displayName = PopoverPrimitive.Trigger.displayName
 
 const PopoverContent = forwardRef<
   ElementRef<typeof PopoverPrimitive.Content>,
