@@ -1,3 +1,4 @@
+import {ContestSorting} from '@/lib/types/enums'
 import {
   ContestStatus,
   FindingSeverity,
@@ -37,6 +38,12 @@ const translations = {
     [ContestStatus.APPROVED]: 'Approved',
     [ContestStatus.REJECTED]: 'Rejected',
     [ContestStatus.FINISHED]: 'Finished',
+  },
+  contestSorting: {
+    [ContestSorting.START_DATE]: 'Start date',
+    [ContestSorting.END_DATE]: 'End date',
+    [ContestSorting.TITLE]: 'Title',
+    [ContestSorting.REWARDS_AMOUNT]: 'Reward',
   },
   projectLanguage: {
     [ProjectLanguage.AIKEN]: 'Aiken',
@@ -88,9 +95,10 @@ export const translateEnum = {
   findingSeverity: getTranslations(translations.findingSeverity),
   findingStatus: getTranslations(translations.findingStatus),
   contestStatus: getTranslations(translations.contestStatus),
+  contestSorting: getTranslations(translations.contestSorting),
   projectLanguage: getTranslations(translations.projectLanguage),
   projectCategory: getTranslations(translations.projectCategory),
-} satisfies Record<keyof typeof translations, () => void>
+} satisfies Record<keyof typeof translations, () => string>
 
 export const selectOptions = {
   userRole: createSelectOptions(translations.userRole),
@@ -99,7 +107,7 @@ export const selectOptions = {
   findingStatus: createSelectOptions(translations.findingStatus),
   projectLanguage: createSelectOptions(translations.projectLanguage),
   projectCategory: createSelectOptions(translations.projectCategory),
-} satisfies Record<keyof typeof translations, SelectOption<unknown>[]>
+}
 
 export const isEnumMember = <T extends string>(
   enumObject: Record<string, T>,
@@ -110,3 +118,8 @@ export const getEnumMemberFilter =
   <T extends string>(enumObject: Record<string, T>) =>
   (value: string): value is T =>
     isEnumMember(enumObject, value)
+
+export const isStringUnionMember = <T extends string>(
+  union: T[],
+  value: string,
+): value is T => (union as string[]).includes(value)

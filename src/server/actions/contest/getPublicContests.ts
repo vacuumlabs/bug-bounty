@@ -9,6 +9,12 @@ import {
   ProjectCategory,
   ProjectLanguage,
 } from '@/server/db/models'
+import {
+  contestSortFieldMap,
+  sortByColumn,
+  SortParams,
+} from '@/lib/utils/common/sorting'
+import {ContestSorting, SortDirection} from '@/lib/types/enums'
 
 export type GetPublicContestsParams = {
   limit?: number
@@ -17,6 +23,7 @@ export type GetPublicContestsParams = {
   searchQuery?: string
   projectCategory?: ProjectCategory[]
   projectLanguage?: ProjectLanguage[]
+  sort?: SortParams<ContestSorting>
 }
 
 export const getPublicContests = async ({
@@ -26,6 +33,7 @@ export const getPublicContests = async ({
   searchQuery,
   projectCategory,
   projectLanguage,
+  sort = {field: ContestSorting.START_DATE, direction: SortDirection.DESC},
 }: GetPublicContestsParams) => {
   return db.query.contests.findMany({
     limit,
@@ -61,6 +69,6 @@ export const getPublicContests = async ({
           ? arrayOverlaps(contests.projectLanguage, projectLanguage)
           : undefined,
       ),
-    orderBy: (contests, {desc}) => desc(contests.startDate),
+    orderBy: sortByColumn(sort.direction, contestSortFieldMap[sort.field]),
   })
 }
