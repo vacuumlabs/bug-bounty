@@ -56,6 +56,10 @@ type UseSearchParamsStateFn<Value extends string[] | string | number> = {
     key: string,
     defaultValue: DefaultValue,
   ): [Value | DefaultValue, SearchParamsSetters<Value>]
+  <DefaultValue extends Value | undefined>(
+    key: string,
+    defaultValue: DefaultValue,
+  ): [Value | DefaultValue, SearchParamsSetters<Value>]
 }
 
 export const useSearchParamsState: UseSearchParamsStateFn<string> = <
@@ -158,16 +162,33 @@ export const useSearchParamsEnumArrayState = <T extends string>(
   return [validValues, setters] as const
 }
 
-export const useSearchParamsEnumState = <T extends string>(
+type UseSearchParamsEnumStateFn = {
+  <Value extends string>(
+    key: string,
+    enumObject: Record<string, Value>,
+    defaultValue?: undefined,
+  ): [Value | undefined, SearchParamsSetters<Value>]
+  <Value extends string, DefaultValue extends Value>(
+    key: string,
+    enumObject: Record<string, Value>,
+    defaultValue: DefaultValue,
+  ): [Value | DefaultValue, SearchParamsSetters<Value>]
+}
+
+export const useSearchParamsEnumState: UseSearchParamsEnumStateFn = <
+  Value extends string,
+  DefaultValue extends Value | undefined,
+>(
   key: string,
-  enumObject: Record<string, T>,
-  defaultValue: T,
-) => {
+  enumObject: Record<string, Value>,
+  defaultValue: DefaultValue,
+): [Value | DefaultValue, SearchParamsSetters<Value>] => {
   const [value, setters] = useSearchParamsState(key, defaultValue)
 
-  const currentValue = isEnumMember(enumObject, value) ? value : defaultValue
+  const currentValue: Value | DefaultValue =
+    value && isEnumMember(enumObject, value) ? value : defaultValue
 
-  return [currentValue, setters] as const
+  return [currentValue, setters]
 }
 
 export const usePushUpdatedSearchParams = () => {
