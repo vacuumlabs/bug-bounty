@@ -15,6 +15,7 @@ import {Input} from '@/components/ui/Input'
 import TimezoneSelect from '@/components/ui/TimezoneSelect'
 import Textarea from '@/components/ui/Textarea'
 import DateTimePicker from '@/components/ui/DateTimePicker/DateTimePicker'
+import Separator from '@/components/ui/Separator'
 
 export const page2fields = [
   'rewardsAmount',
@@ -102,62 +103,66 @@ const NewContestFormPage2 = ({form}: NewContestFormPageProps) => {
           </FormItem>
         )}
       />
-      <FormField
-        control={control}
-        name="timezone"
-        render={({field}) => (
-          <FormItem>
-            <FormLabel>Time zone</FormLabel>
-            <FormControl>
-              <TimezoneSelect {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <div className="flex justify-between">
+      <div className="flex flex-col gap-6">
+        <p>Audit period</p>
+        <Separator />
         <FormField
           control={control}
-          name="startDate"
+          name="timezone"
           render={({field}) => (
             <FormItem>
-              <FormLabel>Start</FormLabel>
+              <FormLabel>Time zone</FormLabel>
               <FormControl>
-                <DateTimePicker
-                  zonename={watch('timezone') ?? undefined}
-                  fromDate={DateTime.now()
-                    .set({millisecond: 0, second: 0})
-                    .toJSDate()}
-                  nullDateText="Choose start date"
-                  value={field.value}
-                  onChange={field.onChange}
-                />
+                <TimezoneSelect {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
-          control={control}
-          name="endDate"
-          render={({field}) => (
-            <FormItem>
-              <FormLabel>End</FormLabel>
-              <FormControl>
-                <DateTimePicker
-                  zonename={watch('timezone') ?? undefined}
-                  fromDate={DateTime.now()
-                    .set({millisecond: 0, second: 0})
-                    .toJSDate()}
-                  nullDateText="Choose end date"
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="flex justify-between">
+          <FormField
+            control={control}
+            name="startDate"
+            render={({field}) => (
+              <FormItem>
+                <FormLabel>Start</FormLabel>
+                <FormControl>
+                  <DateTimePicker
+                    zonename={watch('timezone') ?? undefined}
+                    fromDate={DateTime.now()
+                      .set({millisecond: 0, second: 0})
+                      .toJSDate()}
+                    nullDateText="Choose start date"
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="endDate"
+            render={({field}) => (
+              <FormItem>
+                <FormLabel>End</FormLabel>
+                <FormControl>
+                  <DateTimePicker
+                    zonename={watch('timezone') ?? undefined}
+                    fromDate={DateTime.now()
+                      .set({millisecond: 0, second: 0})
+                      .toJSDate()}
+                    nullDateText="Choose end date"
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
       </div>
     </div>
   )
