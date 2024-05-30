@@ -81,7 +81,8 @@ const DateTimePicker = ({
       />
       <TimePicker
         // take locale date time string in format that the input expects (24hr time)
-        value={timePickerValue}
+        key={zonename}
+        defaultValue={timePickerValue}
         onChange={handleTimePickerChange}
       />
     </div>
