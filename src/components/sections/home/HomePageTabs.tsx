@@ -8,7 +8,7 @@ import HomePageCta from './HomePageCta'
 
 import Separator from '@/components/ui/Separator'
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/Tabs'
-import overlayImage from '@public/images/transparent-thin-overlay.png'
+import overlayImage from '@public/images/thin-overlay.png'
 import {useSearchParamsEnumState} from '@/lib/hooks/useSearchParamsState'
 import {HomePageTab} from '@/lib/types/enums'
 
@@ -35,7 +35,7 @@ const HomePageTabs = () => {
         <div className="relative overflow-hidden bg-white/5 p-24">
           <Image
             src={overlayImage}
-            className="pointer-events-none absolute right-0 top-0 -z-10 h-auto"
+            className="pointer-events-none absolute -top-24 right-0 -z-10 h-auto"
             alt="Overlay graphic"
             width={514}
           />
