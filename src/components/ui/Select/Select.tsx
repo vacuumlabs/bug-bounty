@@ -1,9 +1,10 @@
 'use client'
 
 import {SelectProps as RadixSelectProps} from '@radix-ui/react-select'
-import {Ref} from 'react'
+import {Ref, useState} from 'react'
+import {ChevronDown, ChevronUp} from 'lucide-react'
 
-import {SelectRoot, SelectValue} from './primitives'
+import {SelectIcon, SelectRoot, SelectValue} from './primitives'
 import SelectTrigger from './SelectTrigger'
 import SelectContent from './SelectContent'
 import SelectItem from './SelectItem'
@@ -39,16 +40,25 @@ const Select = genericForwardRef(
     }: SelectProps<T>,
     ref: Ref<HTMLButtonElement>,
   ) => {
+    const [isOpen, setIsOpen] = useState(false)
+
+    const ChevronIcon = isOpen ? ChevronUp : ChevronDown
+
     return (
       <SelectRoot
+        open={isOpen}
+        onOpenChange={setIsOpen}
         value={value === null ? '' : value}
         onValueChange={onChange}
         {...rootProps}>
         <SelectTrigger
           onBlur={onBlur}
           ref={ref}
-          className={cn('w-[180px]', className)}>
+          className={cn('w-[320px]', className)}>
           <SelectValue placeholder={placeholder} />
+          <SelectIcon asChild>
+            <ChevronIcon />
+          </SelectIcon>
         </SelectTrigger>
         <SelectContent>
           {options.map(({value, label}) => (
