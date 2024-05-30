@@ -27,6 +27,7 @@ import {GithubRepository} from '@/server/actions/github/getGithub'
 import {Nullable, Override} from '@/lib/types/general'
 import type {SeverityWeights} from '@/server/actions/reward/calculateRewards'
 import {PATHS} from '@/lib/utils/common/paths'
+import {toast} from '@/components/ui/Toast'
 
 const formPages = ['Basic information', 'Parameter settings', 'Review']
 
@@ -50,12 +51,13 @@ const datesSchema = addContestSchema
       .date()
       .min(new Date(), {message: 'Start date must be in the future'}),
   })
+  .strip()
   .refine((data) => data.endDate > data.startDate, {
     message: 'End date must be after the start date',
     path: ['endDate'],
   })
 
-const formSchema = addContestSchema
+const fieldsSchema = addContestSchema
   .omit({
     status: true,
     repoUrl: true,
@@ -76,7 +78,11 @@ const formSchema = addContestSchema
       ),
     repository: githubRepoSchema,
   })
-  .and(datesSchema)
+  .strip()
+
+// A workaround otherwise Zod won't run refine validations until all the fields exist: https://github.com/colinhacks/zod/issues/479
+const formSchema = z
+  .intersection(fieldsSchema, datesSchema)
   .transform(({rewardsAmount, ...data}) => ({
     ...data,
     rewardsAmount: Math.round(Number(rewardsAmount) * 1e6).toString(),
@@ -98,7 +104,7 @@ const NewContestForm = () => {
   const [page, setPage] = useNewContestFormPageSearchParams()
   const router = useRouter()
 
-  const {mutate} = useAddContest()
+  const {mutate, isPending} = useAddContest()
 
   const form = useForm<InputFormValues, unknown, FormValues>({
     resolver: zodResolver(formSchema),
@@ -149,6 +155,10 @@ const NewContestForm = () => {
     )
   }
 
+  const onSubmit = handleSubmit(addContest, () =>
+    toast({title: 'Submission failed.', description: 'Invalid input values.'}),
+  )
+
   const onContinue = async () => {
     const isValid = await trigger(page === 1 ? page1fields : page2fields)
 
@@ -180,8 +190,8 @@ const NewContestForm = () => {
       </Tabs>
       <div className="flex justify-end">
         {page === 3 ? (
-          <Button type="submit" onClick={handleSubmit(addContest)}>
-            Submit for review
+          <Button type="submit" disabled={isPending} onClick={onSubmit}>
+            {isPending ? 'Submitting...' : 'Submit for review'}
           </Button>
         ) : (
           <Button onClick={onContinue} className="gap-2">
