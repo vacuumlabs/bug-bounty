@@ -1,5 +1,6 @@
 import type {Metadata} from 'next'
 import localFont from 'next/font/local'
+import {ReactNode} from 'react'
 
 import './globals.css'
 
@@ -14,14 +15,14 @@ const redditSans = localFont({
 })
 
 export const metadata: Metadata = {
-  title: 'Cardano Bug Bounty',
+  title: 'Bounty Lab',
   description: 'Cardano Bug Bounty PoC',
 }
 
 const RootLayout = async ({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: ReactNode
 }>) => {
   const session = await getServerAuthSession()
 
