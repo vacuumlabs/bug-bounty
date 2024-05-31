@@ -6,6 +6,7 @@ import {NewContestFormPageProps} from './NewContestForm'
 
 import {translateEnum} from '@/lib/utils/common/enums'
 import MarkdownPreview from '@/components/markdown/MarkdownPreview'
+import {formatAda} from '@/lib/utils/common/format'
 
 const formatDate = (date: Date | null, timezone: string | null) =>
   date
@@ -84,7 +85,7 @@ const NewContestFormReviewPage = ({form}: NewContestFormPageProps) => {
       </div>
       <div className="flex flex-col gap-3">
         <h3 className="text-bodyL text-purple-light">{`Total rewards (in ADA)`}</h3>
-        <p>{Number(rewardsAmount).toLocaleString()}</p>
+        <p>{formatAda(Number(rewardsAmount) * 1e6)}</p>
       </div>
       <div className="flex flex-col gap-3">
         <h3 className="text-bodyL text-purple-light">Severity rewards</h3>
