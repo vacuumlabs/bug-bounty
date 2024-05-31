@@ -1,3 +1,5 @@
+export const APP_LOCALE = 'en-US'
+
 export const ellipsizeText = (text: string, maxLength: number) => {
   const trimmedText = text.trim()
 
@@ -17,7 +19,7 @@ export const formatAda = (
 
   const adaAmount = parsedAmount / 1e6
 
-  return `₳ ${adaAmount.toLocaleString('en-US', {
+  return `₳ ${adaAmount.toLocaleString(APP_LOCALE, {
     maximumFractionDigits,
   })}`
 }
