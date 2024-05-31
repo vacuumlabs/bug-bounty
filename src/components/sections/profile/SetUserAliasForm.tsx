@@ -72,7 +72,10 @@ const SetUserAliasForm = ({initialAlias}: SetUserAliasFormProps) => {
               <FormControl>
                 <Input {...field} />
               </FormControl>
-              <Button disabled={isPending || !isDirty} type="submit">
+              <Button
+                size="large"
+                disabled={isPending || !isDirty}
+                type="submit">
                 Set alias
               </Button>
             </div>

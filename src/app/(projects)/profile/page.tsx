@@ -1,6 +1,5 @@
 import Link from 'next/link'
 
-import SignOutButton from '@/components/ui/SignOutButon'
 import {requirePageSession} from '@/server/utils/auth'
 import {prefetchGetUser} from '@/lib/queries/user/getUser'
 import Profile from '@/components/sections/profile/Profile'
@@ -15,7 +14,7 @@ const ProfilePage = async () => {
   await prefetchGetUser(session.user.id)
 
   return (
-    <main className="flex max-w-[1000px] flex-col items-start gap-8 px-20 pt-[50px]">
+    <main className="flex max-w-[1000px] flex-col items-start gap-8 px-24 py-12">
       <h1 className="text-3xl font-semibold">My profile</h1>
       <HydrationBoundary>
         <Profile />
@@ -27,9 +26,6 @@ const ProfilePage = async () => {
       <Button asChild variant="outline">
         <Link href="/finding/new">Add finding</Link>
       </Button>
-      <SignOutButton variant="outline" callbackUrl={PATHS.home}>
-        Sign out
-      </SignOutButton>
     </main>
   )
 }
