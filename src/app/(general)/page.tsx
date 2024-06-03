@@ -9,6 +9,7 @@ import HomePageTabs, {
 } from '@/components/sections/home/HomePageTabs'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 import HomePageCtaButton from '@/components/sections/home/HomePageCtaButton'
+import KnowledgeBase from '@/components/sections/home/KnowledgeBase'
 
 const Home = async () => {
   await Promise.all([
@@ -26,7 +27,7 @@ const Home = async () => {
   ])
 
   return (
-    <main className="relative flex flex-col justify-between pt-[200px]">
+    <main className="relative flex flex-col justify-between pb-24 pt-[200px]">
       <Image
         src={backgroundImage}
         alt="Background image"
@@ -51,6 +52,7 @@ const Home = async () => {
       </div>
       <HydrationBoundary>
         <HomePageTabs />
+        <KnowledgeBase />
       </HydrationBoundary>
     </main>
   )
