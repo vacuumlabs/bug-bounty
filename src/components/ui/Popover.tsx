@@ -6,6 +6,7 @@ import {ComponentPropsWithoutRef, ElementRef, forwardRef} from 'react'
 import {cn} from '@/lib/utils/client/tailwind'
 
 const Popover = PopoverPrimitive.Root
+const PopoverPortal = PopoverPrimitive.Portal
 
 const PopoverTrigger = forwardRef<
   ElementRef<typeof PopoverPrimitive.Trigger>,
@@ -41,4 +42,4 @@ const PopoverContent = forwardRef<
 ))
 PopoverContent.displayName = PopoverPrimitive.Content.displayName
 
-export {Popover, PopoverTrigger, PopoverContent}
+export {Popover, PopoverPortal, PopoverTrigger, PopoverContent}
