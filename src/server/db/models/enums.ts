@@ -1,6 +1,7 @@
 export enum UserRole {
   JUDGE = 'judge',
   AUDITOR = 'auditor',
+  PROJECT_OWNER = 'project_owner',
 }
 
 export enum ContestStatus {

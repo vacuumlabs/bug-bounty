@@ -8,18 +8,19 @@ import GithubProvider from 'next-auth/providers/github'
 import EmailProvider, {EmailUserConfig} from 'next-auth/providers/email'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import {DefaultJWT} from 'next-auth/jwt'
+import {z} from 'zod'
 
 import {verifyCredentials} from './actions/auth/verifyCredentials'
 import {UserRole} from './db/models'
 
-import {env} from '@/env'
 import {db} from '@/server/db'
+import {env} from '@/env'
 
 declare module 'next-auth' {
   interface Session extends DefaultSession {
     user: {
       id: string
-      role: UserRole
+      role: UserRole | null
       provider: string | undefined
     } & DefaultSession['user']
   }
@@ -27,14 +28,30 @@ declare module 'next-auth' {
 
 declare module 'next-auth/jwt' {
   interface JWT extends DefaultJWT {
-    role: UserRole
+    role: UserRole | null
     provider: string | undefined
   }
 }
 
+const updateSessionSchema = z
+  .object({
+    role: z.enum([UserRole.AUDITOR, UserRole.PROJECT_OWNER]),
+  })
+  .partial()
+  .optional()
+
 export const authOptions: NextAuthOptions = {
+  pages: {
+    signIn: '/auth/signin',
+  },
   callbacks: {
-    jwt: async ({token, user, trigger, account}) => {
+    jwt: async ({token, user, trigger, account, session}) => {
+      const sessionData = updateSessionSchema.parse(session)
+
+      if (trigger === 'update' && sessionData?.role) {
+        token.role = sessionData.role
+      }
+
       if (trigger !== 'signIn' && trigger !== 'signUp') {
         return token
       }
@@ -54,15 +71,19 @@ export const authOptions: NextAuthOptions = {
       token.provider = account?.provider
       return token
     },
-    session: ({session, token}) => ({
-      ...session,
-      user: {
-        ...session.user,
-        role: token.role,
-        id: token.sub,
-        provider: token.provider,
-      },
-    }),
+    session: ({session, token, newSession}) => {
+      const newSessionData = updateSessionSchema.parse(newSession)
+
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          role: newSessionData?.role ?? token.role,
+          id: token.sub,
+          provider: token.provider,
+        },
+      }
+    },
     signIn: ({user, account}) => {
       if (account?.provider !== 'credentials') {
         return true

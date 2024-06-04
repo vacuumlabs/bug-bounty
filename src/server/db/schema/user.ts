@@ -16,11 +16,9 @@ export const users = pgTable('user', {
   name: varchar('name', {length: 255}),
   alias: varchar('alias', {length: 255}).unique(),
   role: varchar('role', {
-    length: 8,
+    length: 24,
     enum: getDrizzleEnum(UserRole),
-  })
-    .notNull()
-    .default(UserRole.AUDITOR),
+  }),
   walletAddress: varchar('walletAddress', {length: 255}),
   email: varchar('email', {length: 255}).notNull(),
   emailVerified: timestamp('emailVerified', {
