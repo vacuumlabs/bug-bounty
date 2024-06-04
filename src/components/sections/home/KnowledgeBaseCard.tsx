@@ -5,6 +5,7 @@ import Link from 'next/link'
 import {Button} from '@/components/ui/Button'
 import Separator from '@/components/ui/Separator'
 import {cn} from '@/lib/utils/client/tailwind'
+import {ellipsizeText} from '@/lib/utils/common/format'
 
 export type KnowledgeBaseCardProps = {
   title: string
@@ -33,9 +34,13 @@ const KnowledgeBaseCard = ({
       <div className="flex flex-col gap-3">
         <span className="text-titleM">{title}</span>
         <Separator className="w-11" />
-        <p className="text-bodyS">{description}</p>
+        <p className="text-bodyS">{ellipsizeText(description, 230)}</p>
       </div>
-      <Button asChild variant="outline" size="small" className="self-start">
+      <Button
+        asChild
+        variant="outline"
+        size="small"
+        className="mt-auto self-start">
         <Link href={href} target="_blank">
           Read more
           <ArrowRight className="ml-2" />

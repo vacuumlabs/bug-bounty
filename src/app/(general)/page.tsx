@@ -10,6 +10,7 @@ import HomePageTabs, {
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 import HomePageCtaButton from '@/components/sections/home/HomePageCtaButton'
 import KnowledgeBase from '@/components/sections/home/KnowledgeBase'
+import {getArticlesFeed} from '@/server/loaders/getArticlesFeed'
 
 const Home = async () => {
   await Promise.all([
@@ -25,6 +26,8 @@ const Home = async () => {
       projectLanguage: [],
     }),
   ])
+
+  const feed = await getArticlesFeed()
 
   return (
     <main className="relative flex flex-col justify-between pb-24 pt-[200px]">
@@ -52,7 +55,7 @@ const Home = async () => {
       </div>
       <HydrationBoundary>
         <HomePageTabs />
-        <KnowledgeBase />
+        <KnowledgeBase articles={feed.items} defaultImageUrl={feed.image.url} />
       </HydrationBoundary>
     </main>
   )
