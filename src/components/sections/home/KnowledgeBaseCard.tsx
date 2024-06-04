@@ -25,7 +25,7 @@ const KnowledgeBaseCard = ({
   return (
     <div
       className={cn(
-        'flex flex-1 flex-col gap-6 overflow-hidden border-b-2 border-transparent bg-grey-90 p-6 hover:border-b-white',
+        'flex flex-col gap-6 overflow-hidden border-b-2 border-transparent bg-grey-90 p-6 hover:border-b-white',
         className,
       )}>
       <div className="relative h-[200px]">

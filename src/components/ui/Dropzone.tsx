@@ -128,10 +128,7 @@ const Dropzone = forwardRef<HTMLDivElement, DropzoneProps>(
               <FileCheck2Icon className="h-4 w-4" />
               <p className="text-sm font-medium">{file.name}</p>
             </div>
-            <Button
-              className="rounded-full"
-              size="icon"
-              onClick={() => removeFile(index)}>
+            <Button size="icon" onClick={() => removeFile(index)}>
               <X />
             </Button>
           </div>
