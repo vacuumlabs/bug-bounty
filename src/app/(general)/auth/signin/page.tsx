@@ -22,10 +22,7 @@ const SignInPage = () => {
         <h1 className="whitespace-pre-line text-headlineL font-bold uppercase">
           LOGIN
         </h1>
-        <p className="pt-2">
-          Define the reward for the project (in ADA), severity rewards, known
-          issues and audit period.
-        </p>
+        <p className="pt-2">Choose an account to log in with</p>
         <div className="pt-10">
           <OAuthButtons />
         </div>
