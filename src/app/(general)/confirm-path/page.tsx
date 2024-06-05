@@ -1,11 +1,17 @@
 import Image from 'next/image'
+import {redirect} from 'next/navigation'
 
 import backgroundImage from '@public/images/background-graphic.png'
 import ConfirmPathButtons from '@/components/sections/profile/ConfirmPathButtons'
 import {requirePageSession} from '@/server/utils/auth'
+import {PATHS} from '@/lib/utils/common/paths'
 
 const ConfirmPathPage = async () => {
-  await requirePageSession()
+  const session = await requirePageSession()
+
+  if (session.user.role) {
+    redirect(PATHS.myProjects)
+  }
 
   return (
     <main className="relative flex flex-col justify-between pt-[200px]">
