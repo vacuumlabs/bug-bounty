@@ -20,12 +20,15 @@ const ConfirmPathButtons = () => {
   const [selectedPath, setSelectedPath] = useState<SetUserRoleEnum>(
     UserRole.AUDITOR,
   )
+  const [isUpdateLoading, setIsUpdateLoading] = useState(false)
 
-  const {mutateAsync} = useSetUserRole()
+  const {mutateAsync, isPending} = useSetUserRole()
 
   const onConfirm = async () => {
     await mutateAsync(selectedPath)
+    setIsUpdateLoading(true)
     await update({role: selectedPath})
+    setIsUpdateLoading(false)
 
     if (selectedPath === UserRole.PROJECT_OWNER) {
       router.push(`${PATHS.connectWallet}?source=confirmPath`)
@@ -73,8 +76,8 @@ const ConfirmPathButtons = () => {
       </div>
 
       <div className="pt-16">
-        <Button variant="default" onClick={onConfirm}>
-          Confirm
+        <Button variant="default" disabled={isPending} onClick={onConfirm}>
+          {isUpdateLoading || isPending ? 'Loading...' : 'Confirm'}
         </Button>
       </div>
     </div>
