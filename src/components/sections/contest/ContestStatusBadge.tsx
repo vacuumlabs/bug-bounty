@@ -12,6 +12,7 @@ type BadgeStatus =
   | 'pending'
   | 'rejected'
   | 'approved'
+  | 'notApproved'
   | 'live'
   | 'judging'
   | 'finished'
@@ -22,6 +23,7 @@ const contestStatusTexts: Record<BadgeStatus, string> = {
   pending: 'Pending',
   rejected: 'Rejected',
   approved: 'Approved',
+  notApproved: 'Not Approved',
   live: 'Live',
   judging: 'Judging',
   finished: 'Finished',
@@ -33,6 +35,7 @@ const backgroundColorMap = {
   pending: 'bg-yellow',
   rejected: 'bg-red',
   approved: 'bg-green-light',
+  notApproved: 'bg-red-light',
   live: 'bg-green',
   judging: 'bg-blue',
   finished: 'bg-purple',
@@ -53,6 +56,12 @@ const ContestStatusBadge = ({contest, className}: ContestStatusBadgeProps) => {
     }
     if (contest.status === ContestStatus.FINISHED) {
       return 'finished'
+    }
+    if (
+      contest.status !== ContestStatus.APPROVED &&
+      DateTime.fromJSDate(contest.startDate) < DateTime.now()
+    ) {
+      return 'notApproved'
     }
     if (contest.status === ContestStatus.IN_REVIEW) {
       return 'inReview'
