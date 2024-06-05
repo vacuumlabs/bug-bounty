@@ -7,8 +7,14 @@ import RegisterWalletAddress from '@/components/sections/profile/RegisterWalletA
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 import {PATHS} from '@/lib/utils/common/paths'
 
-const ConnectWalletPage = async () => {
+const ConnectWalletPage = async ({
+  searchParams,
+}: {
+  searchParams?: Record<string, string | string[] | undefined>
+}) => {
   const session = await requirePageSession()
+
+  const isFromConfirmPath = searchParams?.source === 'confirmPath'
 
   await prefetchGetUser(session.user.id)
 
@@ -17,8 +23,10 @@ const ConnectWalletPage = async () => {
       <HydrationBoundary>
         <RegisterWalletAddress />
       </HydrationBoundary>
-      <Button asChild variant="link">
-        <Link href={PATHS.profile}>Go home</Link>
+      <Button asChild variant="outline">
+        <Link href={isFromConfirmPath ? PATHS.myProjects : PATHS.profile}>
+          {isFromConfirmPath ? 'SKIP THIS STEP' : 'Go home'}
+        </Link>
       </Button>
     </main>
   )

@@ -12,14 +12,14 @@ import {Button} from '@/components/ui/Button'
 import {useSetUserRole} from '@/lib/queries/user/setUserRole'
 import {SetUserRoleEnum} from '@/server/actions/user/setUserRole'
 import {UserRole} from '@/server/db/models'
+import {PATHS} from '@/lib/utils/common/paths'
 
 const ConfirmPathButtons = () => {
-  const {update, data} = useSession()
+  const {update} = useSession()
   const router = useRouter()
   const [selectedPath, setSelectedPath] = useState<SetUserRoleEnum>(
     UserRole.AUDITOR,
   )
-  console.log(data)
 
   const {mutateAsync} = useSetUserRole()
 
@@ -28,12 +28,12 @@ const ConfirmPathButtons = () => {
     await update({role: selectedPath})
 
     if (selectedPath === UserRole.PROJECT_OWNER) {
-      router.push('my-projects')
+      router.push(`${PATHS.connectWallet}?source=confirmPath`)
     }
 
     // TODO: Redirect to auditor dashboard
     if (selectedPath === UserRole.AUDITOR) {
-      router.push('/')
+      router.push(PATHS.home)
     }
   }
 

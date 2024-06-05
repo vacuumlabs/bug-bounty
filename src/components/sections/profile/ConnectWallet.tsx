@@ -7,7 +7,7 @@ import NoSSR from '@/components/helpers/NoSsr'
 const ConnectWallet = () => {
   return (
     <NoSSR>
-      <CardanoWallet />
+      <CardanoWallet label="Connect your wallet" isDark />
     </NoSSR>
   )
 }
