@@ -6,12 +6,13 @@ import {signIn} from 'next-auth/react'
 import twitterLogo from '@public/images/oauth/twitter-logo.svg'
 import googleLogo from '@public/images/oauth/google-logo.svg'
 import githubLogo from '@public/images/oauth/github-logo.svg'
+import {PATHS} from '@/lib/utils/common/paths'
 
 const OAuthButtons = () => {
   return (
     <div className="flex flex-col gap-6">
       <button
-        onClick={() => signIn('google', {callbackUrl: '/my-projects'})}
+        onClick={() => signIn('google', {callbackUrl: PATHS.myProjects})}
         className="flex h-12 w-96 items-center justify-center bg-white">
         <Image
           src={googleLogo as string}
@@ -23,7 +24,7 @@ const OAuthButtons = () => {
         <span className="pl-2 font-bold text-black">Sign Up with Google</span>
       </button>
       <button
-        onClick={() => signIn('github', {callbackUrl: '/my-projects'})}
+        onClick={() => signIn('github', {callbackUrl: PATHS.myProjects})}
         className="flex h-12 w-96 items-center justify-center bg-white">
         <Image
           src={githubLogo as string}
@@ -35,7 +36,7 @@ const OAuthButtons = () => {
         <span className="pl-2 font-bold text-black">Sign Up with GitHub</span>
       </button>
       <button
-        onClick={() => signIn('twitter', {callbackUrl: '/my-projects'})}
+        onClick={() => signIn('twitter', {callbackUrl: PATHS.myProjects})}
         className="flex h-12 w-96 items-center justify-center bg-white">
         <Image
           src={twitterLogo as string}
