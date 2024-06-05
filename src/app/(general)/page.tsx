@@ -13,7 +13,8 @@ import KnowledgeBase from '@/components/sections/home/KnowledgeBase'
 import {getArticlesFeed} from '@/server/loaders/getArticlesFeed'
 
 const Home = async () => {
-  await Promise.all([
+  const [feedResult] = await Promise.allSettled([
+    getArticlesFeed(),
     prefetchGetPublicContests({
       type: ContestOccurence.PRESENT,
       offset: 0,
@@ -26,8 +27,6 @@ const Home = async () => {
       projectLanguage: [],
     }),
   ])
-
-  const feed = await getArticlesFeed()
 
   return (
     <main className="relative flex flex-col justify-between pb-24 pt-[200px]">
@@ -55,7 +54,12 @@ const Home = async () => {
       </div>
       <HydrationBoundary>
         <HomePageTabs />
-        <KnowledgeBase articles={feed.items} defaultImageUrl={feed.image.url} />
+        {feedResult.status === 'fulfilled' && (
+          <KnowledgeBase
+            articles={feedResult.value.items}
+            defaultImageUrl={feedResult.value.image.url}
+          />
+        )}
       </HydrationBoundary>
     </main>
   )
