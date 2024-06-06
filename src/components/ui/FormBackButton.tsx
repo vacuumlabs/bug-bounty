@@ -3,16 +3,17 @@
 import {ArrowLeft} from 'lucide-react'
 
 import {Button} from './Button'
-import {useNewContestFormPageSearchParams} from '../sections/contest/NewContestForm/hooks'
 
+import {useFormPageSearchParams} from '@/lib/hooks/useFormPageSearchParams'
 import {cn} from '@/lib/utils/client/tailwind'
 
 type FormBackButtonProps = {
+  numberOfPages: number
   className?: string
 }
 
-const FormBackButton = ({className}: FormBackButtonProps) => {
-  const [page, setValue] = useNewContestFormPageSearchParams()
+const FormBackButton = ({className, numberOfPages}: FormBackButtonProps) => {
+  const [page, setValue] = useFormPageSearchParams(numberOfPages)
 
   if (page === 1) {
     return null
