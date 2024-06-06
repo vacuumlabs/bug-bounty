@@ -10,8 +10,8 @@ import {ArrowRight} from 'lucide-react'
 import NewContestFormPage1, {page1fields} from './NewContestFormPage1'
 import NewContestFormPage2, {page2fields} from './NewContestFormPage2'
 import NewContestFormReviewPage from './NewContestFormReviewPage'
-import {useNewContestFormPageSearchParams} from './hooks'
 
+import {useFormPageSearchParams} from '@/lib/hooks/useFormPageSearchParams'
 import {Form} from '@/components/ui/Form'
 import {useAddContest} from '@/lib/queries/contest/addContest'
 import {
@@ -101,7 +101,7 @@ export type NewContestFormPageProps = {
 }
 
 const NewContestForm = () => {
-  const [page, setPage] = useNewContestFormPageSearchParams()
+  const [page, setPage] = useFormPageSearchParams(3)
   const router = useRouter()
 
   const {mutate, isPending} = useAddContest()
