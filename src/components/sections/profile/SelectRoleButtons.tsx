@@ -36,7 +36,7 @@ const SelectRoleButtons = () => {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="flex gap-8">
+      <div className="flex gap-6">
         <button
           className={cn(
             'flex h-[260px] w-[460px] flex-col items-center justify-center gap-4 border-b-2 border-grey-90 bg-grey-90',

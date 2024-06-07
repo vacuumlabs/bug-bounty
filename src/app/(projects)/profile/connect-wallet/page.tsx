@@ -19,11 +19,11 @@ const ConnectWalletPage = async ({
   await prefetchGetUser(session.user.id)
 
   return (
-    <main className="flex flex-col items-center gap-8 pt-[100px]">
+    <main className="flex flex-col items-center gap-8 py-[155px]">
       <HydrationBoundary>
         <RegisterWalletAddress />
       </HydrationBoundary>
-      <Button asChild variant="outline">
+      <Button asChild variant="outline" className="mt-12">
         <Link href={isFromConfirmPath ? PATHS.myProjects : PATHS.profile}>
           {isFromConfirmPath ? 'SKIP THIS STEP' : 'Go home'}
         </Link>

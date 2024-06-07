@@ -14,7 +14,7 @@ const SelectRolePage = async () => {
   }
 
   return (
-    <main className="relative flex flex-col justify-between pt-[200px]">
+    <main className="relative flex flex-col justify-between py-[147px]">
       <Image
         src={backgroundImage}
         alt="Background image"
@@ -31,7 +31,7 @@ const SelectRolePage = async () => {
         <h1 className="whitespace-pre-line text-headlineS font-bold uppercase">
           Confirm your path on our platform
         </h1>
-        <div className="pt-12">
+        <div className="mt-12">
           <SelectRoleButtons />
         </div>
       </div>
