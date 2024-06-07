@@ -21,7 +21,7 @@ const OAuthButtons = () => {
           width={24}
           height={24}
         />
-        <span className="pl-2 font-bold text-black">Sign Up with Google</span>
+        <span className="pl-2 font-bold text-black">Sign In with Google</span>
       </button>
       <button
         onClick={() => signIn('github', {callbackUrl: PATHS.myProjects})}
@@ -33,7 +33,7 @@ const OAuthButtons = () => {
           width={24}
           height={24}
         />
-        <span className="pl-2 font-bold text-black">Sign Up with GitHub</span>
+        <span className="pl-2 font-bold text-black">Sign In with GitHub</span>
       </button>
       <button
         onClick={() => signIn('twitter', {callbackUrl: PATHS.myProjects})}
@@ -45,7 +45,7 @@ const OAuthButtons = () => {
           width={24}
           height={24}
         />
-        <span className="pl-2 font-bold text-black">Sign Up with Twitter</span>
+        <span className="pl-2 font-bold text-black">Sign In with Twitter</span>
       </button>
     </div>
   )
