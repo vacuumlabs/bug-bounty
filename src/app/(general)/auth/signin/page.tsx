@@ -20,7 +20,7 @@ const SignInPage = () => {
       />
       <div className="flex flex-col items-center justify-center px-24">
         <h1 className="whitespace-pre-line text-headlineL font-bold uppercase">
-          LOGIN
+          Login
         </h1>
         <p className="pt-2">Choose an account to log in with</p>
         <div className="pt-10">
