@@ -36,8 +36,9 @@ const ConnectWalletPage = async ({
             callbackUrl
               ? getRelativePathFromAbsolutePath(callbackUrl)
               : PATHS.profile
-          }>
-          {callbackUrl ? 'SKIP THIS STEP' : 'Go home'}
+          }
+          className="uppercase">
+          {callbackUrl ? 'Skip this step' : 'Back to profile'}
         </Link>
       </Button>
     </main>
