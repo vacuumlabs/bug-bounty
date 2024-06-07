@@ -3,7 +3,6 @@
 import Image from 'next/image'
 import {useState} from 'react'
 import {useRouter} from 'next/navigation'
-import {useSession} from 'next-auth/react'
 
 import hunterBadgeImage from '@public/images/hunter-badge.png'
 import projectOwnerBadgeImage from '@public/images/project-owner-badge.png'
@@ -15,20 +14,15 @@ import {UserRole} from '@/server/db/models'
 import {PATHS} from '@/lib/utils/common/paths'
 
 const ConfirmPathButtons = () => {
-  const {update} = useSession()
   const router = useRouter()
   const [selectedPath, setSelectedPath] = useState<SetUserRoleEnum>(
     UserRole.AUDITOR,
   )
-  const [isUpdateLoading, setIsUpdateLoading] = useState(false)
 
   const {mutateAsync, isPending} = useSetUserRole()
 
   const onConfirm = async () => {
     await mutateAsync(selectedPath)
-    setIsUpdateLoading(true)
-    await update({role: selectedPath})
-    setIsUpdateLoading(false)
 
     if (selectedPath === UserRole.PROJECT_OWNER) {
       router.push(`${PATHS.connectWallet}?source=confirmPath`)
@@ -77,7 +71,7 @@ const ConfirmPathButtons = () => {
 
       <div className="pt-16">
         <Button variant="default" disabled={isPending} onClick={onConfirm}>
-          {isUpdateLoading || isPending ? 'Loading...' : 'Confirm'}
+          {isPending ? 'Loading...' : 'Confirm'}
         </Button>
       </div>
     </div>
