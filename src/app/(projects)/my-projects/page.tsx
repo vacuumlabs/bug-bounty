@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import {redirect} from 'next/navigation'
 
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 import ProjectsDashboardOverview from '@/components/sections/projects/ProjectsDashboardOverview'
@@ -8,14 +7,9 @@ import {requirePageSession} from '@/server/utils/auth'
 import {prefetchGetMyContests} from '@/lib/queries/contest/getMyContests'
 import {prefetchGetMyContestsReportCounts} from '@/lib/queries/contest/getMyContestsReportCounts'
 import MyContests from '@/components/sections/projects/MyContests'
-import {PATHS} from '@/lib/utils/common/paths'
 
 const MyProjectsPage = async () => {
-  const session = await requirePageSession()
-
-  if (!session.user.role) {
-    redirect(PATHS.selectRole)
-  }
+  await requirePageSession()
 
   await Promise.all([
     prefetchGetMyContestsReportCounts(),
