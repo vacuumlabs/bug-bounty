@@ -14,7 +14,7 @@ export const useSetUserRole = () => {
   return useMutation({
     mutationFn: withApiErrorHandler(
       async (request: UserRole.AUDITOR | UserRole.PROJECT_OWNER) => {
-        await update()
+        await update({role: request})
 
         return setUserRole(request)
       },
