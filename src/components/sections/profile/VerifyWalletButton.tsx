@@ -15,14 +15,16 @@ const VerifyWalletButton = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
 
+  const callbackUrl = searchParams.get('callbackUrl')
+
   const handleVerifyWallet = () =>
     mutate(undefined, {
       onSuccess: () => {
-        router.push(
-          searchParams.get('source') === 'confirmPath'
-            ? PATHS.myProjects
-            : PATHS.profile,
-        )
+        if (callbackUrl) {
+          router.push(callbackUrl)
+        }
+
+        router.push(PATHS.profile)
       },
     })
 

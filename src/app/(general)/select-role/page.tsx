@@ -6,11 +6,16 @@ import SelectRoleButtons from '@/components/sections/profile/SelectRoleButtons'
 import {requirePageSession} from '@/server/utils/auth'
 import {PATHS} from '@/lib/utils/common/paths'
 
-const SelectRolePage = async () => {
+const SelectRolePage = async ({
+  searchParams,
+}: {
+  searchParams?: Record<string, string | string[] | undefined>
+}) => {
   const session = await requirePageSession()
+  const callbackUrl = searchParams?.callbackUrl as string | undefined
 
   if (session.user.role) {
-    redirect(PATHS.myProjects)
+    redirect(callbackUrl ?? PATHS.home)
   }
 
   return (
@@ -32,7 +37,7 @@ const SelectRolePage = async () => {
           Confirm your path on our platform
         </h1>
         <div className="mt-12">
-          <SelectRoleButtons />
+          <SelectRoleButtons callbackUrl={callbackUrl} />
         </div>
       </div>
     </main>

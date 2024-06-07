@@ -13,7 +13,11 @@ import {SetUserRoleEnum} from '@/server/actions/user/setUserRole'
 import {UserRole} from '@/server/db/models'
 import {PATHS} from '@/lib/utils/common/paths'
 
-const SelectRoleButtons = () => {
+type SelectRoleButtonsProps = {
+  callbackUrl: string | undefined
+}
+
+const SelectRoleButtons = ({callbackUrl}: SelectRoleButtonsProps) => {
   const router = useRouter()
   const [selectedPath, setSelectedPath] = useState<SetUserRoleEnum>(
     UserRole.AUDITOR,
@@ -24,14 +28,7 @@ const SelectRoleButtons = () => {
   const onConfirm = async () => {
     await mutateAsync(selectedPath)
 
-    if (selectedPath === UserRole.PROJECT_OWNER) {
-      router.push(`${PATHS.connectWallet}?source=confirmPath`)
-    }
-
-    // TODO: Redirect to auditor dashboard
-    if (selectedPath === UserRole.AUDITOR) {
-      router.push(PATHS.home)
-    }
+    router.push(`${PATHS.connectWallet}?callbackUrl=${callbackUrl}`)
   }
 
   return (
