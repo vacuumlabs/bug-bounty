@@ -1,5 +1,12 @@
-export const getRelativePathFromAbsolutePath = (_url: string): string => {
+export const getRelativePathFromAbsolutePath = (
+  _url: string,
+  withSearch = true,
+): string => {
   const url = new URL(_url)
 
-  return url.pathname + url.search
+  if (withSearch) {
+    return url.pathname + url.search
+  }
+
+  return url.pathname
 }

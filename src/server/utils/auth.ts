@@ -8,6 +8,7 @@ import {db} from '../db'
 
 import {ServerError} from '@/lib/types/error'
 import {PATHS} from '@/lib/utils/common/paths'
+import {getRelativePathFromAbsolutePath} from '@/lib/utils/common/url'
 
 export const getServerAuthSession = () => getServerSession(authOptions)
 
@@ -32,7 +33,17 @@ export const requirePageSession = async () => {
   const pathName = headersList.get('x-url')
 
   if (!session) {
-    redirect(`${PATHS.signIn}?error=SessionRequired&callbackUrl=${pathName}`)
+    return redirect(
+      `${PATHS.signIn}?error=SessionRequired&callbackUrl=${pathName}`,
+    )
+  }
+
+  const relativePathName = pathName
+    ? getRelativePathFromAbsolutePath(pathName, false)
+    : null
+
+  if (!session.user.role && relativePathName !== PATHS.selectRole) {
+    return redirect(`${PATHS.selectRole}?callbackUrl=${pathName}`)
   }
 
   return session
