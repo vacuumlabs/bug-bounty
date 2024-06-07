@@ -2,11 +2,11 @@ import Image from 'next/image'
 import {redirect} from 'next/navigation'
 
 import backgroundImage from '@public/images/background-graphic.png'
-import ConfirmPathButtons from '@/components/sections/profile/ConfirmPathButtons'
+import SelectRoleButtons from '@/components/sections/profile/SelectRoleButtons'
 import {requirePageSession} from '@/server/utils/auth'
 import {PATHS} from '@/lib/utils/common/paths'
 
-const ConfirmPathPage = async () => {
+const SelectRolePage = async () => {
   const session = await requirePageSession()
 
   if (session.user.role) {
@@ -32,11 +32,11 @@ const ConfirmPathPage = async () => {
           Confirm your path on our platform
         </h1>
         <div className="pt-12">
-          <ConfirmPathButtons />
+          <SelectRoleButtons />
         </div>
       </div>
     </main>
   )
 }
 
-export default ConfirmPathPage
+export default SelectRolePage

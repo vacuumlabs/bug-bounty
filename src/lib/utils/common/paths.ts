@@ -1,6 +1,7 @@
 export const PATHS = {
   aboutUs: '/about-us',
   connectWallet: '/profile/connect-wallet',
+  selectRole: '/select-role',
   home: '/',
   myProjects: '/my-projects',
   myProjectsRewards: '/my-projects/rewards',

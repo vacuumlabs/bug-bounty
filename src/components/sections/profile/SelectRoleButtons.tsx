@@ -13,7 +13,7 @@ import {SetUserRoleEnum} from '@/server/actions/user/setUserRole'
 import {UserRole} from '@/server/db/models'
 import {PATHS} from '@/lib/utils/common/paths'
 
-const ConfirmPathButtons = () => {
+const SelectRoleButtons = () => {
   const router = useRouter()
   const [selectedPath, setSelectedPath] = useState<SetUserRoleEnum>(
     UserRole.AUDITOR,
@@ -78,4 +78,4 @@ const ConfirmPathButtons = () => {
   )
 }
 
-export default ConfirmPathButtons
+export default SelectRoleButtons

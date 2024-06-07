@@ -8,12 +8,13 @@ import {requirePageSession} from '@/server/utils/auth'
 import {prefetchGetMyContests} from '@/lib/queries/contest/getMyContests'
 import {prefetchGetMyContestsReportCounts} from '@/lib/queries/contest/getMyContestsReportCounts'
 import MyContests from '@/components/sections/projects/MyContests'
+import {PATHS} from '@/lib/utils/common/paths'
 
 const MyProjectsPage = async () => {
   const session = await requirePageSession()
 
   if (!session.user.role) {
-    redirect('/confirm-path')
+    redirect(PATHS.selectRole)
   }
 
   await Promise.all([
