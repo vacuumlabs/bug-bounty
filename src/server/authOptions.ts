@@ -15,6 +15,7 @@ import {UserRole} from './db/models'
 
 import {db} from '@/server/db'
 import {env} from '@/env'
+import {PATHS} from '@/lib/utils/common/paths'
 
 declare module 'next-auth' {
   interface Session extends DefaultSession {
@@ -42,7 +43,7 @@ const updateSessionSchema = z
 
 export const authOptions: NextAuthOptions = {
   pages: {
-    signIn: '/auth/signin',
+    signIn: PATHS.signIn,
   },
   callbacks: {
     jwt: async ({token, user, trigger, account, session}) => {

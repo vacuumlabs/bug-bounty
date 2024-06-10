@@ -9,7 +9,7 @@ export const PATHS = {
   newProject: '/my-projects/new',
   newProjectSuccess: '/my-projects/new/success',
   profile: '/profile',
-  signIn: '/api/auth/signin',
+  signIn: '/auth/signin',
   signOut: '/api/auth/signout',
 } as const
 
