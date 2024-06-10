@@ -1,6 +1,7 @@
 export const PATHS = {
   aboutUs: '/about-us',
   connectWallet: '/profile/connect-wallet',
+  selectRole: '/select-role',
   home: '/',
   myProjects: '/my-projects',
   myProjectsRewards: '/my-projects/rewards',
@@ -8,7 +9,7 @@ export const PATHS = {
   newProject: '/my-projects/new',
   newProjectSuccess: '/my-projects/new/success',
   profile: '/profile',
-  signIn: '/api/auth/signin',
+  signIn: '/auth/signin',
   signOut: '/api/auth/signout',
 } as const
 

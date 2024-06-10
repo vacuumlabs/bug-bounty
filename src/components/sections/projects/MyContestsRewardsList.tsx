@@ -7,7 +7,6 @@ import {Button} from '@/components/ui/Button'
 import {PATHS} from '@/lib/utils/common/paths'
 import type {ContestWithFindingCounts} from '@/server/actions/contest/getMyContests'
 
-
 type MyContestsRewardsListProps = {
   contests: ContestWithFindingCounts[] | undefined
 }

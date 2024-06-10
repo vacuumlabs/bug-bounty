@@ -1,7 +1,7 @@
 'use client'
 
 import {useWallet} from '@meshsdk/react'
-import {useRouter} from 'next/navigation'
+import {useRouter, useSearchParams} from 'next/navigation'
 
 import ConnectWallet from './ConnectWallet'
 
@@ -13,10 +13,17 @@ const VerifyWalletButton = () => {
   const {connected} = useWallet()
   const {mutate} = useAddWalletAddress()
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const callbackUrl = searchParams.get('callbackUrl')
 
   const handleVerifyWallet = () =>
     mutate(undefined, {
       onSuccess: () => {
+        if (callbackUrl) {
+          router.push(callbackUrl)
+        }
+
         router.push(PATHS.profile)
       },
     })

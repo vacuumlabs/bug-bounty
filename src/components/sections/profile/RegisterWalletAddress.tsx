@@ -20,10 +20,14 @@ const RegisterWalletAddress = () => {
     </>
   ) : (
     <>
-      <h1 className="text-2xl">
-        Connect your wallet to add it to your account
-      </h1>
-      <VerifyWalletButton />
+      <h1 className="text-titleL uppercase">Connect your wallet</h1>
+      <p className="mt-3 text-center">
+        Make sure to select the address you wish to use for rewards, as a single
+        wallet can contain multiple addresses or accounts.
+      </p>
+      <div className="mt-12">
+        <VerifyWalletButton />
+      </div>
     </>
   )
 }

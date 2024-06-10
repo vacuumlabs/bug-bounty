@@ -8,3 +8,5 @@ export type Merge<A, B> = Omit<A, keyof B> &
   Omit<B, keyof A> & {
     [K in keyof (A | B)]: A[K] | B[K]
   }
+
+export type SearchParams = Record<string, string | string[] | undefined>
