@@ -71,14 +71,12 @@ export const authOptions: NextAuthOptions = {
       token.provider = account?.provider
       return token
     },
-    session: ({session, token, newSession}) => {
-      const newSessionData = updateSessionSchema.parse(newSession)
-
+    session: ({session, token}) => {
       return {
         ...session,
         user: {
           ...session.user,
-          role: newSessionData?.role ?? token.role,
+          role: token.role,
           id: token.sub,
           provider: token.provider,
         },
