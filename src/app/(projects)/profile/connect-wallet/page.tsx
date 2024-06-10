@@ -8,7 +8,6 @@ import RegisterWalletAddress from '@/components/sections/profile/RegisterWalletA
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 import {PATHS} from '@/lib/utils/common/paths'
 import {getUserAction} from '@/server/actions/user/getUser'
-import {getRelativePathFromAbsolutePath} from '@/lib/utils/common/url'
 import {SearchParams} from '@/lib/types/general'
 
 const ConnectWalletPage = async ({
@@ -32,13 +31,7 @@ const ConnectWalletPage = async ({
         <RegisterWalletAddress />
       </HydrationBoundary>
       <Button asChild variant="outline" className="mt-12">
-        <Link
-          href={
-            callbackUrl
-              ? getRelativePathFromAbsolutePath(callbackUrl)
-              : PATHS.profile
-          }
-          className="uppercase">
+        <Link href={callbackUrl ?? PATHS.profile} className="uppercase">
           {callbackUrl ? 'Skip this step' : 'Back to profile'}
         </Link>
       </Button>

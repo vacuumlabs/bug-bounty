@@ -28,7 +28,12 @@ const SelectRoleButtons = ({callbackUrl}: SelectRoleButtonsProps) => {
   const onConfirm = async () => {
     await mutateAsync(selectedPath)
 
-    router.push(`${PATHS.connectWallet}?callbackUrl=${callbackUrl}`)
+    if (selectedPath === UserRole.AUDITOR) {
+      router.push(`${PATHS.connectWallet}?callbackUrl=${callbackUrl}`)
+      return
+    }
+
+    router.push(callbackUrl ?? PATHS.home)
   }
 
   return (
