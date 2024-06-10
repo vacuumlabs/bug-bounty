@@ -34,7 +34,7 @@ const SelectRolePage = async ({
         }}
       />
       <div className="flex flex-col items-center justify-center px-24">
-        <h1 className="whitespace-pre-line text-headlineS font-bold uppercase">
+        <h1 className="whitespace-pre-line text-titleL uppercase">
           Confirm your path on our platform
         </h1>
         <div className="mt-12">

@@ -26,7 +26,7 @@ const ConnectWalletPage = async ({
   await prefetchGetUser(session.user.id)
 
   return (
-    <main className="flex flex-col items-center gap-8 py-[155px]">
+    <main className="flex flex-col items-center py-[155px]">
       <HydrationBoundary>
         <RegisterWalletAddress />
       </HydrationBoundary>

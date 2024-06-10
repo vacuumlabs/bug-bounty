@@ -41,7 +41,7 @@ const SelectRoleButtons = ({callbackUrl}: SelectRoleButtonsProps) => {
       <div className="flex gap-6">
         <button
           className={cn(
-            'flex h-[260px] w-[460px] flex-col items-center justify-center gap-4 border-b-2 border-grey-90 bg-grey-90',
+            'flex h-[260px] w-[460px] flex-col items-center justify-center gap-6 border-b-2 border-grey-90 bg-grey-90',
             selectedPath === UserRole.AUDITOR && 'border-white',
           )}
           onClick={() => setSelectedPath(UserRole.AUDITOR)}>
@@ -51,12 +51,14 @@ const SelectRoleButtons = ({callbackUrl}: SelectRoleButtonsProps) => {
             width={120}
             height={120}
           />
-          <span className="text-xl font-semibold">Hunter</span>
-          <p>I want to hunt for bugs and earn rewards.</p>
+          <div>
+            <span className="text-titleM">Hunter</span>
+            <p className="mt-3">I want to hunt for bugs and earn rewards.</p>
+          </div>
         </button>
         <button
           className={cn(
-            'flex h-[260px] w-[460px] flex-col items-center justify-center gap-4 border-b-2 border-grey-90 bg-grey-90',
+            'flex h-[260px] w-[460px] flex-col items-center justify-center gap-6 border-b-2 border-grey-90 bg-grey-90',
             selectedPath === UserRole.PROJECT_OWNER && 'border-white',
           )}
           onClick={() => setSelectedPath(UserRole.PROJECT_OWNER)}>
@@ -66,8 +68,12 @@ const SelectRoleButtons = ({callbackUrl}: SelectRoleButtonsProps) => {
             width={120}
             height={120}
           />
-          <span className="text-xl font-semibold">Project</span>
-          <p>I want my project to be audited by expert bug hunters.</p>
+          <div>
+            <span className="text-titleM">Project</span>
+            <p className="mt-3">
+              I want my project to be audited by expert bug hunters.
+            </p>
+          </div>
         </button>
       </div>
 
