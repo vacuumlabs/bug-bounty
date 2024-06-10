@@ -13,7 +13,7 @@ type OAuthButtonsProps = {
 }
 
 const OAuthButtons = ({callbackUrl}: OAuthButtonsProps) => {
-  const redirectUrl = `${PATHS.selectRole}?callbackUrl=${callbackUrl ?? PATHS.home}`
+  const redirectUrl = `${PATHS.selectRole}${callbackUrl ? `?callbackUrl=${callbackUrl}` : ''}`
 
   return (
     <div className="flex flex-col gap-6">
