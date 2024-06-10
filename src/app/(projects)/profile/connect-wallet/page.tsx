@@ -9,11 +9,12 @@ import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 import {PATHS} from '@/lib/utils/common/paths'
 import {getUserAction} from '@/server/actions/user/getUser'
 import {getRelativePathFromAbsolutePath} from '@/lib/utils/common/url'
+import {SearchParams} from '@/lib/types/general'
 
 const ConnectWalletPage = async ({
   searchParams,
 }: {
-  searchParams?: Record<string, string | string[] | undefined>
+  searchParams?: SearchParams
 }) => {
   const session = await requirePageSession()
   const user = await getUserAction()

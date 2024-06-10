@@ -2,12 +2,9 @@ import Image from 'next/image'
 
 import backgroundImage from '@public/images/background-graphic.png'
 import OAuthButtons from '@/components/sections/auth/OAuthButtons'
+import {SearchParams} from '@/lib/types/general'
 
-const SignInPage = ({
-  searchParams,
-}: {
-  searchParams?: Record<string, string | string[] | undefined>
-}) => {
+const SignInPage = ({searchParams}: {searchParams?: SearchParams}) => {
   const error = searchParams?.error
 
   return (
@@ -25,7 +22,7 @@ const SignInPage = ({
         }}
       />
       <div className="flex flex-col items-center justify-center px-24">
-        {error && error === 'SessionRequired' && (
+        {error === 'SessionRequired' && (
           <span className="text-red">
             You must be logged in to access this page
           </span>

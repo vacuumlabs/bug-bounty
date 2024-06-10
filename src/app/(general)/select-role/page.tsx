@@ -5,11 +5,12 @@ import backgroundImage from '@public/images/background-graphic.png'
 import SelectRoleButtons from '@/components/sections/profile/SelectRoleButtons'
 import {requirePageSession} from '@/server/utils/auth'
 import {PATHS} from '@/lib/utils/common/paths'
+import {SearchParams} from '@/lib/types/general'
 
 const SelectRolePage = async ({
   searchParams,
 }: {
-  searchParams?: Record<string, string | string[] | undefined>
+  searchParams?: SearchParams
 }) => {
   const session = await requirePageSession()
   const callbackUrl = searchParams?.callbackUrl as string | undefined
