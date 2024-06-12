@@ -25,7 +25,7 @@ const OAuthButtons = ({callbackUrl}: OAuthButtonsProps) => {
         }
         className="flex h-12 w-96 items-center justify-center bg-white">
         <Image
-          src={googleLogo as string}
+          src={googleLogo}
           alt="Google logo"
           className="h-6 w-6"
           width={24}
@@ -37,7 +37,7 @@ const OAuthButtons = ({callbackUrl}: OAuthButtonsProps) => {
         onClick={() => signIn('github', {callbackUrl: redirectUrl})}
         className="flex h-12 w-96 items-center justify-center bg-white">
         <Image
-          src={githubLogo as string}
+          src={githubLogo}
           alt="Github logo"
           className="h-6 w-6"
           width={24}
@@ -49,7 +49,7 @@ const OAuthButtons = ({callbackUrl}: OAuthButtonsProps) => {
         onClick={() => signIn('twitter', {callbackUrl: redirectUrl})}
         className="flex h-12 w-96 items-center justify-center bg-white">
         <Image
-          src={twitterLogo as string}
+          src={twitterLogo}
           alt="Twitter logo"
           className="h-6 w-6"
           width={24}
