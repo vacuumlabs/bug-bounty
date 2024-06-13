@@ -10,7 +10,7 @@ import {cn} from '@/lib/utils/client/tailwind'
 
 type MarkdownEditorProps = {
   className?: string
-  value: string | null
+  value: string | null | undefined
   onChange: (value: string) => void
   onBlur?: () => void
   name?: string

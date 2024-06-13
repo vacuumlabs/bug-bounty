@@ -7,7 +7,7 @@ import {ComponentPropsWithoutRef, ElementRef, forwardRef} from 'react'
 import {cn} from '@/lib/utils/client/tailwind'
 
 const labelVariants = cva(
-  'leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+  'peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
 )
 
 const Label = forwardRef<
@@ -24,4 +24,4 @@ const Label = forwardRef<
 
 Label.displayName = LabelPrimitive.Root.displayName
 
-export {Label}
+export default Label

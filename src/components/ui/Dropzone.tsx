@@ -93,12 +93,12 @@ const Dropzone = forwardRef<HTMLDivElement, DropzoneProps>(
     }
 
     return (
-      <div className={cn('flex flex-col', wrapperClassName)}>
+      <div className={cn('flex flex-col gap-9', wrapperClassName)}>
         <Card
           ref={ref}
           className={cn(
-            `border-2 border-dashed hover:cursor-pointer hover:border-slate-500 hover:bg-grey-10`,
-            isDraggedOver && 'border-slate-500 bg-grey-10',
+            `border-2 border-dashed hover:cursor-pointer hover:border-grey-10 hover:bg-grey-70`,
+            isDraggedOver && 'bg-grey-60',
             className,
           )}>
           <CardContent
@@ -120,19 +120,19 @@ const Dropzone = forwardRef<HTMLDivElement, DropzoneProps>(
             </div>
           </CardContent>
         </Card>
-        {value?.map((file, index) => (
-          <div
-            key={`${file.name}-${file.size}`}
-            className="relative flex items-center justify-between p-2">
-            <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-x-12 gap-y-3">
+          {value?.map((file, index) => (
+            <div
+              key={`${file.name}-${file.size}`}
+              className="flex items-center gap-2">
               <FileCheck2Icon className="h-4 w-4" />
-              <p className="text-sm font-medium">{file.name}</p>
+              <p className="text-buttonS">{file.name}</p>
+              <Button variant="ghost" onClick={() => removeFile(index)}>
+                <X />
+              </Button>
             </div>
-            <Button size="icon" onClick={() => removeFile(index)}>
-              <X />
-            </Button>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     )
   },
