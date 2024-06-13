@@ -16,6 +16,7 @@ import {InsertUser} from '@/server/db/schema/user'
 import {InsertContest} from '@/server/db/schema/contest'
 import {InsertFinding} from '@/server/db/schema/finding'
 import {deleteFindingAction} from '@/server/actions/finding/deleteFinding'
+import {TEST_WALLET_ADDRESS} from '@/server/utils/test'
 
 const userId = uuidv4()
 const contestId = uuidv4()
@@ -43,8 +44,9 @@ const findingToInsert: InsertFinding = {
   title: 'Finding title',
   severity: FindingSeverity.HIGH,
   status: FindingStatus.PENDING,
-  targetFileUrl: 'https://github.com/example-contest/file.js',
+  affectedFiles: ['https://github.com/example-contest/file.js'],
   deduplicatedFindingId: null,
+  rewardWalletAddress: TEST_WALLET_ADDRESS,
 }
 
 vi.mock('next-auth')

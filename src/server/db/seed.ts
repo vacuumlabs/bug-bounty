@@ -17,6 +17,7 @@ import {
   ProjectLanguage,
   UserRole,
 } from './models/enums'
+import {TEST_WALLET_ADDRESS} from '../utils/test'
 
 import {db, schema} from './index'
 
@@ -118,10 +119,12 @@ const getFindingsToInsert = (
 ): InsertFinding[] =>
   Array.from({length: FINDINGS_PER_CONTEST}).map((_, index) => ({
     authorId: auditorUserId,
+    rewardWalletAddress: TEST_WALLET_ADDRESS,
     contestId,
     title: `Bug #${index + 1}`,
     description: faker.lorem.paragraph(),
-    targetFileUrl: faker.internet.url(),
+    affectedFiles: faker.helpers.multiple(() => faker.internet.url()),
+    proofOfConcept: faker.helpers.maybe(() => faker.lorem.paragraph()),
     severity: faker.helpers.enumValue(FindingSeverity),
     status: faker.helpers.enumValue(FindingStatus),
   }))

@@ -22,6 +22,7 @@ import {
 } from '@/server/actions/deduplicatedFinding/mergeDeduplicatedFindings'
 import {InsertFinding} from '@/server/db/schema/finding'
 import {InsertDeduplicatedFinding} from '@/server/db/schema/deduplicatedFinding'
+import {TEST_WALLET_ADDRESS} from '@/server/utils/test'
 
 const userId = uuidv4()
 const contestId = uuidv4()
@@ -79,8 +80,9 @@ const findingsToInsert: InsertFinding[] = [
     description: 'Finding 1 description',
     severity: FindingSeverity.HIGH,
     status: FindingStatus.APPROVED,
-    targetFileUrl: 'http://exampleurl.com',
+    affectedFiles: ['http://exampleurl.com'],
     deduplicatedFindingId: bestDeduplicatedFindingId,
+    rewardWalletAddress: TEST_WALLET_ADDRESS,
   },
   {
     authorId: userId,
@@ -89,8 +91,9 @@ const findingsToInsert: InsertFinding[] = [
     description: 'Finding 2 description',
     severity: FindingSeverity.MEDIUM,
     status: FindingStatus.APPROVED,
-    targetFileUrl: 'http://exampleurl.com',
+    affectedFiles: ['http://exampleurl.com'],
     deduplicatedFindingId: deduplicatedFinding2Id,
+    rewardWalletAddress: TEST_WALLET_ADDRESS,
   },
   {
     authorId: userId,
@@ -99,8 +102,9 @@ const findingsToInsert: InsertFinding[] = [
     description: 'Finding 3 description',
     severity: FindingSeverity.INFO,
     status: FindingStatus.APPROVED,
-    targetFileUrl: 'http://exampleurl.com',
+    affectedFiles: ['http://exampleurl.com'],
     deduplicatedFindingId: deduplicatedFinding3Id,
+    rewardWalletAddress: TEST_WALLET_ADDRESS,
   },
 ]
 

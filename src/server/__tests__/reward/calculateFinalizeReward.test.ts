@@ -23,6 +23,7 @@ import {
   calculateRewardsAction,
 } from '@/server/actions/reward/calculateRewards'
 import {finalizeRewardsAction} from '@/server/actions/reward/finalizeRewards'
+import {TEST_WALLET_ADDRESS} from '@/server/utils/test'
 
 const judgeId = uuidv4()
 const contestId = uuidv4()
@@ -70,8 +71,9 @@ const findingsToInsert: InsertFinding[] = [
     title: 'Finding title',
     severity: FindingSeverity.HIGH,
     status: FindingStatus.APPROVED,
-    targetFileUrl: 'https://github.com/example-contest/file1.js',
+    affectedFiles: ['https://github.com/example-contest/file1.js'],
     deduplicatedFindingId: null,
+    rewardWalletAddress: TEST_WALLET_ADDRESS,
   },
   {
     id: finding2Id,
@@ -81,8 +83,9 @@ const findingsToInsert: InsertFinding[] = [
     title: 'Finding 2 title',
     severity: FindingSeverity.CRITICAL,
     status: FindingStatus.APPROVED,
-    targetFileUrl: 'https://github.com/example-contest/file2.js',
+    affectedFiles: ['https://github.com/example-contest/file2.js'],
     deduplicatedFindingId: null,
+    rewardWalletAddress: TEST_WALLET_ADDRESS,
   },
   {
     id: finding3Id,
@@ -92,8 +95,9 @@ const findingsToInsert: InsertFinding[] = [
     title: 'Finding 3 title',
     severity: FindingSeverity.INFO,
     status: FindingStatus.APPROVED,
-    targetFileUrl: 'https://github.com/example-contest/file3.js',
+    affectedFiles: ['https://github.com/example-contest/file3.js'],
     deduplicatedFindingId: null,
+    rewardWalletAddress: TEST_WALLET_ADDRESS,
   },
   {
     id: finding4Id,
@@ -103,8 +107,9 @@ const findingsToInsert: InsertFinding[] = [
     title: 'Finding 4 title',
     severity: FindingSeverity.HIGH,
     status: FindingStatus.APPROVED,
-    targetFileUrl: 'https://github.com/example-contest/file1.js',
+    affectedFiles: ['https://github.com/example-contest/file1.js'],
     deduplicatedFindingId: null,
+    rewardWalletAddress: TEST_WALLET_ADDRESS,
   },
 ]
 
@@ -317,7 +322,8 @@ describe('calculateReward finalizeReward', () => {
       title: 'Finding title',
       severity: FindingSeverity.HIGH,
       status: FindingStatus.PENDING,
-      targetFileUrl: 'https://github.com/example-contest/filePending.js',
+      affectedFiles: ['https://github.com/example-contest/filePending.js'],
+      rewardWalletAddress: TEST_WALLET_ADDRESS,
     }
 
     await db.insert(schema.findings).values(pendingFinding)
@@ -345,7 +351,8 @@ describe('calculateReward finalizeReward', () => {
       title: 'Finding title',
       severity: FindingSeverity.HIGH,
       status: FindingStatus.REJECTED,
-      targetFileUrl: 'https://github.com/example-contest/filePending.js',
+      affectedFiles: ['https://github.com/example-contest/filePending.js'],
+      rewardWalletAddress: TEST_WALLET_ADDRESS,
     }
 
     await db.insert(schema.findings).values(rejectedFinding)
@@ -400,7 +407,8 @@ describe('calculateReward finalizeReward', () => {
       title: 'Finding title',
       severity: FindingSeverity.HIGH,
       status: FindingStatus.APPROVED,
-      targetFileUrl: 'https://github.com/example-contest/filePending.js',
+      affectedFiles: ['https://github.com/example-contest/filePending.js'],
+      rewardWalletAddress: TEST_WALLET_ADDRESS,
     }
 
     await db.insert(schema.findings).values(unassignedFinding)
