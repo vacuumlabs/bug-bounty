@@ -16,7 +16,8 @@
     "fix-all": "yarn lint:fix; yarn format; yarn tsc",
     "db:push": "drizzle-kit push:pg",
     "db:studio": "drizzle-kit studio",
-    "db:seed": "tsx --env-file=.env.local ./src/server/db/seed.ts",
+    "db:seed": "tsx --env-file=.env.local ./src/scripts/seedDb.ts",
+    "db:clear": "tsx --env-file=.env.local ./src/scripts/clearDb.ts",
     "db:diagram": "tsx --env-file=.env.local ./src/server/db/diagram/dbml.ts && dbml-renderer -i ./src/server/db/diagram/schema.dbml -o ./src/server/db/diagram/db-diagram.svg",
     "postinstall": "patch-package"
   },
@@ -109,7 +110,7 @@
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "tailwindcss": "^3.4.3",
-    "tsx": "^4.11.0",
+    "tsx": "4.12.0",
     "typescript": "^5.4.5",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^1.6.0"

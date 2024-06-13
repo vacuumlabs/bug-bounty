@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-process-exit */
 import {faker} from '@faker-js/faker'
 import bcrypt from 'bcryptjs'
 import {sql} from 'drizzle-orm'
@@ -139,7 +138,7 @@ const getRewardToInsert = (finding: Finding): InsertReward => ({
   }),
 })
 
-const seed = async () => {
+export const seedDb = async () => {
   const dbSchema = db._.schema
 
   await db.transaction(async (tx) => {
@@ -211,8 +210,4 @@ const seed = async () => {
     )
     console.log(`Inserted ${rewards.length} rewards`)
   })
-
-  process.exit()
 }
-
-void seed()
