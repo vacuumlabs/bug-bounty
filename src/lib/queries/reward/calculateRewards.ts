@@ -1,4 +1,4 @@
-import {QueryOptions, useQuery} from '@tanstack/react-query'
+import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
 import {queryKeys} from '../keys'
 
@@ -10,7 +10,7 @@ import {withApiErrorHandler} from '@/lib/utils/common/error'
 
 export const useCalculatedRewards = (
   contestId: string,
-  options?: QueryOptions<CalculateRewardsResponse>,
+  options?: Partial<UseQueryOptions<CalculateRewardsResponse>>,
 ) => {
   return useQuery({
     ...options,
