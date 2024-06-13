@@ -1,0 +1,58 @@
+'use client'
+
+import * as TooltipPrimitive from '@radix-ui/react-tooltip'
+import {ComponentPropsWithoutRef, ElementRef, forwardRef} from 'react'
+
+import {cn} from '@/lib/utils/client/tailwind'
+
+const TooltipProvider = TooltipPrimitive.Provider
+
+const Tooltip = TooltipPrimitive.Root
+
+const TooltipTrigger = TooltipPrimitive.Trigger
+
+const TooltipArrow = forwardRef<
+  ElementRef<typeof TooltipPrimitive.Arrow>,
+  ComponentPropsWithoutRef<typeof TooltipPrimitive.Arrow>
+>(
+  (
+    {
+      className,
+      width = 23,
+      height = 20,
+      fill = 'black',
+      stroke = 'white',
+      ...props
+    },
+    ref,
+  ) => (
+    <TooltipPrimitive.Arrow
+      ref={ref}
+      height={height}
+      width={width}
+      className={cn('z-50 text-white', className)}
+      fill={fill}
+      stroke={stroke}
+      {...props}
+    />
+  ),
+)
+TooltipArrow.displayName = TooltipPrimitive.Arrow.displayName
+
+const TooltipContent = forwardRef<
+  ElementRef<typeof TooltipPrimitive.Content>,
+  ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
+>(({className, sideOffset = 4, ...props}, ref) => (
+  <TooltipPrimitive.Content
+    ref={ref}
+    sideOffset={sideOffset}
+    className={cn(
+      'z-50 border border-white bg-black p-6 shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+      className,
+    )}
+    {...props}
+  />
+))
+TooltipContent.displayName = TooltipPrimitive.Content.displayName
+
+export {Tooltip, TooltipArrow, TooltipTrigger, TooltipContent, TooltipProvider}

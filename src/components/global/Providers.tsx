@@ -11,6 +11,8 @@ import {ReactNode} from 'react'
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
 import {Session} from 'next-auth'
 
+import {TooltipProvider} from '../ui/Tooltip'
+
 import {handleGeneralError} from '@/lib/utils/client/error'
 
 type ProvidersProps = {
@@ -62,11 +64,13 @@ const Providers: React.FC<ProvidersProps> = ({children, session}) => {
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
         <MeshProvider>
-          {children}
-          <ReactQueryDevtools
-            buttonPosition="bottom-left"
-            initialIsOpen={false}
-          />
+          <TooltipProvider>
+            {children}
+            <ReactQueryDevtools
+              buttonPosition="bottom-left"
+              initialIsOpen={false}
+            />
+          </TooltipProvider>
         </MeshProvider>
       </QueryClientProvider>
     </SessionProvider>
