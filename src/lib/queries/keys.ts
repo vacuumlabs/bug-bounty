@@ -20,6 +20,7 @@ export const queryKeys = createQueryKeyStore({
     calculated: (contestId: string) => [contestId],
   },
   contests: {
+    one: (contestId: string | undefined) => [contestId],
     mine: (params: GetMyContestsParams) => [params],
     reportCounts: null,
     public: (params: GetPublicContestsParams) => [params],
