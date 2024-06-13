@@ -13,7 +13,7 @@ const options = Intl.supportedValuesOf('timeZone').map((zone) => ({
 }))
 
 const TimezoneSelect = (
-  {className, ...props}: TimezoneSelectProps,
+  props: TimezoneSelectProps,
   ref: Ref<HTMLButtonElement>,
 ) => {
   return (

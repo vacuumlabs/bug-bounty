@@ -113,7 +113,7 @@ const NewContestFormPage2 = ({form}: NewContestFormPageProps) => {
             <FormItem>
               <FormLabel>Time zone</FormLabel>
               <FormControl>
-                <TimezoneSelect {...field} />
+                <TimezoneSelect {...field} className="w-[350px]" />
               </FormControl>
               <FormMessage />
             </FormItem>
