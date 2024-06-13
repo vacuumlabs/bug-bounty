@@ -82,7 +82,7 @@ const Combobox = <T extends string>(
           role="combobox"
           aria-expanded={isOpen}
           className={cn(
-            'flex w-[320px] justify-between border p-3 font-normal normal-case',
+            'flex w-full justify-between border p-3 font-normal normal-case',
             className,
           )}>
           {renderValue(
@@ -93,7 +93,9 @@ const Combobox = <T extends string>(
           <ChevronIcon className="ml-auto shrink-0" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent onBlur={onBlur} className="w-[320px] p-0">
+      <PopoverContent
+        onBlur={onBlur}
+        className="w-[--radix-popper-anchor-width] p-0">
         <Command shouldFilter={shouldFilter}>
           <CommandInput
             value={searchQuery}

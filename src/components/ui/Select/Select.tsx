@@ -54,7 +54,7 @@ const Select = genericForwardRef(
         <SelectTrigger
           onBlur={onBlur}
           ref={ref}
-          className={cn('w-[320px]', className)}>
+          className={cn('w-full', className)}>
           <SelectValue placeholder={placeholder} />
           <SelectIcon asChild>
             <ChevronIcon />
