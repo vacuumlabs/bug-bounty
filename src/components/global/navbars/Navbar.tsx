@@ -13,13 +13,14 @@ import {UserAvatar} from '@/components/ui/Avatar'
 import {cn} from '@/lib/utils/client/tailwind'
 import {useSearchParamsState} from '@/lib/hooks/useSearchParamsState'
 import {HomePageTab} from '@/lib/types/enums'
-import {PATHS} from '@/lib/utils/common/paths'
+import {PATHS, getDashboardPathByUserRole} from '@/lib/utils/common/paths'
 import SignOutButton from '@/components/ui/SignOutButon'
 
 const Navbar = () => {
   const [currentTab] = useSearchParamsState('tab')
   const pathname = usePathname()
   const session = useSession()
+  const role = session.data?.user.role
 
   const isProjectsTabActive = currentTab === HomePageTab.PROJECTS
   const isLoggedIn = session.status === 'authenticated'
@@ -53,8 +54,10 @@ const Navbar = () => {
               <Button
                 asChild
                 variant="link"
-                className={cn(pathname === PATHS.myProjects && 'font-bold')}>
-                <Link href={PATHS.myProjects}>Dashboard</Link>
+                className={cn(
+                  pathname === getDashboardPathByUserRole(role) && 'font-bold',
+                )}>
+                <Link href={getDashboardPathByUserRole(role)}>Dashboard</Link>
               </Button>
               <UserAvatar />
               <SignOutButton variant="link">
