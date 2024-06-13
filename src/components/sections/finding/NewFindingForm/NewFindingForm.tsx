@@ -7,6 +7,7 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import {ArrowRight} from 'lucide-react'
 
 import NewFindingFormPage1, {page1fields} from './NewFindingFormPage1'
+import NewFindingFormPage2, {page2fields} from './NewFindingFormPage2'
 
 import {Form} from '@/components/ui/Form'
 import {addFindingSchema} from '@/server/utils/validations/schemas'
@@ -22,14 +23,23 @@ import {Nullable} from '@/lib/types/general'
 import {PATHS} from '@/lib/utils/common/paths'
 import {useGetUser} from '@/lib/queries/user/getUser'
 
+const MAX_FILE_SIZE = 1024 * 1024 * 3 // 3MB
 const formPageTitles = ['Basic information', 'Report description', 'Review']
+
+const fileSchema = z
+  .instanceof(File)
+  .array()
+  .refine(
+    (files) => files.every((file) => file.size <= MAX_FILE_SIZE),
+    'Max file size is 3MB',
+  )
 
 const formSchema = addFindingSchema
   .omit({
     status: true,
   })
   .extend({
-    attachments: z.instanceof(File).array().optional(),
+    attachments: fileSchema,
   })
 
 type FormValues = z.infer<typeof formSchema>
@@ -77,7 +87,7 @@ const NewFindingForm = () => {
   )
 
   const onContinue = async () => {
-    const isValid = await trigger(page === 1 ? page1fields : [])
+    const isValid = await trigger(page === 1 ? page1fields : page2fields)
 
     if (isValid) {
       setPage(page + 1)
@@ -98,7 +108,9 @@ const NewFindingForm = () => {
         <TabsContent forceMount hidden={page !== 1} value="1">
           <NewFindingFormPage1 form={form} />
         </TabsContent>
-        <TabsContent forceMount hidden={page !== 2} value="2"></TabsContent>
+        <TabsContent forceMount hidden={page !== 2} value="2">
+          <NewFindingFormPage2 form={form} />
+        </TabsContent>
         <TabsContent value="3"></TabsContent>
       </Tabs>
       <div className="flex justify-end">

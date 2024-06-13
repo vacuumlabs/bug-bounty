@@ -22,7 +22,7 @@ import {
 } from 'react'
 
 import {cn} from '@/lib/utils/client/tailwind'
-import {Label} from '@/components/ui/Label'
+import Label from '@/components/ui/Label'
 
 type OnSubmit<
   TFieldValues extends FieldValues,
@@ -117,7 +117,11 @@ const FormItem = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 
     return (
       <FormItemContext.Provider value={{id}}>
-        <div ref={ref} className={cn('space-y-2', className)} {...props} />
+        <div
+          ref={ref}
+          className={cn('flex flex-col gap-y-2', className)}
+          {...props}
+        />
       </FormItemContext.Provider>
     )
   },
