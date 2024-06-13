@@ -34,10 +34,14 @@ export const findings = pgTable(
     ),
     title: varchar('name', {length: 255}).notNull(),
     description: text('description').notNull(),
-    targetFileUrl: varchar('targetFileUrl', {length: 255}).notNull(),
+    proofOfConcept: text('proofOfConcept'),
+    affectedFiles: varchar('affectedFiles', {length: 255}).array().notNull(),
     severity: varchar('severity', {
       length: 8,
       enum: getDrizzleEnum(FindingSeverity),
+    }).notNull(),
+    rewardWalletAddress: varchar('rewardWalletAddress', {
+      length: 255,
     }).notNull(),
     status: varchar('status', {
       length: 8,
@@ -84,8 +88,6 @@ export const findingRelations = relations(findings, ({one, many}) => ({
 }))
 
 export const insertFindingSchema = createInsertSchema(findings, {
-  targetFileUrl: (schema) =>
-    schema.targetFileUrl.url('Invalid target file URL.'),
   title: (schema) =>
     schema.title.min(1, {
       message: 'Title can’t be empty.',
@@ -94,6 +96,10 @@ export const insertFindingSchema = createInsertSchema(findings, {
     schema.description.min(1, {
       message: 'Description can’t be empty.',
     }),
+  rewardWalletAddress: (schema) =>
+    schema.rewardWalletAddress.min(1, 'Wallet address can’t be empty.'),
+  affectedFiles: (schema) =>
+    schema.affectedFiles.min(1, "Affected files can't be empty."),
 })
   .omit({
     createdAt: true,

@@ -21,6 +21,7 @@ import {InsertFinding} from '@/server/db/schema/finding'
 import {InsertDeduplicatedFinding} from '@/server/db/schema/deduplicatedFinding'
 import {InsertReward} from '@/server/db/schema/reward'
 import {storeRewardTxHashAction} from '@/server/actions/reward/storeRewardTxHash'
+import {TEST_WALLET_ADDRESS} from '@/server/utils/test'
 
 const judgeId = uuidv4()
 const contestId = uuidv4()
@@ -63,8 +64,9 @@ const findingsToInsert: InsertFinding[] = [
     title: 'Finding title',
     severity: FindingSeverity.HIGH,
     status: FindingStatus.APPROVED,
-    targetFileUrl: 'https://github.com/example-contest/file1.js',
+    affectedFiles: ['https://github.com/example-contest/file1.js'],
     deduplicatedFindingId: null,
+    rewardWalletAddress: TEST_WALLET_ADDRESS,
   },
 ]
 

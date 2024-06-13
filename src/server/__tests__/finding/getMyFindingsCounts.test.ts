@@ -2,6 +2,7 @@ import {describe, it, vi, Mock, beforeEach, expect} from 'vitest'
 import {addDays, subDays} from 'date-fns'
 import {getServerSession} from 'next-auth'
 import {v4 as uuidv4} from 'uuid'
+import {faker} from '@faker-js/faker'
 
 import {trunacateDb} from '../utils/db'
 
@@ -21,6 +22,7 @@ import {
   getMyFindingsCountsAction,
 } from '@/server/actions/finding/getMyFindingsCounts'
 import {InsertReward} from '@/server/db/schema/reward'
+import {TEST_WALLET_ADDRESS} from '@/server/utils/test'
 
 const userId = uuidv4()
 const contestId1 = uuidv4()
@@ -38,6 +40,7 @@ const contestsToInsert: InsertContest[] = [
     repoBranch: 'main',
     rewardsAmount: '1000',
     customConditions: 'There are four custom conditions.',
+    filesInScope: faker.helpers.multiple(() => faker.internet.url()),
     projectCategory: [ProjectCategory.DEFI, ProjectCategory.INFRASTRUCTURE],
     status: ContestStatus.PENDING,
     distributedRewardsAmount: '0',
@@ -53,6 +56,7 @@ const contestsToInsert: InsertContest[] = [
     repoBranch: 'main',
     rewardsAmount: '2000',
     customConditions: 'There are four custom conditions.',
+    filesInScope: faker.helpers.multiple(() => faker.internet.url()),
     projectCategory: [ProjectCategory.DEFI, ProjectCategory.INFRASTRUCTURE],
     status: ContestStatus.PENDING,
     distributedRewardsAmount: '0',
@@ -71,7 +75,8 @@ const findingsToInsert: InsertFinding[] = [
     title: 'Finding title',
     severity: FindingSeverity.HIGH,
     status: FindingStatus.PENDING,
-    targetFileUrl: 'https://github.com/example-contest/file.js',
+    affectedFiles: ['https://github.com/example-contest/file.js'],
+    rewardWalletAddress: TEST_WALLET_ADDRESS,
     deduplicatedFindingId: null,
   },
   {
@@ -82,7 +87,8 @@ const findingsToInsert: InsertFinding[] = [
     title: 'Finding 2 title',
     severity: FindingSeverity.LOW,
     status: FindingStatus.APPROVED,
-    targetFileUrl: 'https://github.com/example-contest/file.js',
+    affectedFiles: ['https://github.com/example-contest/file.js'],
+    rewardWalletAddress: TEST_WALLET_ADDRESS,
     deduplicatedFindingId: null,
   },
 ]

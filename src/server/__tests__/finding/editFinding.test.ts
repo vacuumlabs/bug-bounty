@@ -21,6 +21,7 @@ import {
   EditFindingRequest,
   editFindingAction,
 } from '@/server/actions/finding/editFinding'
+import {TEST_WALLET_ADDRESS} from '@/server/utils/test'
 
 const userId = uuidv4()
 const contestId = uuidv4()
@@ -49,8 +50,9 @@ const findingToInsert: InsertFinding = {
   title: 'Finding title',
   severity: FindingSeverity.HIGH,
   status: FindingStatus.DRAFT,
-  targetFileUrl: 'https://github.com/example-contest/file.js',
+  affectedFiles: ['https://github.com/example-contest/file.js'],
   deduplicatedFindingId: null,
+  rewardWalletAddress: TEST_WALLET_ADDRESS,
 }
 
 vi.mock('next-auth')
@@ -112,7 +114,8 @@ describe('editFinding', () => {
         title: 'Updated finding title',
         severity: FindingSeverity.LOW,
         status: FindingStatus.PENDING,
-        targetFileUrl: 'https://github.com/example-contest/file-2.js',
+        affectedFiles: ['https://github.com/example-contest/file-2.js'],
+        rewardWalletAddress: TEST_WALLET_ADDRESS,
       },
     }
 
@@ -134,7 +137,9 @@ describe('editFinding', () => {
       description: 'This is an updated finding description.',
       severity: FindingSeverity.LOW,
       status: FindingStatus.PENDING,
-      targetFileUrl: 'https://github.com/example-contest/file-2.js',
+      affectedFiles: ['https://github.com/example-contest/file-2.js'],
+      rewardWalletAddress: TEST_WALLET_ADDRESS,
+      proofOfConcept: null,
       contestId,
       authorId: userId,
       createdAt: expectAnyDate,

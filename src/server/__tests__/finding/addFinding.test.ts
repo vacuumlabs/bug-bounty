@@ -20,6 +20,7 @@ import {
   addFindingAction,
 } from '@/server/actions/finding/addFinding'
 import {Finding} from '@/server/db/schema/finding'
+import {TEST_WALLET_ADDRESS} from '@/server/utils/test'
 
 const userId = uuidv4()
 const contestId = uuidv4()
@@ -81,17 +82,19 @@ describe('addFinding', () => {
       throw new Error('Failed to insert contest.')
     }
 
-    const request: AddFindingRequest = {
+    const request = {
       finding: {
         contestId: contestId,
         description: 'This is a finding description.',
+        proofOfConcept: 'This is a proof of concept.',
         title: 'Finding title',
         severity: FindingSeverity.HIGH,
         status: FindingStatus.PENDING,
-        targetFileUrl: 'https://github.com/example-contest/file.js',
+        affectedFiles: ['https://github.com/example-contest/file.js'],
+        rewardWalletAddress: TEST_WALLET_ADDRESS,
       },
       attachments: [],
-    }
+    } as const satisfies AddFindingRequest
 
     const result = await addFindingAction(request)
 
