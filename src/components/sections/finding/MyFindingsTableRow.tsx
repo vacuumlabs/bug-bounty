@@ -45,7 +45,7 @@ const MyFindingsTableRow = ({finding}: MyFindingsTableRowProps) => {
       </TableCell>
       <TableCell className="text-bodyM capitalize">{contestStatus}</TableCell>
       <TableCell className="text-bodyM capitalize">{finding.status}</TableCell>
-      <TableCell>
+      <TableCell className="text-right">
         <Button asChild variant="outline" size="small">
           <Link href={PATHS.finding(finding.id)} className="gap-2 text-buttonS">
             Show report
