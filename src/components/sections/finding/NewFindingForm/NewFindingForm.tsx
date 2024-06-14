@@ -8,6 +8,7 @@ import {ArrowRight} from 'lucide-react'
 
 import NewFindingFormPage1, {page1fields} from './NewFindingFormPage1'
 import NewFindingFormPage2, {page2fields} from './NewFindingFormPage2'
+import NewFindingFormReviewPage from './NewFindingFormReviewPage'
 
 import {Form} from '@/components/ui/Form'
 import {addFindingSchema} from '@/server/utils/validations/schemas'
@@ -111,7 +112,9 @@ const NewFindingForm = () => {
         <TabsContent forceMount hidden={page !== 2} value="2">
           <NewFindingFormPage2 form={form} />
         </TabsContent>
-        <TabsContent value="3"></TabsContent>
+        <TabsContent value="3">
+          <NewFindingFormReviewPage form={form} />
+        </TabsContent>
       </Tabs>
       <div className="flex justify-end">
         {page === 3 ? (
