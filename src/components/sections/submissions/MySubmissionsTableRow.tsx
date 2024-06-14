@@ -1,3 +1,4 @@
+import {useMemo} from 'react'
 import Link from 'next/link'
 import {ArrowRight} from 'lucide-react'
 import {DateTime} from 'luxon'
@@ -9,13 +10,18 @@ import {MyFinding} from '@/server/actions/finding/getMyFindings'
 import {TableCell, TableRow} from '@/components/ui/Table'
 import {Avatar, AvatarImage} from '@/components/ui/Avatar'
 import {Button} from '@/components/ui/Button'
-import {ContestStatus} from '@/server/db/models'
+import {getContestStatus} from '@/lib/utils/common/contest'
 
 type MySubmissionsTableRowProps = {
   finding: MyFinding
 }
 
 const MySubmissionsTableRow = ({finding}: MySubmissionsTableRowProps) => {
+  const contestStatus = useMemo(
+    () => getContestStatus({...finding.contest}),
+    [finding.contest],
+  )
+
   return (
     <TableRow className="bg-grey-90">
       <TableCell>
@@ -35,9 +41,7 @@ const MySubmissionsTableRow = ({finding}: MySubmissionsTableRowProps) => {
       <TableCell>
         <MySubmissionSeverityBadge severity={finding.severity} />
       </TableCell>
-      <TableCell className="text-bodyM capitalize">
-        {getProjectState(finding.contest.status)}
-      </TableCell>
+      <TableCell className="text-bodyM capitalize">{contestStatus}</TableCell>
       <TableCell className="text-bodyM capitalize">{finding.status}</TableCell>
       <TableCell>
         <Button asChild variant="outline" className="h-[40px] w-[148px]">
@@ -49,19 +53,6 @@ const MySubmissionsTableRow = ({finding}: MySubmissionsTableRowProps) => {
       </TableCell>
     </TableRow>
   )
-}
-
-const getProjectState = (contestStatus: ContestStatus) => {
-  switch (contestStatus) {
-    case ContestStatus.APPROVED:
-      return 'Open'
-    case ContestStatus.IN_REVIEW:
-      return 'Judging'
-    case ContestStatus.FINISHED:
-      return 'Finished'
-    default:
-      return 'Unknown'
-  }
 }
 
 export default MySubmissionsTableRow
