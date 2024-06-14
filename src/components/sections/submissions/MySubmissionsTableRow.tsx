@@ -6,7 +6,7 @@ import MySubmissionSeverityBadge from './MySubmissionSeverityBadge'
 
 import cardanoLogo from '@public/images/cardano-logo.png'
 import {MyFinding} from '@/server/actions/finding/getMyFindings'
-import {TableCell, TableRow} from '@/components/ui/table'
+import {TableCell, TableRow} from '@/components/ui/Table'
 import {Avatar, AvatarImage} from '@/components/ui/Avatar'
 import {Button} from '@/components/ui/Button'
 import {ContestStatus} from '@/server/db/models'

@@ -12,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@/components/ui/Table'
 
 type MySubmissionsListProps = {
   findings: MyFinding[] | undefined
@@ -34,8 +34,8 @@ const MySubmissionsTable = ({findings}: MySubmissionsListProps) => {
   }
 
   return (
-    <Table className="border-separate border-spacing-y-6 hover:bg-transparent">
-      <TableHeader className="[&_tr]:border-b-0 [&_tr]:hover:bg-transparent">
+    <Table className="border-separate border-spacing-y-6">
+      <TableHeader className="[&_tr]:border-b-0">
         <TableRow>
           <TableHead className="text-bodyM text-grey-40">Project</TableHead>
           <TableHead className="text-bodyM text-grey-40">Finding</TableHead>
@@ -47,7 +47,7 @@ const MySubmissionsTable = ({findings}: MySubmissionsListProps) => {
           <TableHead className="text-bodyM text-grey-40">Status</TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody className="[&_tr]:border-b-0 [&_tr]:hover:bg-grey-90">
+      <TableBody className="[&_tr]:border-b-0">
         {findings.map((finding) => (
           <MySubmissionsTableRow key={finding.id} finding={finding} />
         ))}
