@@ -45,7 +45,7 @@ const MySubmissionsTableRow = ({finding}: MySubmissionsTableRowProps) => {
       <TableCell className="text-bodyM capitalize">{contestStatus}</TableCell>
       <TableCell className="text-bodyM capitalize">{finding.status}</TableCell>
       <TableCell>
-        <Button asChild variant="outline" className="h-[40px] w-[148px]">
+        <Button asChild variant="outline" size="small">
           <Link
             href={`${PATHS.finding}/${finding.id}`}
             className="gap-2 text-buttonS">
