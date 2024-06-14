@@ -37,6 +37,7 @@ const MyFindingsTableRow = ({finding}: MyFindingsTableRowProps) => {
       <TableCell className="text-bodyM">
         {DateTime.fromJSDate(finding.createdAt).toLocaleString(
           DateTime.DATETIME_MED,
+          {locale: 'en'},
         )}
       </TableCell>
       <TableCell>
