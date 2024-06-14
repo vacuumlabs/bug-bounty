@@ -2,6 +2,7 @@ import {describe, it, expect, vi, Mock, beforeEach} from 'vitest'
 import {addDays, subDays} from 'date-fns'
 import {getServerSession} from 'next-auth'
 import {v4 as uuidv4} from 'uuid'
+import {faker} from '@faker-js/faker'
 
 import {trunacateDb} from '../utils/db'
 
@@ -36,6 +37,7 @@ const contestToInsert: InsertContest = {
   repoBranch: 'main',
   rewardsAmount: '1000',
   customConditions: 'There are four custom conditions.',
+  filesInScope: faker.helpers.multiple(() => faker.internet.url()),
   projectCategory: [ProjectCategory.DEFI, ProjectCategory.INFRASTRUCTURE],
   projectLanguage: [ProjectLanguage.AIKEN],
   status: ContestStatus.APPROVED,
@@ -261,6 +263,7 @@ describe('mergeDeduplicatedFindings', () => {
       repoBranch: 'main',
       rewardsAmount: '1000',
       setupSteps: 'Step 1, Step 2, Step 3',
+      filesInScope: faker.helpers.multiple(() => faker.internet.url()),
       status: ContestStatus.APPROVED,
       distributedRewardsAmount: '0',
       startDate: subDays(new Date(), 5),

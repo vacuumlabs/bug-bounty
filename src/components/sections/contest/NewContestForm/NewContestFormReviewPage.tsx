@@ -62,7 +62,7 @@ const NewContestFormReviewPage = ({form}: NewContestFormPageProps) => {
             </div>
           ))
         ) : (
-          <p>Whole repository</p>
+          <p>No files in scope selected</p>
         )}
       </div>
       <div className="flex flex-col gap-3">

@@ -41,10 +41,9 @@ const NewFindingFormPage1 = ({form}: NewFindingFormPageProps) => {
     enabled: !!contestId,
   })
 
-  // TODO fetch all files in repo, if no specific "filesInScope" were selected
   const affectedFilesSelectOptions = useMemo(
     () =>
-      contest?.filesInScope?.map((file) => ({
+      contest?.filesInScope.map((file) => ({
         value: file,
         label: file,
       })),

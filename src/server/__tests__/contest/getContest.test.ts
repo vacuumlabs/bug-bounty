@@ -2,6 +2,7 @@ import {describe, it, expect, vi, Mock, beforeEach} from 'vitest'
 import {addDays} from 'date-fns'
 import {getServerSession} from 'next-auth'
 import {v4 as uuidv4} from 'uuid'
+import {faker} from '@faker-js/faker'
 
 import {trunacateDb} from '../utils/db'
 
@@ -27,6 +28,7 @@ const contestsToInsert: InsertContest[] = [
     repoBranch: 'main',
     rewardsAmount: '1000',
     customConditions: 'There are four custom conditions.',
+    filesInScope: faker.helpers.multiple(() => faker.internet.url()),
     status: ContestStatus.APPROVED,
     projectCategory: [ProjectCategory.DEFI, ProjectCategory.INFRASTRUCTURE],
     projectLanguage: [ProjectLanguage.AIKEN],
@@ -42,6 +44,7 @@ const contestsToInsert: InsertContest[] = [
     repoBranch: 'main',
     rewardsAmount: '1002',
     customConditions: 'There are four custom conditions.',
+    filesInScope: faker.helpers.multiple(() => faker.internet.url()),
     status: ContestStatus.FINISHED,
     distributedRewardsAmount: '0',
     startDate: addDays(new Date(), 1),
@@ -55,6 +58,7 @@ const contestsToInsert: InsertContest[] = [
     repoBranch: 'main',
     rewardsAmount: '1003',
     customConditions: 'There are four custom conditions.',
+    filesInScope: faker.helpers.multiple(() => faker.internet.url()),
     status: ContestStatus.PENDING,
     projectCategory: [],
     projectLanguage: [],
@@ -70,6 +74,7 @@ const contestsToInsert: InsertContest[] = [
     repoBranch: 'main',
     rewardsAmount: '1004',
     customConditions: 'There are four custom conditions.',
+    filesInScope: faker.helpers.multiple(() => faker.internet.url()),
     status: ContestStatus.REJECTED,
     projectCategory: [ProjectCategory.OTHER],
     projectLanguage: [ProjectLanguage.OTHER],

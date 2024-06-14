@@ -31,7 +31,7 @@ export const contests = pgTable(
     title: varchar('name', {length: 255}).notNull(),
     repoUrl: varchar('repoUrl', {length: 255}).notNull(),
     repoBranch: varchar('repoBranch', {length: 255}).notNull(),
-    filesInScope: varchar('filesInScope', {length: 255}).array(),
+    filesInScope: varchar('filesInScope', {length: 255}).array().notNull(),
     description: text('description').notNull(),
     customConditions: text('customConditions'),
     projectLanguage: varchar('projectLanguage', {
@@ -98,6 +98,8 @@ export const insertContestSchema = createInsertSchema(contests, {
   rewardsAmount: (schema) => schema.rewardsAmount.min(1, 'Required'),
   description: (schema) =>
     schema.description.min(1, 'Description can’t be empty.'),
+  filesInScope: (schema) =>
+    schema.filesInScope.min(1, 'Must have at least 1 file in scope.'),
 })
   .omit({
     createdAt: true,

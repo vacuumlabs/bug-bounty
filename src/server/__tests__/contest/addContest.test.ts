@@ -2,6 +2,7 @@ import {describe, it, expect, vi, Mock, beforeEach} from 'vitest'
 import {addDays} from 'date-fns'
 import {getServerSession} from 'next-auth'
 import {v4 as uuidv4} from 'uuid'
+import {faker} from '@faker-js/faker'
 
 import {trunacateDb} from '../utils/db'
 import {expectAnyDate, expectAnyString} from '../utils/expect'
@@ -29,6 +30,7 @@ const request: AddContestRequest = {
     repoUrl: 'https://github.com/example-contest',
     rewardsAmount: '1000',
     customConditions: 'There are four custom conditions.',
+    filesInScope: faker.helpers.multiple(() => faker.internet.url()),
     projectCategory: [ProjectCategory.DEFI, ProjectCategory.INFRASTRUCTURE],
     projectLanguage: [ProjectLanguage.AIKEN],
     status: ContestStatus.IN_REVIEW,
