@@ -26,7 +26,7 @@ const Navbar = () => {
   const isLoggedIn = session.status === 'authenticated'
 
   return (
-    <div className="pointer-events-none fixed z-10 flex h-[289px] w-full flex-col bg-gradient-to-b from-black px-24 pt-11">
+    <div className="pointer-events-none fixed z-10 flex h-[289px] w-full flex-col bg-gradient-to-b from-black px-24 pt-10">
       <div className="pointer-events-auto flex flex-row items-center justify-between">
         <Link href={PATHS.home}>
           <Image

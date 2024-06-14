@@ -8,7 +8,7 @@ const SignInPage = ({searchParams}: {searchParams?: SearchParams}) => {
   const error = searchParams?.error
 
   return (
-    <main className="relative flex flex-col justify-between py-[155px]">
+    <main className="relative flex flex-col justify-between py-[116px]">
       <Image
         src={backgroundImage}
         alt="Background image"
