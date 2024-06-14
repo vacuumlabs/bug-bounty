@@ -47,7 +47,7 @@ type ContestStatusBadgeProps = {
 
 const ContestStatusBadge = ({contest, className}: ContestStatusBadgeProps) => {
   const badgeStatus: BadgeStatus = useMemo(
-    () => getContestStatus({...contest}),
+    () => getContestStatus(contest),
     [contest],
   )
 

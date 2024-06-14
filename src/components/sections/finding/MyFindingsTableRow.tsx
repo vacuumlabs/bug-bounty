@@ -19,7 +19,7 @@ type MyFindingsTableRowProps = {
 
 const MyFindingsTableRow = ({finding}: MyFindingsTableRowProps) => {
   const contestStatus = useMemo(
-    () => getContestStatus({...finding.contest}),
+    () => getContestStatus(finding.contest),
     [finding.contest],
   )
 
