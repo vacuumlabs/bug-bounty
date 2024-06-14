@@ -30,16 +30,14 @@ const AuditorsNavbar = () => {
           <Button
             asChild
             variant="link"
-            className={cn(pathname === PATHS.mySubmissions && 'font-bold')}>
-            <Link href={PATHS.mySubmissions}>My Submissions</Link>
+            className={cn(pathname === PATHS.myFindings && 'font-bold')}>
+            <Link href={PATHS.myFindings}>My Submissions</Link>
           </Button>
           <Button
             asChild
             variant="link"
-            className={cn(
-              pathname === PATHS.mySubmissionsRewards && 'font-bold',
-            )}>
-            <Link href={PATHS.mySubmissionsRewards}>Rewards</Link>
+            className={cn(pathname === PATHS.myFindingsRewards && 'font-bold')}>
+            <Link href={PATHS.myFindingsRewards}>Rewards</Link>
           </Button>
           <Button
             asChild

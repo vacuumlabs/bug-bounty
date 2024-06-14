@@ -7,8 +7,8 @@ export const PATHS = {
   home: '/',
   myProjects: '/my-projects',
   myProjectsRewards: '/my-projects/rewards',
-  mySubmissions: '/my-submissions',
-  mySubmissionsRewards: '/my-submissions/rewards',
+  myFindings: '/my-findings',
+  myFindingsRewards: '/my-findings/rewards',
   finding: (id?: string) => (id ? `/finding/${id}` : '/finding'),
   newFinding: '/finding/new',
   newProject: '/my-projects/new',
@@ -23,7 +23,7 @@ export const getDashboardPathByUserRole = (
 ): string => {
   switch (role) {
     case UserRole.AUDITOR:
-      return PATHS.mySubmissions
+      return PATHS.myFindings
     case UserRole.PROJECT_OWNER:
       return PATHS.myProjects
     default:

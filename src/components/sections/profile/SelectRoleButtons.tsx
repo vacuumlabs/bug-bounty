@@ -30,7 +30,7 @@ const SelectRoleButtons = ({callbackUrl}: SelectRoleButtonsProps) => {
 
     if (selectedPath === UserRole.AUDITOR) {
       router.push(
-        `${PATHS.connectWallet}?callbackUrl=${callbackUrl ?? PATHS.mySubmissions}`,
+        `${PATHS.connectWallet}?callbackUrl=${callbackUrl ?? PATHS.myFindings}`,
       )
       return
     }
