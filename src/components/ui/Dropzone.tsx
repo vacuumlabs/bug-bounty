@@ -7,9 +7,8 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import {FileCheck2Icon, X} from 'lucide-react'
 
-import {Button} from './Button'
+import FileList from './FileList'
 
 import {Card, CardContent} from '@/components/ui/Card'
 import {Input} from '@/components/ui/Input'
@@ -120,19 +119,7 @@ const Dropzone = forwardRef<HTMLDivElement, DropzoneProps>(
             </div>
           </CardContent>
         </Card>
-        <div className="flex flex-wrap items-center gap-x-12 gap-y-3">
-          {value?.map((file, index) => (
-            <div
-              key={`${file.name}-${file.size}`}
-              className="flex items-center gap-2">
-              <FileCheck2Icon className="h-4 w-4" />
-              <p className="text-buttonS">{file.name}</p>
-              <Button variant="ghost" onClick={() => removeFile(index)}>
-                <X />
-              </Button>
-            </div>
-          ))}
-        </div>
+        <FileList files={value ?? []} onRemove={removeFile} />
       </div>
     )
   },
