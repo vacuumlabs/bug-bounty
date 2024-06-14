@@ -12,7 +12,7 @@ import {UserAvatar} from '@/components/ui/Avatar'
 import {PATHS} from '@/lib/utils/common/paths'
 import SignOutButton from '@/components/ui/SignOutButon'
 
-const SubmissionsNavbar = () => {
+const AuditorsNavbar = () => {
   const pathname = usePathname()
 
   return (
@@ -67,4 +67,4 @@ const SubmissionsNavbar = () => {
   )
 }
 
-export default SubmissionsNavbar
+export default AuditorsNavbar

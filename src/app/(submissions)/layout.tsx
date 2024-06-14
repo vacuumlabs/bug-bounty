@@ -1,6 +1,6 @@
 import {ReactNode} from 'react'
 
-import SubmissionsNavbar from '@/components/global/navbars/SubmissionsNavbar'
+import AuditorsNavbar from '@/components/global/navbars/AuditorsNavbar'
 
 type SubmissionsLayoutProps = {
   children: ReactNode
@@ -9,7 +9,7 @@ type SubmissionsLayoutProps = {
 const SubmissionsLayout = ({children}: SubmissionsLayoutProps) => {
   return (
     <>
-      <SubmissionsNavbar />
+      <AuditorsNavbar />
       <div className="flex flex-grow flex-col pt-[96px]">{children}</div>
     </>
   )
