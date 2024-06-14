@@ -9,6 +9,7 @@ export const PATHS = {
   myProjectsRewards: '/my-projects/rewards',
   mySubmissions: '/my-submissions',
   mySubmissionsRewards: '/my-submissions/rewards',
+  finding: '/finding',
   newFinding: '/finding/new',
   newProject: '/my-projects/new',
   newProjectSuccess: '/my-projects/new/success',

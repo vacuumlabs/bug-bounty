@@ -11,6 +11,7 @@ import {TableCell, TableRow} from '@/components/ui/Table'
 import {Avatar, AvatarImage} from '@/components/ui/Avatar'
 import {Button} from '@/components/ui/Button'
 import {getContestStatus} from '@/lib/utils/common/contest'
+import {PATHS} from '@/lib/utils/common/paths'
 
 type MySubmissionsTableRowProps = {
   finding: MyFinding
@@ -45,7 +46,9 @@ const MySubmissionsTableRow = ({finding}: MySubmissionsTableRowProps) => {
       <TableCell className="text-bodyM capitalize">{finding.status}</TableCell>
       <TableCell>
         <Button asChild variant="outline" className="h-[40px] w-[148px]">
-          <Link href={`/finding/${finding.id}`} className="gap-2 text-buttonS">
+          <Link
+            href={`${PATHS.finding}/${finding.id}`}
+            className="gap-2 text-buttonS">
             Show report
             <ArrowRight width={16} height={16} />
           </Link>
