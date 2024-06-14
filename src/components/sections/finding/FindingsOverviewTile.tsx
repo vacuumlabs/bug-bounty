@@ -1,16 +1,16 @@
 import {cn} from '@/lib/utils/client/tailwind'
 
-type SubmissionsOverviewTileProps = {
+type FindingsOverviewTileProps = {
   title: string
   value: string | number
   className?: string
 }
 
-const SubmissionsOverviewTile = ({
+const FindingsOverviewTile = ({
   title,
   value,
   className,
-}: SubmissionsOverviewTileProps) => {
+}: FindingsOverviewTileProps) => {
   return (
     <div className={cn('flex flex-1 flex-col gap-4 bg-grey-90 p-6', className)}>
       <p className="text-titleM">{title}</p>
@@ -19,4 +19,4 @@ const SubmissionsOverviewTile = ({
   )
 }
 
-export default SubmissionsOverviewTile
+export default FindingsOverviewTile

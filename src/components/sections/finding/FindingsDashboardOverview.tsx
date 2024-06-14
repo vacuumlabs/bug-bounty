@@ -2,19 +2,19 @@
 
 import {useMemo} from 'react'
 
-import SubmissionsOverviewTile from './SubmissionsOverviewTile'
+import FindingsOverviewTile from './FindingsOverviewTile'
 
 import {cn} from '@/lib/utils/client/tailwind'
 import {useGetMyFindingsCounts} from '@/lib/queries/finding/getMyFindingsCounts'
 import {formatAda} from '@/lib/utils/common/format'
 
-type SubmissionsDashboardOverviewProps = {
+type FindingsDashboardOverviewProps = {
   className?: string
 }
 
-const SubmissionsDashboardOverview = ({
+const FindingsDashboardOverview = ({
   className,
-}: SubmissionsDashboardOverviewProps) => {
+}: FindingsDashboardOverviewProps) => {
   const {data} = useGetMyFindingsCounts()
 
   const tiles = useMemo(
@@ -44,7 +44,7 @@ const SubmissionsDashboardOverview = ({
   return (
     <div className={cn('flex gap-6', className)}>
       {tiles.map((tile, index) => (
-        <SubmissionsOverviewTile
+        <FindingsOverviewTile
           key={index}
           title={tile.title}
           value={tile.count}
@@ -54,4 +54,4 @@ const SubmissionsDashboardOverview = ({
   )
 }
 
-export default SubmissionsDashboardOverview
+export default FindingsDashboardOverview

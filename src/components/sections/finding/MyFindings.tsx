@@ -3,7 +3,7 @@
 import {DateTime} from 'luxon'
 import {useMemo} from 'react'
 
-import MySubmissionsTable from './MySubmissionsTable'
+import MyFindingsTable from './MyFindingsTable'
 
 import Skeleton from '@/components/ui/Skeleton'
 import {Tabs, TabsList, TabsTrigger} from '@/components/ui/Tabs'
@@ -13,7 +13,7 @@ import Separator from '@/components/ui/Separator'
 import {FindingOccurence} from '@/server/db/models'
 import {useGetMyFindings} from '@/lib/queries/finding/getMyFinding'
 
-const MySubmissions = () => {
+const MyFindings = () => {
   const [findingType, {setValue: setFindingType}] = useSearchParamsEnumState(
     'type',
     FindingOccurence,
@@ -71,7 +71,7 @@ const MySubmissions = () => {
           {isLoading ? (
             <Skeleton className="h-[240px]" />
           ) : (
-            <MySubmissionsTable findings={currentFindings} />
+            <MyFindingsTable findings={currentFindings} />
           )}
         </div>
       </Tabs>
@@ -79,4 +79,4 @@ const MySubmissions = () => {
   )
 }
 
-export default MySubmissions
+export default MyFindings

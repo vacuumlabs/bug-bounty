@@ -11,7 +11,7 @@ const severityToColor = {
   [FindingSeverity.CRITICAL]: 'bg-red',
 }
 
-const MySubmissionSeverityBadge = ({
+const MyFindingsSeverityBadge = ({
   severity,
   className,
 }: {
@@ -25,4 +25,4 @@ const MySubmissionSeverityBadge = ({
   )
 }
 
-export default MySubmissionSeverityBadge
+export default MyFindingsSeverityBadge

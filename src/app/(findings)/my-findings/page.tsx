@@ -5,8 +5,8 @@ import backgroundImage from '@public/images/thin-overlay.png'
 import {requirePageSession} from '@/server/utils/auth'
 import {prefetchGetMyFindings} from '@/lib/queries/finding/getMyFinding'
 import {prefetchGetMyFindingsCounts} from '@/lib/queries/finding/getMyFindingsCounts'
-import SubmissionsDashboardOverview from '@/components/sections/submissions/SubmissionsDashboardOverview'
-import MySubmissions from '@/components/sections/submissions/MySubmissions'
+import FindingsDashboardOverview from '@/components/sections/finding/FindingsDashboardOverview'
+import MyFindings from '@/components/sections/finding/MyFindings'
 
 const MySubmissionsPage = async () => {
   await requirePageSession()
@@ -28,8 +28,8 @@ const MySubmissionsPage = async () => {
       />
       <h1 className="mx-24 mb-6 text-headlineS uppercase">My Submissions</h1>
       <HydrationBoundary>
-        <SubmissionsDashboardOverview className="mx-24 mb-12" />
-        <MySubmissions />
+        <FindingsDashboardOverview className="mx-24 mb-12" />
+        <MyFindings />
       </HydrationBoundary>
     </main>
   )

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import {ArrowRight} from 'lucide-react'
 
-import MySubmissionsTableRow from './MySubmissionsTableRow'
+import MyFindingsTableRow from './MyFindingsTableRow'
 
 import {Button} from '@/components/ui/Button'
 import {PATHS} from '@/lib/utils/common/paths'
@@ -14,11 +14,11 @@ import {
   TableRow,
 } from '@/components/ui/Table'
 
-type MySubmissionsListProps = {
+type MyFindingsTableProps = {
   findings: MyFinding[] | undefined
 }
 
-const MySubmissionsTable = ({findings}: MySubmissionsListProps) => {
+const MyFindingsTable = ({findings}: MyFindingsTableProps) => {
   if (!findings?.length) {
     return (
       <div className="flex h-[450px] flex-col items-center justify-center">
@@ -49,11 +49,11 @@ const MySubmissionsTable = ({findings}: MySubmissionsListProps) => {
       </TableHeader>
       <TableBody className="[&_tr]:border-b-0">
         {findings.map((finding) => (
-          <MySubmissionsTableRow key={finding.id} finding={finding} />
+          <MyFindingsTableRow key={finding.id} finding={finding} />
         ))}
       </TableBody>
     </Table>
   )
 }
 
-export default MySubmissionsTable
+export default MyFindingsTable

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import {ArrowRight} from 'lucide-react'
 import {DateTime} from 'luxon'
 
-import MySubmissionSeverityBadge from './MySubmissionSeverityBadge'
+import MyFindingsSeverityBadge from './MyFindingsSeverityBadge'
 
 import cardanoLogo from '@public/images/cardano-logo.png'
 import {MyFinding} from '@/server/actions/finding/getMyFindings'
@@ -13,11 +13,11 @@ import {Button} from '@/components/ui/Button'
 import {getContestStatus} from '@/lib/utils/common/contest'
 import {PATHS} from '@/lib/utils/common/paths'
 
-type MySubmissionsTableRowProps = {
+type MyFindingsTableRowProps = {
   finding: MyFinding
 }
 
-const MySubmissionsTableRow = ({finding}: MySubmissionsTableRowProps) => {
+const MyFindingsTableRow = ({finding}: MyFindingsTableRowProps) => {
   const contestStatus = useMemo(
     () => getContestStatus({...finding.contest}),
     [finding.contest],
@@ -40,7 +40,7 @@ const MySubmissionsTableRow = ({finding}: MySubmissionsTableRowProps) => {
         )}
       </TableCell>
       <TableCell>
-        <MySubmissionSeverityBadge severity={finding.severity} />
+        <MyFindingsSeverityBadge severity={finding.severity} />
       </TableCell>
       <TableCell className="text-bodyM capitalize">{contestStatus}</TableCell>
       <TableCell className="text-bodyM capitalize">{finding.status}</TableCell>
@@ -58,4 +58,4 @@ const MySubmissionsTableRow = ({finding}: MySubmissionsTableRowProps) => {
   )
 }
 
-export default MySubmissionsTableRow
+export default MyFindingsTableRow
