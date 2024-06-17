@@ -1,10 +1,9 @@
 import {useMemo} from 'react'
-import {DateTime} from 'luxon'
 
-import {ContestStatus} from '@/server/db/models'
 import {Contest} from '@/server/db/schema/contest'
 import {cn} from '@/lib/utils/client/tailwind'
 import {Badge} from '@/components/ui/Badge'
+import {getContestStatus} from '@/lib/utils/common/contest'
 
 type BadgeStatus =
   | 'draft'
@@ -47,39 +46,10 @@ type ContestStatusBadgeProps = {
 }
 
 const ContestStatusBadge = ({contest, className}: ContestStatusBadgeProps) => {
-  const badgeStatus: BadgeStatus = useMemo(() => {
-    if (contest.status === ContestStatus.DRAFT) {
-      return 'draft'
-    }
-    if (contest.status === ContestStatus.REJECTED) {
-      return 'rejected'
-    }
-    if (contest.status === ContestStatus.FINISHED) {
-      return 'finished'
-    }
-    if (
-      contest.status !== ContestStatus.APPROVED &&
-      DateTime.fromJSDate(contest.startDate) < DateTime.now()
-    ) {
-      return 'notApproved'
-    }
-    if (contest.status === ContestStatus.IN_REVIEW) {
-      return 'inReview'
-    }
-    if (contest.status === ContestStatus.PENDING) {
-      return 'pending'
-    }
-    if (DateTime.fromJSDate(contest.endDate) < DateTime.now()) {
-      return 'judging'
-    }
-    if (
-      DateTime.fromJSDate(contest.startDate) < DateTime.now() &&
-      DateTime.fromJSDate(contest.endDate) > DateTime.now()
-    ) {
-      return 'live'
-    }
-    return 'approved'
-  }, [contest])
+  const badgeStatus: BadgeStatus = useMemo(
+    () => getContestStatus(contest),
+    [contest],
+  )
 
   return (
     <Badge className={cn(backgroundColorMap[badgeStatus], className)}>

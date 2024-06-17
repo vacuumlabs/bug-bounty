@@ -9,6 +9,7 @@ import {
 } from '@/server/actions/github/getGithub'
 import {GetPublicContestCountsParams} from '@/server/actions/contest/getPublicContestCounts'
 import {GetMyContestsParams} from '@/server/actions/contest/getMyContests'
+import {GetMyFindingsParams} from '@/server/actions/finding/getMyFindings'
 
 export const queryKeys = createQueryKeyStore({
   users: {
@@ -23,6 +24,10 @@ export const queryKeys = createQueryKeyStore({
     reportCounts: null,
     public: (params: GetPublicContestsParams) => [params],
     publicCounts: (params: GetPublicContestCountsParams) => [params],
+  },
+  findings: {
+    mine: (params: GetMyFindingsParams) => [params],
+    counts: null,
   },
   deduplicatedFindings: {
     all: (params: GetDeduplicatedFindingsParams) => [params],

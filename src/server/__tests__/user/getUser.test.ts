@@ -17,6 +17,7 @@ const userToInsert: InsertUser = {
   email: 'user@example.com',
   alias: 'user',
   name: 'user',
+  role: UserRole.AUDITOR,
 }
 
 vi.mock('next-auth')
