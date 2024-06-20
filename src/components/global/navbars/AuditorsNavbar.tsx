@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import {usePathname} from 'next/navigation'
-import {ArrowRight, LogOut} from 'lucide-react'
+import {LogOut} from 'lucide-react'
 
 import {Button} from '@/components/ui/Button'
 import bountyLabLogo from '@public/images/bounty-lab-icon.png'
@@ -49,10 +49,7 @@ const AuditorsNavbar = () => {
         <div className="flex items-center gap-10">
           {pathname !== PATHS.newFinding && (
             <Button asChild>
-              <Link href={PATHS.newFinding} className="gap-3">
-                Submit Report
-                <ArrowRight />
-              </Link>
+              <Link href={PATHS.newFinding}>Submit Report</Link>
             </Button>
           )}
           <UserAvatar />

@@ -14,3 +14,12 @@ export enum ContestSorting {
   REWARDS_AMOUNT = 'rewardsAmount',
   TITLE = 'title',
 }
+
+export enum MyFindingsRewardsSorting {
+  PROJECT = 'project',
+  SUBMITTED = 'submitted',
+  REVIEWED = 'reviewed',
+  SEVERITY = 'severity',
+  REWARD = 'reward',
+  STATE = 'state',
+}

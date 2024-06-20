@@ -10,6 +10,7 @@ import {
 import {GetPublicContestCountsParams} from '@/server/actions/contest/getPublicContestCounts'
 import {GetMyContestsParams} from '@/server/actions/contest/getMyContests'
 import {GetMyFindingsParams} from '@/server/actions/finding/getMyFindings'
+import {GetMyFindingsRewardsParams} from '@/server/actions/reward/getMyFindingsRewards'
 
 export const queryKeys = createQueryKeyStore({
   users: {
@@ -17,6 +18,11 @@ export const queryKeys = createQueryKeyStore({
   },
   rewards: {
     all: (params: GetRewardsParams) => [params],
+    mine: (userId: string | undefined, params: GetMyFindingsRewardsParams) => [
+      userId,
+      params,
+    ],
+    totalSize: (userId: string | undefined) => [userId],
     calculated: (contestId: string) => [contestId],
   },
   contests: {
