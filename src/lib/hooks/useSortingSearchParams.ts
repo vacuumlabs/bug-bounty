@@ -17,6 +17,14 @@ export const useSortingSearchParams = <T extends string>(
   const [sortBy, {getSearchParamsUpdater: updateSortBy}] =
     useSearchParamsEnumState('sortBy', sortFieldsEnum)
 
+  const getSortParamsUpdaters = useCallback(
+    (params: SortParams<T>) => [
+      updateSortDirection(params.direction),
+      updateSortBy(params.field),
+    ],
+    [updateSortDirection, updateSortBy],
+  )
+
   const setSortParams = useCallback(
     (params: SortParams<T>) =>
       updateSearchParams([
@@ -37,5 +45,5 @@ export const useSortingSearchParams = <T extends string>(
     [sortBy, sortDirection],
   )
 
-  return [sortParams, setSortParams] as const
+  return [sortParams, {setSortParams, getSortParamsUpdaters}] as const
 }

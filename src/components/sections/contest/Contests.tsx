@@ -52,7 +52,7 @@ const Contests = ({pageSize}: ContestsProps) => {
   const [page, {getSearchParamsUpdater: updatePageSearchParams}] =
     useSearchParamsNumericState('page', 1)
 
-  const [sortParams, setSortParams] = useSortingSearchParams(ContestSorting)
+  const [sortParams, {setSortParams}] = useSortingSearchParams(ContestSorting)
 
   const {data: contests, isLoading} = useGetPublicContests({
     type: contestType,

@@ -5,29 +5,46 @@ import {TableHead} from './Table'
 import {cn} from '@/lib/utils/client/tailwind'
 import {SortParams} from '@/lib/utils/common/sorting'
 import {SortDirection} from '@/lib/types/enums'
+import {
+  SearchParamsUpdater,
+  mergeSearchParamsUpdaters,
+  useUpdateSearchParams,
+} from '@/lib/hooks/useSearchParamsState'
 
 type TableHeadWithSortProps<T extends string> = {
   title: string
-  setSortParams: (sortParams: SortParams<T>) => void
+  updateSortSearchParams: (params: SortParams<T>) => SearchParamsUpdater[]
   sortField: T
   sortParams?: SortParams<T>
+  searchParamsUpdaters?: SearchParamsUpdater[]
 }
 
 const TableHeadWithSort = <T extends string>({
   title,
-  setSortParams,
+  updateSortSearchParams,
   sortField,
   sortParams,
+  searchParamsUpdaters,
 }: TableHeadWithSortProps<T>) => {
+  const updateSearchParams = useUpdateSearchParams()
+
   return (
     <TableHead>
       <div className="flex items-center gap-[3px]">
         <span className="text-bodyM text-grey-40">{title}</span>
         <div className="flex flex-col">
           <button
-            onClick={() =>
-              setSortParams({direction: SortDirection.ASC, field: sortField})
-            }>
+            onClick={() => {
+              updateSearchParams(
+                mergeSearchParamsUpdaters([
+                  ...updateSortSearchParams({
+                    direction: SortDirection.ASC,
+                    field: sortField,
+                  }),
+                  ...(searchParamsUpdaters ?? []),
+                ]),
+              )
+            }}>
             <ChevronUp
               className={cn(
                 'h-4',
@@ -39,9 +56,17 @@ const TableHeadWithSort = <T extends string>({
             />
           </button>
           <button
-            onClick={() =>
-              setSortParams({direction: SortDirection.DESC, field: sortField})
-            }>
+            onClick={() => {
+              updateSearchParams(
+                mergeSearchParamsUpdaters([
+                  ...updateSortSearchParams({
+                    direction: SortDirection.DESC,
+                    field: sortField,
+                  }),
+                  ...(searchParamsUpdaters ?? []),
+                ]),
+              )
+            }}>
             <ChevronDown
               className={cn(
                 'h-4',

@@ -28,10 +28,10 @@ import {MyFindingsRewardsSorting} from '@/lib/types/enums'
 export const MY_FINDINGS_REWARDS_PAGE_SIZE = 7
 
 const MyFindingsRewardsTable = () => {
-  const [page] = useSearchParamsNumericState('page', 1)
-  const [sortParams, setSortParams] = useSortingSearchParams(
-    MyFindingsRewardsSorting,
-  )
+  const [page, {getSearchParamsUpdater: updatePageSearchParams}] =
+    useSearchParamsNumericState('page', 1)
+  const [sortParams, {getSortParamsUpdaters: updateSortSearchParams}] =
+    useSortingSearchParams(MyFindingsRewardsSorting)
 
   const {data: totalSize} = useGetMyFindingsRewardsSize()
   const {data, isLoading} = useGetMyFindingsRewards({
@@ -74,38 +74,44 @@ const MyFindingsRewardsTable = () => {
             <TableHeadWithSort
               title="Projects"
               sortParams={sortParams}
-              setSortParams={setSortParams}
+              updateSortSearchParams={updateSortSearchParams}
               sortField={MyFindingsRewardsSorting.PROJECT}
+              searchParamsUpdaters={[updatePageSearchParams(1)]}
             />
             <TableHeadWithSort
               title="Submitted"
               sortParams={sortParams}
-              setSortParams={setSortParams}
+              updateSortSearchParams={updateSortSearchParams}
               sortField={MyFindingsRewardsSorting.SUBMITTED}
+              searchParamsUpdaters={[updatePageSearchParams(1)]}
             />
             <TableHeadWithSort
               title="Reviewed"
               sortParams={sortParams}
-              setSortParams={setSortParams}
+              updateSortSearchParams={updateSortSearchParams}
               sortField={MyFindingsRewardsSorting.REVIEWED}
+              searchParamsUpdaters={[updatePageSearchParams(1)]}
             />
             <TableHeadWithSort
               title="Severity"
               sortParams={sortParams}
-              setSortParams={setSortParams}
+              updateSortSearchParams={updateSortSearchParams}
               sortField={MyFindingsRewardsSorting.SEVERITY}
+              searchParamsUpdaters={[updatePageSearchParams(1)]}
             />
             <TableHeadWithSort
               title="Reward"
               sortParams={sortParams}
-              setSortParams={setSortParams}
+              updateSortSearchParams={updateSortSearchParams}
               sortField={MyFindingsRewardsSorting.REWARD}
+              searchParamsUpdaters={[updatePageSearchParams(1)]}
             />
             <TableHeadWithSort
               title="State"
               sortParams={sortParams}
-              setSortParams={setSortParams}
+              updateSortSearchParams={updateSortSearchParams}
               sortField={MyFindingsRewardsSorting.STATE}
+              searchParamsUpdaters={[updatePageSearchParams(1)]}
             />
             <TableHead className="text-bodyM text-grey-40" />
           </TableRow>
