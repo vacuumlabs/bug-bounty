@@ -36,12 +36,12 @@ const myFindingsRewardsPage = async () => {
         }}
       />
       <h1 className="mx-24 mb-12 text-headlineS uppercase">My Rewards</h1>
+      <Separator />
       <HydrationBoundary>
-        <Separator />
+        <div className="mx-24 mt-12">
+          <MyFindingsRewardsTable />
+        </div>
       </HydrationBoundary>
-      <div className="mx-24 mt-12">
-        <MyFindingsRewardsTable />
-      </div>
     </main>
   )
 }
