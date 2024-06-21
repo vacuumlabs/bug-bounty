@@ -19,6 +19,11 @@ export enum ContestOccurence {
   FUTURE = 'future',
 }
 
+export enum ContestView {
+  DETAILS = 'details',
+  LEADERBOARD = 'leaderboard',
+}
+
 export enum FindingOccurence {
   PAST = 'past',
   PRESENT = 'present',

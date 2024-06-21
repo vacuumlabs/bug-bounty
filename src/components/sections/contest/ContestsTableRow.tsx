@@ -7,10 +7,11 @@ import ContestStatusBadge from './ContestStatusBadge'
 import {Button} from '@/components/ui/Button'
 import {Contest} from '@/server/db/schema/contest'
 import {formatAda} from '@/lib/utils/common/format'
-import {ContestOccurence} from '@/server/db/models'
+import {ContestOccurence, ContestStatus} from '@/server/db/models'
 import {Avatar, AvatarImage} from '@/components/ui/Avatar'
 import cardanoLogo from '@public/images/cardano-logo.png'
 import {useSearchParamsEnumState} from '@/lib/hooks/useSearchParamsState'
+import {PATHS} from '@/lib/utils/common/paths'
 
 type ContestsTableRowProps = {
   contest: Contest
@@ -59,10 +60,19 @@ const ContestsTableRow = ({contest}: ContestsTableRowProps) => {
       </td>
       <td>
         <Button variant="outline" asChild size="small" className="normal-case">
-          <Link className="gap-2" href={`/contests/${contest.id}`}>
-            View Audit
-            <ArrowRight size={16} />
-          </Link>
+          {contest.status === ContestStatus.FINISHED ? (
+            <Link
+              className="gap-2"
+              href={`${PATHS.contest(contest.id)}?view=leaderboard`}>
+              View Result
+              <ArrowRight size={16} />
+            </Link>
+          ) : (
+            <Link className="gap-2" href={PATHS.contest(contest.id)}>
+              View Audit
+              <ArrowRight size={16} />
+            </Link>
+          )}
         </Button>
       </td>
     </tr>

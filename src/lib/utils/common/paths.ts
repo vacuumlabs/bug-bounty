@@ -5,6 +5,7 @@ export const PATHS = {
   connectWallet: '/profile/connect-wallet',
   selectRole: '/select-role',
   home: '/',
+  contest: (id: string) => `/contests/${id}`,
   myProjects: '/my-projects',
   myProjectsRewards: '/my-projects/rewards',
   myFindings: '/my-findings',

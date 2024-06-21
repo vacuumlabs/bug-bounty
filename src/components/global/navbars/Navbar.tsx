@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import {useSession} from 'next-auth/react'
 import {usePathname} from 'next/navigation'
-import {ArrowRight, LogOut} from 'lucide-react'
+import {LogOut} from 'lucide-react'
 
 import {Button} from '../../ui/Button'
 
@@ -71,15 +71,9 @@ const Navbar = () => {
           )}
           <Button asChild>
             {isProjectsTabActive ? (
-              <Link href={PATHS.newProject}>
-                Get protected
-                <ArrowRight className="ml-2" />
-              </Link>
+              <Link href={PATHS.newProject}>Get protected</Link>
             ) : (
-              <Link href="/#contests">
-                Explore bounties
-                <ArrowRight className="ml-2" />
-              </Link>
+              <Link href="/#contests">Explore bounties</Link>
             )}
           </Button>
         </nav>

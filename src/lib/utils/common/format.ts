@@ -33,3 +33,14 @@ export const formatDate = (date: Date, format?: DateTimeFormatOptions) =>
   DateTime.fromJSDate(date).toLocaleString(format, {
     locale: 'en',
   })
+
+export const formatTimeRemaining = (endDate: Date) => {
+  const enddate = DateTime.fromJSDate(endDate)
+  const now = DateTime.now()
+  const diff = enddate.diff(now, ['days', 'hours']).toObject()
+
+  const days = Math.floor(diff.days ?? 0)
+  const hours = String(Math.floor(diff.hours ?? 0)).padStart(2, '0')
+
+  return `${days} days ${hours} hours`
+}

@@ -4,25 +4,28 @@ import {queryKeys} from '../keys'
 
 import getServerQueryClient from '@/server/utils/queryClient'
 import {withApiErrorHandler} from '@/lib/utils/common/error'
-import {Contest, getContest} from '@/server/actions/contest/getContest'
+import {
+  ContestLeaderboard,
+  getContestLeaderboard,
+} from '@/server/actions/contest/getContestLeaderboard'
 
 const getQueryOptions = (contestId: string | undefined) => ({
-  queryKey: queryKeys.contests.one(contestId).queryKey,
+  queryKey: queryKeys.contests.leaderboard(contestId).queryKey,
   queryFn: withApiErrorHandler(() => {
     if (!contestId) {
       throw new Error('Contest ID is required.')
     }
 
-    return getContest({contestId})
+    return getContestLeaderboard({contestId})
   }),
 })
 
-export const useGetContest = (
+export const useGetContestLeaderboard = (
   contestId: string | undefined,
-  options?: Partial<UseQueryOptions<Contest>>,
+  options?: Partial<UseQueryOptions<ContestLeaderboard>>,
 ) => useQuery({...getQueryOptions(contestId), ...options})
 
-export const prefetchGetContest = async (contestId: string) => {
+export const prefetchGetContestLeaderboard = async (contestId: string) => {
   const queryClient = getServerQueryClient()
   await queryClient.prefetchQuery(getQueryOptions(contestId))
 }

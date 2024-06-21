@@ -86,7 +86,7 @@ const contestsToInsert: InsertContest[] = [
 
 vi.mock('next-auth')
 
-describe('getContest', () => {
+describe('getPublicContests', () => {
   beforeEach(async () => {
     vi.resetAllMocks()
 
@@ -100,7 +100,7 @@ describe('getContest', () => {
     await db.insert(schema.users).values([user])
   })
 
-  it('gets a contest successfully', async () => {
+  it('gets public contests successfully', async () => {
     ;(getServerSession as Mock).mockResolvedValue({
       user: {
         id: userId,
@@ -115,9 +115,9 @@ describe('getContest', () => {
       .values(contestsToInsert)
       .returning()
 
-    const getContestResult = await getPublicContests({})
+    const getPublicContestResult = await getPublicContests({})
 
-    const dbContest = await db.query.contests.findMany({
+    const dbPublicContests = await db.query.contests.findMany({
       where: (contests, {inArray}) =>
         inArray(contests.status, [
           ContestStatus.APPROVED,
@@ -125,13 +125,13 @@ describe('getContest', () => {
         ]),
     })
 
-    expect(getContestResult).toEqual(
+    expect(getPublicContestResult).toEqual(
       insertedContests.filter(
         (contest) =>
           contest.status === ContestStatus.APPROVED ||
           contest.status === ContestStatus.FINISHED,
       ),
     )
-    expect(getContestResult).toEqual(dbContest)
+    expect(getPublicContestResult).toEqual(dbPublicContests)
   })
 })
