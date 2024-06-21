@@ -18,6 +18,8 @@ const myFindingsRewardsPage = async () => {
   await Promise.all([
     prefetchGetMyFindingsRewards(user.id, {
       limit: MY_FINDINGS_REWARDS_PAGE_SIZE,
+      offset: 0,
+      sort: undefined,
     }),
     prefetchGetMyFindingsRewardsSize(user.id),
   ])
