@@ -6,7 +6,7 @@ import MyFindingsSeverityBadge from '../MyFindingsSeverityBadge'
 import {Avatar, AvatarImage} from '@/components/ui/Avatar'
 import {TableCell, TableRow} from '@/components/ui/Table'
 import cardanoLogo from '@public/images/cardano-logo.png'
-import {formatAda} from '@/lib/utils/common/format'
+import {formatAda, formatDate} from '@/lib/utils/common/format'
 import {Button} from '@/components/ui/Button'
 import {MyFindingsReward} from '@/server/actions/reward/getMyFindingsRewards'
 
@@ -32,20 +32,10 @@ const MyFindingsRewardsTableRow = ({data}: MyFindingsRewardsTableRowProps) => {
         </div>
       </TableCell>
       <TableCell className="text-bodyM">
-        {submitted
-          ? DateTime.fromJSDate(submitted).toLocaleString(
-              DateTime.DATETIME_MED,
-              {locale: 'en'},
-            )
-          : '-'}
+        {submitted ? formatDate(submitted, DateTime.DATETIME_MED) : '-'}
       </TableCell>
       <TableCell className="text-bodyM">
-        {reviewed
-          ? DateTime.fromJSDate(reviewed).toLocaleString(
-              DateTime.DATETIME_MED,
-              {locale: 'en'},
-            )
-          : '-'}
+        {reviewed ? formatDate(reviewed, DateTime.DATETIME_MED) : '-'}
       </TableCell>
       <TableCell className="text-bodyM">
         {severity ? <MyFindingsSeverityBadge severity={severity} /> : '-'}

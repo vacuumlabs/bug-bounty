@@ -1,3 +1,5 @@
+import {DateTime, DateTimeFormatOptions} from 'luxon'
+
 export const APP_LOCALE = 'en-US'
 
 export const ellipsizeText = (text: string, maxLength: number) => {
@@ -26,3 +28,8 @@ export const formatAda = (
 
 export const formatTabCount = (count: number | undefined) =>
   count == null ? '' : ` (${count})`
+
+export const formatDate = (date: Date, format?: DateTimeFormatOptions) =>
+  DateTime.fromJSDate(date).toLocaleString(format, {
+    locale: 'en',
+  })
