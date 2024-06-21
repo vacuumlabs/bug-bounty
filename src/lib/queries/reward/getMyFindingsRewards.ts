@@ -8,7 +8,7 @@ import {useUserId} from '@/lib/hooks/useUserId'
 import {
   GetMyFindingsRewardsParams,
   getMyFindingsRewards,
-  getMyFindingsRewardsSize,
+  getMyFindingsRewardsCount,
 } from '@/server/actions/reward/getMyFindingsRewards'
 
 const getMyFindingsRewardsQueryOptions = (
@@ -35,18 +35,18 @@ export const prefetchGetMyFindingsRewards = async (
   )
 }
 
-const getMyFindingsRewardsSizeQueryOptions = (userId: string | undefined) => ({
+const getMyFindingsRewardsCountQueryOptions = (userId: string | undefined) => ({
   queryKey: queryKeys.rewards.totalSize(userId).queryKey,
-  queryFn: withApiErrorHandler(() => getMyFindingsRewardsSize()),
+  queryFn: withApiErrorHandler(() => getMyFindingsRewardsCount()),
 })
 
-export const useGetMyFindingsRewardsSize = () => {
+export const useGetMyFindingsRewardsCount = () => {
   const userId = useUserId()
 
-  return useQuery(getMyFindingsRewardsSizeQueryOptions(userId))
+  return useQuery(getMyFindingsRewardsCountQueryOptions(userId))
 }
 
-export const prefetchGetMyFindingsRewardsSize = async (userId: string) => {
+export const prefetchGetMyFindingsRewardsCount = async (userId: string) => {
   const queryClient = getServerQueryClient()
-  await queryClient.prefetchQuery(getMyFindingsRewardsSizeQueryOptions(userId))
+  await queryClient.prefetchQuery(getMyFindingsRewardsCountQueryOptions(userId))
 }

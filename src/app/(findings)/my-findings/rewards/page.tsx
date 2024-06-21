@@ -9,7 +9,7 @@ import MyFindingsRewardsTable, {
 } from '@/components/sections/finding/rewards/MyFindingsRewardsTable'
 import {
   prefetchGetMyFindingsRewards,
-  prefetchGetMyFindingsRewardsSize,
+  prefetchGetMyFindingsRewardsCount,
 } from '@/lib/queries/reward/getMyFindingsRewards'
 
 const myFindingsRewardsPage = async () => {
@@ -21,7 +21,7 @@ const myFindingsRewardsPage = async () => {
       offset: 0,
       sort: undefined,
     }),
-    prefetchGetMyFindingsRewardsSize(user.id),
+    prefetchGetMyFindingsRewardsCount(user.id),
   ])
 
   return (

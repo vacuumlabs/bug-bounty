@@ -24,7 +24,7 @@ import {InsertReward} from '@/server/db/schema/reward'
 import {TEST_WALLET_ADDRESS} from '@/server/utils/test'
 import {
   getMyFindingsRewards,
-  getMyFindingsRewardsSize,
+  getMyFindingsRewardsCount,
 } from '@/server/actions/reward/getMyFindingsRewards'
 
 const contestId = uuidv4()
@@ -160,7 +160,7 @@ describe('getMyFindingsRewards', () => {
       limit: 10,
     })
 
-    const size = await getMyFindingsRewardsSize()
+    const size = await getMyFindingsRewardsCount()
 
     expect(result).toEqual([
       {

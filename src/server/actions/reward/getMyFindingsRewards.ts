@@ -67,7 +67,7 @@ export const getMyFindingsRewards = serializeServerErrors(
   getMyFindingsRewardsAction,
 )
 
-const getMyFindingsRewardsSizeAction = async () => {
+const getMyFindingsRewardsCountAction = async () => {
   const session = await requireServerSession()
 
   const rewardsCount = await db
@@ -84,6 +84,6 @@ const getMyFindingsRewardsSizeAction = async () => {
   return {count: rewardsCount[0].count}
 }
 
-export const getMyFindingsRewardsSize = serializeServerErrors(
-  getMyFindingsRewardsSizeAction,
+export const getMyFindingsRewardsCount = serializeServerErrors(
+  getMyFindingsRewardsCountAction,
 )

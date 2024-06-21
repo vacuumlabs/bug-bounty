@@ -17,7 +17,7 @@ import {
 import {PATHS} from '@/lib/utils/common/paths'
 import {
   useGetMyFindingsRewards,
-  useGetMyFindingsRewardsSize,
+  useGetMyFindingsRewardsCount,
 } from '@/lib/queries/reward/getMyFindingsRewards'
 import TablePagination from '@/components/ui/TablePagination'
 import {useSearchParamsNumericState} from '@/lib/hooks/useSearchParamsState'
@@ -33,7 +33,7 @@ const MyFindingsRewardsTable = () => {
   const [sortParams, {getSortParamsUpdaters: updateSortSearchParams}] =
     useSortingSearchParams(MyFindingsRewardsSorting)
 
-  const {data: totalSize} = useGetMyFindingsRewardsSize()
+  const {data: totalSize} = useGetMyFindingsRewardsCount()
   const {data, isLoading} = useGetMyFindingsRewards({
     limit: MY_FINDINGS_REWARDS_PAGE_SIZE,
     offset: (page - 1) * MY_FINDINGS_REWARDS_PAGE_SIZE,
