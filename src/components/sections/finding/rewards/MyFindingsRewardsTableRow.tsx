@@ -1,5 +1,6 @@
 import {DateTime} from 'luxon'
 import {Wallet} from 'lucide-react'
+import Link from 'next/link'
 
 import MyFindingsSeverityBadge from '../MyFindingsSeverityBadge'
 
@@ -50,13 +51,13 @@ const MyFindingsRewardsTableRow = ({data}: MyFindingsRewardsTableRowProps) => {
       <TableCell className="text-right">
         {!!txHash && (
           <Button asChild variant="outline" size="small">
-            <a
+            <Link
               href={`https://cardanoscan.io/transaction/${txHash}`}
               target="_blank"
               className="gap-2 text-buttonS uppercase">
               TX detail
               <Wallet width={16} height={16} />
-            </a>
+            </Link>
           </Button>
         )}
       </TableCell>
