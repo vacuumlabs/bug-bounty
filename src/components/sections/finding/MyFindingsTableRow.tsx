@@ -12,6 +12,7 @@ import {Avatar, AvatarImage} from '@/components/ui/Avatar'
 import {Button} from '@/components/ui/Button'
 import {getContestStatus} from '@/lib/utils/common/contest'
 import {PATHS} from '@/lib/utils/common/paths'
+import {formatDate} from '@/lib/utils/common/format'
 
 type MyFindingsTableRowProps = {
   finding: MyFinding
@@ -35,10 +36,7 @@ const MyFindingsTableRow = ({finding}: MyFindingsTableRowProps) => {
       </TableCell>
       <TableCell className="text-bodyM">{finding.title}</TableCell>
       <TableCell className="text-bodyM">
-        {DateTime.fromJSDate(finding.createdAt).toLocaleString(
-          DateTime.DATETIME_MED,
-          {locale: 'en'},
-        )}
+        {formatDate(finding.createdAt, DateTime.DATETIME_MED)}
       </TableCell>
       <TableCell>
         <MyFindingsSeverityBadge severity={finding.severity} />

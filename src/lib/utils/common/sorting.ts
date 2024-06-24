@@ -3,7 +3,13 @@ import {AnyColumn, SQLWrapper, asc, desc} from 'drizzle-orm'
 import {translateEnum} from './enums'
 
 import {contests} from '@/server/db/schema/contest'
-import {ContestSorting, SortDirection} from '@/lib/types/enums'
+import {
+  ContestSorting,
+  MyFindingsRewardsSorting,
+  SortDirection,
+} from '@/lib/types/enums'
+import {rewards} from '@/server/db/schema/reward'
+import {findings} from '@/server/db/schema/finding'
 
 export type SortParams<T extends string> = {
   direction: SortDirection
@@ -62,3 +68,12 @@ export const contestSortOptions = createSortOptions(
   contestSortFieldLabels,
   translateEnum.contestSorting,
 )
+
+export const myFindingsRewardsSortFieldMap = {
+  [MyFindingsRewardsSorting.PROJECT]: contests.title,
+  [MyFindingsRewardsSorting.SUBMITTED]: findings.createdAt,
+  [MyFindingsRewardsSorting.REVIEWED]: findings.updatedAt,
+  [MyFindingsRewardsSorting.SEVERITY]: findings.severity,
+  [MyFindingsRewardsSorting.REWARD]: rewards.amount,
+  [MyFindingsRewardsSorting.STATE]: rewards.transferTxHash,
+}
