@@ -11,8 +11,9 @@ import {cn} from '@/lib/utils/client/tailwind'
 import {UserAvatar} from '@/components/ui/Avatar'
 import {PATHS} from '@/lib/utils/common/paths'
 import SignOutButton from '@/components/ui/SignOutButon'
+import RoleSwitch from '@/components/ui/RoleSwitch'
 
-const AuditorsNavbar = () => {
+const ProjectsNavbar = () => {
   const pathname = usePathname()
 
   return (
@@ -30,29 +31,26 @@ const AuditorsNavbar = () => {
           <Button
             asChild
             variant="link"
-            className={cn(pathname === PATHS.myFindings && 'font-bold')}>
-            <Link href={PATHS.myFindings}>My Submissions</Link>
+            className={cn(pathname === PATHS.myProjects && 'font-bold')}>
+            <Link href={PATHS.myProjects}>Projects</Link>
           </Button>
           <Button
             asChild
             variant="link"
-            className={cn(pathname === PATHS.myFindingsRewards && 'font-bold')}>
-            <Link href={PATHS.myFindingsRewards}>Rewards</Link>
-          </Button>
-          <Button
-            asChild
-            variant="link"
-            className={cn(pathname === PATHS.home && 'font-bold')}>
-            <Link href={PATHS.home}>Bounties</Link>
+            className={cn(pathname === PATHS.myProjectsRewards && 'font-bold')}>
+            <Link href={PATHS.myProjectsRewards}>Rewards</Link>
           </Button>
         </nav>
         <div className="flex items-center gap-10">
-          {pathname !== PATHS.newFinding && (
+          {pathname !== PATHS.newProject && (
             <Button asChild>
-              <Link href={PATHS.newFinding}>Submit Report</Link>
+              <Link href={PATHS.newProject} className="gap-3">
+                Create audit
+              </Link>
             </Button>
           )}
           <UserAvatar />
+          <RoleSwitch />
           <SignOutButton variant="link">
             <LogOut />
           </SignOutButton>
@@ -62,4 +60,4 @@ const AuditorsNavbar = () => {
   )
 }
 
-export default AuditorsNavbar
+export default ProjectsNavbar

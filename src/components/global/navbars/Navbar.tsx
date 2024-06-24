@@ -15,6 +15,7 @@ import {useSearchParamsState} from '@/lib/hooks/useSearchParamsState'
 import {HomePageTab} from '@/lib/types/enums'
 import {PATHS, getDashboardPathByUserRole} from '@/lib/utils/common/paths'
 import SignOutButton from '@/components/ui/SignOutButon'
+import RoleSwitch from '@/components/ui/RoleSwitch'
 
 const Navbar = () => {
   const [currentTab] = useSearchParamsState('tab')
@@ -60,6 +61,7 @@ const Navbar = () => {
                 <Link href={getDashboardPathByUserRole(role)}>Dashboard</Link>
               </Button>
               <UserAvatar />
+              <RoleSwitch />
               <SignOutButton variant="link">
                 <LogOut />
               </SignOutButton>
