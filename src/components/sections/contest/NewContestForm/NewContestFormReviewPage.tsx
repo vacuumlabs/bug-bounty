@@ -7,6 +7,7 @@ import {NewContestFormPageProps} from './NewContestForm'
 import {translateEnum} from '@/lib/utils/common/enums'
 import MarkdownPreview from '@/components/markdown/MarkdownPreview'
 import {formatAda} from '@/lib/utils/common/format'
+import ContestSeverityWeightsDisplay from '@/components/ui/ContestSeverityWeightsDisplay'
 
 const formatDate = (date: Date | null, timezone: string | null) =>
   date
@@ -89,32 +90,7 @@ const NewContestFormReviewPage = ({form}: NewContestFormPageProps) => {
       </div>
       <div className="flex flex-col gap-3">
         <h3 className="text-bodyL text-purple-light">Severity rewards</h3>
-        <div className="flex gap-6">
-          <div>
-            <span className="text-grey-30">Critical: </span>
-            <span>{severityWeights.critical}</span>
-          </div>
-          <span>|</span>
-          <div>
-            <span className="text-grey-30">High: </span>
-            <span>{severityWeights.high}</span>
-          </div>
-          <span>|</span>
-          <div>
-            <span className="text-grey-30">Medium: </span>
-            <span>{severityWeights.medium}</span>
-          </div>
-          <span>|</span>
-          <div>
-            <span className="text-grey-30">Low: </span>
-            <span>{severityWeights.low}</span>
-          </div>
-          <span>|</span>
-          <div>
-            <span className="text-grey-30">Info: </span>
-            <span>{severityWeights.info}</span>
-          </div>
-        </div>
+        <ContestSeverityWeightsDisplay {...severityWeights} />
       </div>
       <div className="flex flex-col gap-3">
         <h3 className="text-bodyL text-purple-light">Custom conditions</h3>

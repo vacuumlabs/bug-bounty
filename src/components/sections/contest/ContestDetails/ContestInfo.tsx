@@ -4,6 +4,7 @@ import Link from 'next/link'
 import {LinkIcon} from 'lucide-react'
 
 import {Contest} from '@/server/actions/contest/getContest'
+import ContestSeverityWeightsDisplay from '@/components/ui/ContestSeverityWeightsDisplay'
 
 type ContestInfoProps = {
   contest: Contest
@@ -39,44 +40,13 @@ const ContestInfo = ({contest}: ContestInfoProps) => {
 
       <div className="mb-12 flex flex-col gap-3">
         <h3 className="text-bodyL text-purple-light">Severity Rewards</h3>
-        <div className="flex gap-6">
-          <div className="inline-block">
-            <span className="text-bodyM capitalize text-grey-30">info: </span>
-            <span className="text-bodyM text-white">
-              {contest.contestSeverityWeights?.info ?? '-'}
-            </span>
-          </div>
-          <div className="h-6 w-[1px] bg-white" />
-          <div className="inline-block">
-            <span className="text-bodyM capitalize text-grey-30">low: </span>
-            <span className="text-bodyM text-white">
-              {contest.contestSeverityWeights?.low ?? '-'}
-            </span>
-          </div>
-          <div className="h-6 w-[1px] bg-white" />
-          <div className="inline-block">
-            <span className="text-bodyM capitalize text-grey-30">medium: </span>
-            <span className="text-bodyM text-white">
-              {contest.contestSeverityWeights?.medium ?? '-'}
-            </span>
-          </div>
-          <div className="h-6 w-[1px] bg-white" />
-          <div className="inline-block">
-            <span className="text-bodyM capitalize text-grey-30">high: </span>
-            <span className="text-bodyM text-white">
-              {contest.contestSeverityWeights?.high ?? '-'}
-            </span>
-          </div>
-          <div className="h-6 w-[1px] bg-white" />
-          <div className="inline-block">
-            <span className="text-bodyM capitalize text-grey-30">
-              critical:{' '}
-            </span>
-            <span className="text-bodyM text-white">
-              {contest.contestSeverityWeights?.critical ?? '-'}
-            </span>
-          </div>
-        </div>
+        <ContestSeverityWeightsDisplay
+          info={contest.contestSeverityWeights?.info}
+          low={contest.contestSeverityWeights?.low}
+          medium={contest.contestSeverityWeights?.medium}
+          high={contest.contestSeverityWeights?.high}
+          critical={contest.contestSeverityWeights?.critical}
+        />
       </div>
 
       <div className="mb-12 flex flex-col gap-3">
