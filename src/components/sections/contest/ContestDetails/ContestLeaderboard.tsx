@@ -63,9 +63,8 @@ const ContestLeaderboard = ({contestId}: ContestLeaderboardProps) => {
             <TableHead className="text-bodyM text-grey-40">Insights</TableHead>
             <TableHead className="text-bodyM text-grey-40">Critical</TableHead>
             <TableHead className="text-bodyM text-grey-40">High</TableHead>
-            <TableHead className="text-bodyM text-grey-40">
-              Medium/Low
-            </TableHead>
+            <TableHead className="text-bodyM text-grey-40">Medium</TableHead>
+            <TableHead className="text-bodyM text-grey-40">Low</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="[&_tr]:border-b-0">
@@ -90,7 +89,10 @@ const ContestLeaderboard = ({contestId}: ContestLeaderboardProps) => {
                 {leaderboard.highFindings}
               </TableCell>
               <TableCell className="text-bodyM">
-                {leaderboard.mediumFindings + leaderboard.lowFindings}
+                {leaderboard.mediumFindings}
+              </TableCell>
+              <TableCell className="text-bodyM">
+                {leaderboard.lowFindings}
               </TableCell>
             </TableRow>
           ))}
