@@ -34,9 +34,9 @@ const ContestOverview = ({contest}: ContestOverviewProps) => {
             <Link href={PATHS.newFinding}>Submit Report</Link>
           </Button>
           <Button variant="outline" size="medium" asChild>
-            <a href={contest.repoUrl} target="_blank">
+            <Link href={contest.repoUrl} target="_blank">
               View Repo
-            </a>
+            </Link>
           </Button>
         </div>
       </div>

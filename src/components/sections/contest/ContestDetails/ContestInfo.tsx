@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import {LinkIcon} from 'lucide-react'
 
 import {Contest} from '@/server/actions/contest/getContest'
@@ -15,31 +16,19 @@ const ContestInfo = ({contest}: ContestInfoProps) => {
         <h3 className="text-bodyL text-purple-light">
           Links to the Github repository
         </h3>
-        <div className="flex gap-3">
-          <a href={contest.repoUrl}>GitHub Repository</a>
+        <Link href={contest.repoUrl} className="flex gap-3">
+          <span>GitHub Repository</span>
           <LinkIcon width={24} height={24} />
-        </div>
-        <div className="flex gap-3">
-          <a href="https://github.com/input-output-hk/marlowe">
-            Marlowe GitHub repository
-          </a>
-          <LinkIcon width={24} height={24} />
-        </div>
-        <div className="flex gap-3 capitalize">
-          <a href="https://developers.cardano.org/docs/smart-contracts/">
-            Cardano smart contracts documentation
-          </a>
-          <LinkIcon width={24} height={24} />
-        </div>
+        </Link>
       </div>
 
       <div className="mb-12 flex flex-col gap-3">
         <h3 className="text-bodyL text-purple-light">Scope definition</h3>
         {contest.filesInScope.map((fileUrl) => (
-          <div key={fileUrl} className="flex gap-3">
-            <a href={contest.repoUrl}>{fileUrl}</a>
+          <Link href={contest.repoUrl} key={fileUrl} className="flex gap-3">
+            <span>{fileUrl}</span>
             <LinkIcon width={24} height={24} />
-          </div>
+          </Link>
         ))}
       </div>
 
