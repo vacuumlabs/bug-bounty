@@ -41,7 +41,7 @@ const ContestInfo = ({contest}: ContestInfoProps) => {
         <h3 className="text-bodyL text-purple-light">Severity Rewards</h3>
         <div className="flex gap-6">
           <div className="inline-block">
-            <span className="text-bodyM text-grey-30">info: </span>
+            <span className="text-bodyM capitalize text-grey-30">info: </span>
             <span className="text-bodyM text-white">
               {contest.contestSeverityWeights?.info ?? '-'}
             </span>
