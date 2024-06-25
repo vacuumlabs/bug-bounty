@@ -1,7 +1,7 @@
 'use client'
 
 import ContestLeaderboard from './ContestLeaderboard'
-import ContestDetails from './ContestInfo'
+import ContestInfo from './ContestInfo'
 
 import Separator from '@/components/ui/Separator'
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/Tabs'
@@ -39,7 +39,7 @@ const ContestDetailBody = ({contest}: ContestDetailBodyProps) => {
         <Separator />
         <div className="flex flex-grow flex-col bg-black px-24 pb-24 pt-12">
           <TabsContent value={ContestView.DETAILS}>
-            <ContestDetails contest={contest} />
+            <ContestInfo contest={contest} />
           </TabsContent>
           <TabsContent value={ContestView.LEADERBOARD}>
             <ContestLeaderboard contestId={contest.id} />
