@@ -52,9 +52,9 @@ const ContestLeaderboard = ({contestId}: ContestLeaderboardProps) => {
       </TableHeader>
       <TableBody className="[&_tr]:border-b-0">
         {leaderboard.map((leaderboard, idx) => (
-          <TableRow key={leaderboard.alias} className="bg-grey-90">
+          <TableRow key={leaderboard.userId} className="bg-grey-90">
             <TableCell className="text-titleS">
-              {idx + 1}. {leaderboard.alias}
+              {idx + 1}. {leaderboard.alias ?? leaderboard.userId}
             </TableCell>
             <TableCell className="text-bodyM">
               {formatAda(leaderboard.totalRewards)}

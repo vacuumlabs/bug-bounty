@@ -68,6 +68,7 @@ const getContestLeaderboardAction = async ({contestId}: GetContestParams) => {
 
   const contestLeaderboard = await db
     .select({
+      userId: users.id,
       alias: users.alias,
       totalRewards: userRewards.totalRewards,
       totalBugs: userRewards.totalBugs,
