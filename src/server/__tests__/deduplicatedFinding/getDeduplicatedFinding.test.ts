@@ -11,7 +11,7 @@ import {db, schema} from '@/server/db'
 import {InsertUser} from '@/server/db/schema/user'
 import {InsertContest} from '@/server/db/schema/contest'
 import {InsertDeduplicatedFinding} from '@/server/db/schema/deduplicatedFinding'
-import {getDeduplicatedFindings} from '@/server/actions/deduplicatedFinding/getDeduplicatedFinding'
+import {getDeduplicatedFindingsAction} from '@/server/actions/deduplicatedFinding/getDeduplicatedFinding'
 
 const userId = uuidv4()
 const contestId = uuidv4()
@@ -97,7 +97,7 @@ describe('getDeduplicatedFinding', () => {
       throw new Error('Failed to insert deduplicated findings')
     }
 
-    const result = await getDeduplicatedFindings({contestId})
+    const result = await getDeduplicatedFindingsAction({contestId})
 
     expect(result).toEqual(insertedDeduplicatedFindings)
   })

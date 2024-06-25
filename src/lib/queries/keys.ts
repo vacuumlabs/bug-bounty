@@ -41,6 +41,7 @@ export const queryKeys = createQueryKeyStore({
   },
   deduplicatedFindings: {
     all: (params: GetDeduplicatedFindingsParams) => [params],
+    totalSize: (contestId: string) => [contestId],
   },
   gitHub: {
     publicRepos: (userId: string | undefined) => [userId],

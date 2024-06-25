@@ -14,9 +14,13 @@ import {getContestStatus} from '@/lib/utils/common/contest'
 
 type ContestOverviewProps = {
   contest: Contest
+  vulnerabilitiesCount?: number
 }
 
-const ContestOverview = ({contest}: ContestOverviewProps) => {
+const ContestOverview = ({
+  contest,
+  vulnerabilitiesCount,
+}: ContestOverviewProps) => {
   const projectType = translateEnum.projectCategory(contest.projectCategory)
   const projectLanguage = translateEnum.projectLanguage(contest.projectLanguage)
 
@@ -61,9 +65,11 @@ const ContestOverview = ({contest}: ContestOverviewProps) => {
           </div>
         )}
         <div className="row-span-2 flex h-[296px] flex-col justify-between bg-grey-90 p-6">
-          <h2 className="text-titleM">Total Rewards</h2>
+          <h2 className="text-titleM">
+            {vulnerabilitiesCount ? 'Vulnerabilities found' : 'Total Rewards'}
+          </h2>
           <span className="text-headlineS">
-            {formatAda(contest.rewardsAmount)}
+            {vulnerabilitiesCount ?? formatAda(contest.rewardsAmount)}
           </span>
         </div>
         <div className="flex h-[136px] flex-col justify-between bg-grey-90 p-6">
