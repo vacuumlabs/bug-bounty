@@ -7,6 +7,7 @@ export const PATHS = {
   home: '/',
   contest: (id: string) => `/contests/${id}`,
   myProjects: '/my-projects',
+  myProjectDetails: (id: string) => `/my-projects/${id}`,
   myProjectsRewards: '/my-projects/rewards',
   myFindings: '/my-findings',
   myFindingsRewards: '/my-findings/rewards',

@@ -11,6 +11,7 @@ import {Button} from '@/components/ui/Button'
 import {ContestStatus} from '@/server/db/models'
 import {ellipsizeText, formatAda} from '@/lib/utils/common/format'
 import type {ContestWithFindingCounts} from '@/server/actions/contest/getMyContests'
+import {PATHS} from '@/lib/utils/common/paths'
 
 type MyContestsListItemProps = {
   contest: ContestWithFindingCounts
@@ -76,7 +77,7 @@ const MyContestsListItem = ({contest}: MyContestsListItemProps) => {
           <ContestStatusBadge contest={contest} />
         </div>
         <Button variant="outline" asChild>
-          <Link href="#" className="gap-2">
+          <Link href={PATHS.myProjectDetails(contest.id)} className="gap-2">
             {'Show details'}
             <ArrowRight />
           </Link>
