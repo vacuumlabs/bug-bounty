@@ -4,12 +4,21 @@ import backgroundImage from '@public/images/background-graphic.png'
 import {prefetchGetContest} from '@/lib/queries/contest/getContest'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 import ContestDetails from '@/components/sections/contest/ContestDetails/ContestDetails'
-import {prefetchGetContestLeaderboard} from '@/lib/queries/contest/getContestLeaderboard'
+import {
+  prefetchGetContestLeaderboard,
+  prefetchGetContestLeaderboardCount,
+} from '@/lib/queries/contest/getContestLeaderboard'
+import {CONTEST_LEADERBOARD_PAGE_SIZE} from '@/components/sections/contest/ContestDetails/ContestLeaderboard'
 
 const ContestDetailPage = async ({params}: {params: {id: string}}) => {
   await Promise.all([
     prefetchGetContest(params.id),
-    prefetchGetContestLeaderboard(params.id),
+    prefetchGetContestLeaderboard({
+      contestId: params.id,
+      offset: 0,
+      limit: CONTEST_LEADERBOARD_PAGE_SIZE,
+    }),
+    prefetchGetContestLeaderboardCount(params.id),
   ])
 
   return (

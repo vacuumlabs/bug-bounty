@@ -1,6 +1,6 @@
 'use server'
 
-import {count, desc, eq, sql, sum} from 'drizzle-orm'
+import {count, countDistinct, desc, eq, sql, sum} from 'drizzle-orm'
 
 import {ServerError} from '@/lib/types/error'
 import {serializeServerErrors} from '@/lib/utils/common/error'
@@ -10,15 +10,21 @@ import {rewards} from '@/server/db/schema/reward'
 import {users} from '@/server/db/schema/user'
 import {ContestStatus} from '@/server/db/models'
 
-export type GetContestParams = {
+export type GetContestLeaderboardParams = {
   contestId: string
+  limit: number
+  offset?: number
 }
 
 export type ContestLeaderboard = Awaited<
   ReturnType<typeof getContestLeaderboardAction>
 >
 
-const getContestLeaderboardAction = async ({contestId}: GetContestParams) => {
+const getContestLeaderboardAction = async ({
+  contestId,
+  limit,
+  offset = 0,
+}: GetContestLeaderboardParams) => {
   const contest = await db.query.contests.findFirst({
     where: (contests, {eq}) => eq(contests.id, contestId),
     columns: {
@@ -80,6 +86,8 @@ const getContestLeaderboardAction = async ({contestId}: GetContestParams) => {
     })
     .from(userRewards)
     .leftJoin(users, eq(users.id, userRewards.userId))
+    .limit(limit)
+    .offset(offset)
     .orderBy(desc(userRewards.totalRewards))
 
   return contestLeaderboard
@@ -87,4 +95,23 @@ const getContestLeaderboardAction = async ({contestId}: GetContestParams) => {
 
 export const getContestLeaderboard = serializeServerErrors(
   getContestLeaderboardAction,
+)
+
+const getContestLeaderboardCountAction = async (contestId: string) => {
+  const findingAuthorsCount = await db
+    .select({
+      count: countDistinct(findings.authorId),
+    })
+    .from(findings)
+    .where(eq(findings.contestId, contestId))
+
+  if (!findingAuthorsCount[0]) {
+    throw new ServerError('Failed to get findings authours total size.')
+  }
+
+  return {count: findingAuthorsCount[0].count}
+}
+
+export const getContestLeaderboardCount = serializeServerErrors(
+  getContestLeaderboardCountAction,
 )
