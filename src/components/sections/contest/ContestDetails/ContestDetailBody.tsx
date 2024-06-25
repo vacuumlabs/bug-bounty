@@ -4,7 +4,7 @@ import ContestLeaderboard from './ContestLeaderboard'
 import ContestDetails from './ContestInfo'
 
 import Separator from '@/components/ui/Separator'
-import {Tabs, TabsList, TabsTrigger} from '@/components/ui/Tabs'
+import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/Tabs'
 import {useSearchParamsEnumState} from '@/lib/hooks/useSearchParamsState'
 import {ContestView, ContestStatus} from '@/server/db/models'
 import {Contest} from '@/server/actions/contest/getContest'
@@ -38,12 +38,12 @@ const ContestDetailBody = ({contest}: ContestDetailBodyProps) => {
         </TabsList>
         <Separator />
         <div className="flex flex-grow flex-col bg-black px-24 pb-24 pt-12">
-          {contestView === ContestView.DETAILS && (
+          <TabsContent value={ContestView.DETAILS}>
             <ContestDetails contest={contest} />
-          )}
-          {contestView === ContestView.LEADERBOARD && (
+          </TabsContent>
+          <TabsContent value={ContestView.LEADERBOARD}>
             <ContestLeaderboard contestId={contest.id} />
-          )}
+          </TabsContent>
         </div>
       </Tabs>
     </div>
