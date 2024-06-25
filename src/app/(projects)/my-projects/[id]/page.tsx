@@ -3,9 +3,18 @@ import Image from 'next/image'
 import backgroundImage from '@public/images/thin-overlay.png'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 import MyProjectDetails from '@/components/sections/projects/MyProjectDeailts'
+import {prefetchGetContest} from '@/lib/queries/contest/getContest'
+import {
+  prefetchGetDeduplicatedFindings,
+  prefetchGetDeduplicatedFindingsCount,
+} from '@/lib/queries/deduplicatedFinding/getDeduplicatedFinding'
 
 const MyProjectDetailPage = async ({params}: {params: {id: string}}) => {
-  await Promise.all('')
+  await Promise.all([
+    prefetchGetContest(params.id),
+    prefetchGetDeduplicatedFindings({contestId: params.id}),
+    prefetchGetDeduplicatedFindingsCount(params.id),
+  ])
 
   return (
     <main className="mt-12 flex flex-grow flex-col">
