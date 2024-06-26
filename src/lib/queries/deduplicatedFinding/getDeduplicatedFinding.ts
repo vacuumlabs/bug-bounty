@@ -4,11 +4,31 @@ import {queryKeys} from '../keys'
 
 import {
   GetDeduplicatedFindingsParams,
+  getDeduplicatedFinding,
   getDeduplicatedFindings,
   getDeduplicatedFindingsCount,
 } from '@/server/actions/deduplicatedFinding/getDeduplicatedFinding'
 import getServerQueryClient from '@/server/utils/queryClient'
 import {withApiErrorHandler} from '@/lib/utils/common/error'
+
+const getDeduplicatedFindingQueryOptions = (deduplicatedFindingId: string) => ({
+  queryKey: queryKeys.deduplicatedFindings.one(deduplicatedFindingId).queryKey,
+  queryFn: withApiErrorHandler(() =>
+    getDeduplicatedFinding(deduplicatedFindingId),
+  ),
+})
+
+export const useGetDeduplicatedFinding = (deduplicatedFindingId: string) =>
+  useQuery(getDeduplicatedFindingQueryOptions(deduplicatedFindingId))
+
+export const prefetchGetDeduplicatedFinding = async (
+  deduplicatedFindingId: string,
+) => {
+  const queryClient = getServerQueryClient()
+  await queryClient.prefetchQuery(
+    getDeduplicatedFindingQueryOptions(deduplicatedFindingId),
+  )
+}
 
 const getDeduplicatedFindingsQueryOptions = (
   params: GetDeduplicatedFindingsParams,

@@ -8,6 +8,14 @@ export const PATHS = {
   contest: (id: string) => `/contests/${id}`,
   myProjects: '/my-projects',
   myProjectDetails: (id: string) => `/my-projects/${id}`,
+  myProjectVulnerability: (projectId: string, deduplicatedFindingId: string) =>
+    `/my-projects/${projectId}/vulnerabilities/${deduplicatedFindingId}`,
+  myProjectVulnerabilityReport: (
+    projectId: string,
+    deduplicatedFindingId: string,
+    findingId: string,
+  ) =>
+    `/my-projects/${projectId}/vulnerabilities/${deduplicatedFindingId}/reports/${findingId}`,
   myProjectsRewards: '/my-projects/rewards',
   myFindings: '/my-findings',
   myFindingsRewards: '/my-findings/rewards',
