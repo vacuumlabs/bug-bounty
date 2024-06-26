@@ -18,6 +18,7 @@ const getFindingAction = async ({findingId}: GetFindingParams) => {
       findingAttachments: {
         columns: {
           attachmentUrl: true,
+          fileName: true,
         },
       },
       deduplicatedFinding: {

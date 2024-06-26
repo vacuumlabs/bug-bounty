@@ -19,6 +19,7 @@ export const findingAttachments = pgTable(
       .notNull()
       .references(() => findings.id, {onDelete: 'cascade'}),
     attachmentUrl: varchar('url', {length: 255}).notNull(),
+    fileName: varchar('fileName', {length: 255}).notNull(),
     mimeType: varchar('mimeType', {length: 255}),
     createdAt: timestamp('createdAt', {
       mode: 'date',
@@ -53,6 +54,7 @@ export const insertFindingAttachmentSchema = createInsertSchema(
     attachmentUrl: (schema) =>
       schema.attachmentUrl.url('Invalid attachment URL.'),
     mimeType: (schema) => schema.mimeType.min(1, 'MIME type can’t be empty.'),
+    fileName: (schema) => schema.fileName.min(1, 'File name can’t be empty.'),
   },
 )
   .omit({

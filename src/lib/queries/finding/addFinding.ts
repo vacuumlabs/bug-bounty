@@ -32,9 +32,10 @@ const addFindingWithAttachments = async ({
 
   return addFinding({
     finding,
-    attachments: uploadedBlobs.map((blob) => ({
+    attachments: uploadedBlobs.map((blob, index) => ({
       attachmentUrl: blob.url,
       mimeType: blob.contentType,
+      fileName: attachments[index]?.name || 'unknown',
     })),
   })
 }
