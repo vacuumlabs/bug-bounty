@@ -77,8 +77,14 @@ const MyContestsListItem = ({contest}: MyContestsListItemProps) => {
           <ContestStatusBadge contest={contest} />
         </div>
         <Button variant="outline" asChild>
-          <Link href={PATHS.myProjectDetails(contest.id)} className="gap-2">
-            {'Show details'}
+          <Link
+            href={
+              contest.status === ContestStatus.FINISHED
+                ? `${PATHS.myProjectDetails(contest.id)}?view=vulnerabilities`
+                : PATHS.myProjectDetails(contest.id)
+            }
+            className="gap-2">
+            Show details
             <ArrowRight />
           </Link>
         </Button>
