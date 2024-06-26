@@ -24,6 +24,7 @@ type ContestOverviewProps = {
 const ContestOverview = ({contest, myProject}: ContestOverviewProps) => {
   const projectType = translateEnum.projectCategory(contest.projectCategory)
   const projectLanguage = translateEnum.projectLanguage(contest.projectLanguage)
+  const router = useRouter()
 
   const isContestRunning =
     DateTime.fromJSDate(contest.startDate) < DateTime.now() &&
