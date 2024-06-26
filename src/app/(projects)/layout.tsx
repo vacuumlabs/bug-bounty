@@ -1,6 +1,6 @@
 import {ReactNode} from 'react'
 
-import ProjectsNavbar from '@/components/global/navbars/ProjectsNavbar'
+import RoleBasedNavbar from '@/components/global/navbars/RoleBasedNavbar/RoleBasedNavbar'
 
 type ProjectsLayoutProps = {
   children: ReactNode
@@ -9,7 +9,7 @@ type ProjectsLayoutProps = {
 const ProjectsLayout = ({children}: ProjectsLayoutProps) => {
   return (
     <>
-      <ProjectsNavbar />
+      <RoleBasedNavbar />
       <div className="flex flex-grow flex-col pt-[96px]">{children}</div>
     </>
   )

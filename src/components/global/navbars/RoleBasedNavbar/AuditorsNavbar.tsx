@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import {usePathname} from 'next/navigation'
-import {ArrowRight, LogOut} from 'lucide-react'
+import {LogOut} from 'lucide-react'
 
 import {Button} from '@/components/ui/Button'
 import bountyLabLogo from '@public/images/bounty-lab-icon.png'
@@ -11,8 +11,9 @@ import {cn} from '@/lib/utils/client/tailwind'
 import {UserAvatar} from '@/components/ui/Avatar'
 import {PATHS} from '@/lib/utils/common/paths'
 import SignOutButton from '@/components/ui/SignOutButon'
+import RoleSwitch from '@/components/ui/RoleSwitch'
 
-const ProjectsNavbar = () => {
+const AuditorsNavbar = () => {
   const pathname = usePathname()
 
   return (
@@ -30,26 +31,30 @@ const ProjectsNavbar = () => {
           <Button
             asChild
             variant="link"
-            className={cn(pathname === PATHS.myProjects && 'font-bold')}>
-            <Link href={PATHS.myProjects}>Projects</Link>
+            className={cn(pathname === PATHS.myFindings && 'font-bold')}>
+            <Link href={PATHS.myFindings}>My Submissions</Link>
           </Button>
           <Button
             asChild
             variant="link"
-            className={cn(pathname === PATHS.myProjectsRewards && 'font-bold')}>
-            <Link href={PATHS.myProjectsRewards}>Rewards</Link>
+            className={cn(pathname === PATHS.myFindingsRewards && 'font-bold')}>
+            <Link href={PATHS.myFindingsRewards}>Rewards</Link>
+          </Button>
+          <Button
+            asChild
+            variant="link"
+            className={cn(pathname === PATHS.home && 'font-bold')}>
+            <Link href={PATHS.home}>Bounties</Link>
           </Button>
         </nav>
         <div className="flex items-center gap-10">
-          {pathname !== PATHS.newProject && (
+          {pathname !== PATHS.newFinding && (
             <Button asChild>
-              <Link href={PATHS.newProject} className="gap-3">
-                Create audit
-                <ArrowRight />
-              </Link>
+              <Link href={PATHS.newFinding}>Submit Report</Link>
             </Button>
           )}
           <UserAvatar />
+          <RoleSwitch />
           <SignOutButton variant="link">
             <LogOut />
           </SignOutButton>
@@ -59,4 +64,4 @@ const ProjectsNavbar = () => {
   )
 }
 
-export default ProjectsNavbar
+export default AuditorsNavbar
