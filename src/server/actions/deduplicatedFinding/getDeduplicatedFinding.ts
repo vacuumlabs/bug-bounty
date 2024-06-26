@@ -10,6 +10,7 @@ import {ServerError} from '@/lib/types/error'
 import {findings} from '@/server/db/schema/finding'
 import {MyProjectVulnerabilitiesSorting, SortDirection} from '@/lib/types/enums'
 import {SortParams, sortByColumn} from '@/lib/utils/common/sorting'
+import {ContestStatus} from '@/server/db/models'
 
 const getDeduplicatedFindingAction = async (deduplicatedFindingId: string) => {
   const session = await requireServerSession()
@@ -20,6 +21,7 @@ const getDeduplicatedFindingAction = async (deduplicatedFindingId: string) => {
         columns: {
           authorId: true,
           title: true,
+          status: true,
         },
       },
     },
@@ -29,6 +31,10 @@ const getDeduplicatedFindingAction = async (deduplicatedFindingId: string) => {
 
   if (deduplicatedFinding?.contest.authorId !== session.user.id) {
     throw new ServerError('Unauthorized access to deduplicated finding.')
+  }
+
+  if (deduplicatedFinding.contest.status !== ContestStatus.FINISHED) {
+    throw new ServerError('Contest is not finished.')
   }
 
   const findingCounts = await db
@@ -67,12 +73,17 @@ export const getDeduplicatedFindingsAction = async ({
   const contest = await db.query.contests.findFirst({
     columns: {
       authorId: true,
+      status: true,
     },
     where: (contests, {eq}) => eq(contests.id, contestId),
   })
 
   if (contest?.authorId !== session.user.id) {
     throw new ServerError('Unauthorized access to contest.')
+  }
+
+  if (contest.status !== ContestStatus.FINISHED) {
+    throw new ServerError('Contest is not finished.')
   }
 
   const findingsCount = countDistinct(findings.id).as('findingsCount')
@@ -113,12 +124,17 @@ const getDeduplicatedFindingsCountAction = async (contestId: string) => {
   const contest = await db.query.contests.findFirst({
     columns: {
       authorId: true,
+      status: true,
     },
     where: (contests, {eq}) => eq(contests.id, contestId),
   })
 
   if (contest?.authorId !== session.user.id) {
     throw new ServerError('Unauthorized access to contest.')
+  }
+
+  if (contest.status !== ContestStatus.FINISHED) {
+    throw new ServerError('Contest is not finished.')
   }
 
   const deduplicatedFindingsCount = await db

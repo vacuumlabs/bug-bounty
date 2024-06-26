@@ -17,7 +17,7 @@ import {getContestStatus} from '@/lib/utils/common/contest'
 type ContestOverviewProps = {
   contest: Contest
   myProject?: {
-    vulnerabilitiesCount: number
+    vulnerabilitiesCount: number | undefined
   }
 }
 
@@ -80,12 +80,13 @@ const ContestOverview = ({contest, myProject}: ContestOverviewProps) => {
         )}
         <div className="row-span-2 flex h-[296px] flex-col justify-between bg-grey-90 p-6">
           <h2 className="text-titleM">
-            {myProject ? 'Vulnerabilities found' : 'Total Rewards'}
+            {myProject?.vulnerabilitiesCount
+              ? 'Vulnerabilities found'
+              : 'Total Rewards'}
           </h2>
           <span className="text-headlineS">
-            {myProject
-              ? myProject.vulnerabilitiesCount
-              : formatAda(contest.rewardsAmount)}
+            {myProject?.vulnerabilitiesCount ??
+              formatAda(contest.rewardsAmount)}
           </span>
         </div>
         <div className="flex h-[136px] flex-col justify-between bg-grey-90 p-6">

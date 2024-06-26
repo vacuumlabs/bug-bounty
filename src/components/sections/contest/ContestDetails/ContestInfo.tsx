@@ -9,10 +9,13 @@ import {formatAda} from '@/lib/utils/common/format'
 
 type ContestInfoProps = {
   contest: Contest
-  isMyContest?: boolean
+  showRewardsAmount?: boolean
 }
 
-const ContestInfo = ({contest, isMyContest}: ContestInfoProps) => {
+const ContestInfo = ({
+  contest,
+  showRewardsAmount = false,
+}: ContestInfoProps) => {
   return (
     <div className="mt-12 xl:mx-[340px]">
       <div className="mb-12 flex flex-col gap-3">
@@ -35,7 +38,7 @@ const ContestInfo = ({contest, isMyContest}: ContestInfoProps) => {
         ))}
       </div>
 
-      {isMyContest && (
+      {showRewardsAmount && (
         <div className="mb-12 flex flex-col gap-3">
           <h3 className="text-bodyL text-purple-light">
             Total rewards (in ADA)

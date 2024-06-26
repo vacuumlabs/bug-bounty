@@ -1,4 +1,4 @@
-import {useQuery} from '@tanstack/react-query'
+import {UseQueryOptions, useQuery} from '@tanstack/react-query'
 
 import {queryKeys} from '../keys'
 
@@ -53,8 +53,14 @@ const getGetDeduplicatedFindingsCountQueryOptions = (contestId: string) => ({
   queryFn: withApiErrorHandler(() => getDeduplicatedFindingsCount(contestId)),
 })
 
-export const useGetDeduplicatedFindingsCount = (contestId: string) =>
-  useQuery(getGetDeduplicatedFindingsCountQueryOptions(contestId))
+export const useGetDeduplicatedFindingsCount = (
+  contestId: string,
+  options?: Partial<UseQueryOptions<{count: number}>>,
+) =>
+  useQuery({
+    ...getGetDeduplicatedFindingsCountQueryOptions(contestId),
+    ...options,
+  })
 
 export const prefetchGetDeduplicatedFindingsCount = async (
   contestId: string,

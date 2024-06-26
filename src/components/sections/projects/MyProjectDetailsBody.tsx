@@ -44,7 +44,10 @@ const MyProjectDetailsBody = ({contest}: MyProjectDetailsBodyProps) => {
         <Separator />
         <div className="flex flex-grow flex-col bg-black px-24 pb-24 pt-12">
           <TabsContent value={MyProjectDetailsView.DETAILS}>
-            <ContestInfo contest={contest} isMyContest />
+            <ContestInfo
+              contest={contest}
+              showRewardsAmount={contest.status === ContestStatus.FINISHED}
+            />
           </TabsContent>
           <TabsContent value={MyProjectDetailsView.VULNERABILITIES}>
             <MyProjectVulnerabilitiesList contestId={contest.id} />

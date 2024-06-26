@@ -9,6 +9,7 @@ import Skeleton from '@/components/ui/Skeleton'
 import {useGetContest} from '@/lib/queries/contest/getContest'
 import Separator from '@/components/ui/Separator'
 import {useGetDeduplicatedFindingsCount} from '@/lib/queries/deduplicatedFinding/getDeduplicatedFinding'
+import {ContestStatus} from '@/server/db/models'
 
 type MyProjectDetailsProps = {
   contestId: string
@@ -19,7 +20,9 @@ const MyProjectDetails = ({contestId}: MyProjectDetailsProps) => {
   const {
     data: deduplicatedFindingsCount,
     isLoading: deduplicatedFindingsCountLoading,
-  } = useGetDeduplicatedFindingsCount(contestId)
+  } = useGetDeduplicatedFindingsCount(contestId, {
+    enabled: contest?.status === ContestStatus.FINISHED,
+  })
 
   if (contestLoading || deduplicatedFindingsCountLoading) {
     return (
@@ -51,7 +54,7 @@ const MyProjectDetails = ({contestId}: MyProjectDetailsProps) => {
     )
   }
 
-  if (!contest || !deduplicatedFindingsCount) {
+  if (!contest) {
     return notFound()
   }
 
@@ -60,7 +63,10 @@ const MyProjectDetails = ({contestId}: MyProjectDetailsProps) => {
       <ContestOverview
         contest={contest}
         myProject={{
-          vulnerabilitiesCount: deduplicatedFindingsCount.count,
+          vulnerabilitiesCount:
+            contest.status === ContestStatus.FINISHED
+              ? deduplicatedFindingsCount?.count
+              : undefined,
         }}
       />
       <MyProjectDetailsBody contest={contest} />
