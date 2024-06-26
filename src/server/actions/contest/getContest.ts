@@ -8,9 +8,22 @@ export type GetContestParams = {
   contestId: string
 }
 
+export type Contest = Awaited<ReturnType<typeof getContestAction>>
+
 const getContestAction = async ({contestId}: GetContestParams) => {
   const contest = await db.query.contests.findFirst({
     where: (contests, {eq}) => eq(contests.id, contestId),
+    with: {
+      contestSeverityWeights: {
+        columns: {
+          info: true,
+          low: true,
+          medium: true,
+          high: true,
+          critical: true,
+        },
+      },
+    },
   })
 
   if (!contest) {

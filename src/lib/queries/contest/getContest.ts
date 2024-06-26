@@ -4,8 +4,7 @@ import {queryKeys} from '../keys'
 
 import getServerQueryClient from '@/server/utils/queryClient'
 import {withApiErrorHandler} from '@/lib/utils/common/error'
-import {getContest} from '@/server/actions/contest/getContest'
-import {Contest} from '@/server/db/schema/contest'
+import {Contest, getContest} from '@/server/actions/contest/getContest'
 
 const getQueryOptions = (contestId: string | undefined) => ({
   queryKey: queryKeys.contests.one(contestId).queryKey,

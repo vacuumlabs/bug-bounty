@@ -11,6 +11,7 @@ import {GetPublicContestCountsParams} from '@/server/actions/contest/getPublicCo
 import {GetMyContestsParams} from '@/server/actions/contest/getMyContests'
 import {GetMyFindingsParams} from '@/server/actions/finding/getMyFindings'
 import {GetMyFindingsRewardsParams} from '@/server/actions/reward/getMyFindingsRewards'
+import {GetContestLeaderboardParams} from '@/server/actions/contest/getContestLeaderboard'
 
 export const queryKeys = createQueryKeyStore({
   users: {
@@ -27,6 +28,8 @@ export const queryKeys = createQueryKeyStore({
   },
   contests: {
     one: (contestId: string | undefined) => [contestId],
+    leaderboard: (params: GetContestLeaderboardParams) => [params],
+    leaderboardCount: (contestId: string | undefined) => [contestId],
     mine: (params: GetMyContestsParams) => [params],
     reportCounts: null,
     public: (params: GetPublicContestsParams) => [params],
