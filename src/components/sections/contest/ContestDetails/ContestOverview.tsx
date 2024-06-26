@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import {DateTime} from 'luxon'
+import {ArrowLeft} from 'lucide-react'
+import {useRouter} from 'next/navigation'
 
 import cardanoLogo from '@public/images/cardano-logo.png'
 import {Avatar, AvatarImage} from '@/components/ui/Avatar'
@@ -14,35 +16,47 @@ import {getContestStatus} from '@/lib/utils/common/contest'
 
 type ContestOverviewProps = {
   contest: Contest
-  vulnerabilitiesCount?: number
+  myProject?: {
+    vulnerabilitiesCount: number
+  }
 }
 
-const ContestOverview = ({
-  contest,
-  vulnerabilitiesCount,
-}: ContestOverviewProps) => {
+const ContestOverview = ({contest, myProject}: ContestOverviewProps) => {
   const projectType = translateEnum.projectCategory(contest.projectCategory)
   const projectLanguage = translateEnum.projectLanguage(contest.projectLanguage)
+  const router = useRouter()
 
   return (
     <div className="px-24">
       <div className="flex items-center gap-12">
+        {myProject && (
+          <Button
+            variant="outline"
+            size="small"
+            className="flex gap-2 uppercase"
+            onClick={() => router.back()}>
+            <ArrowLeft width={16} height={16} />
+            Go Back
+          </Button>
+        )}
         <div className="flex items-center gap-6">
           <Avatar>
             <AvatarImage src={cardanoLogo.src} />
           </Avatar>
           <span className="text-headlineS text-white">{contest.title}</span>
         </div>
-        <div className="flex items-center gap-6">
-          <Button variant="default" size="medium" asChild>
-            <Link href={PATHS.newFinding}>Submit Report</Link>
-          </Button>
-          <Button variant="outline" size="medium" asChild>
-            <Link href={contest.repoUrl} target="_blank">
-              View Repo
-            </Link>
-          </Button>
-        </div>
+        {!myProject && (
+          <div className="flex items-center gap-6">
+            <Button variant="default" size="medium" asChild>
+              <Link href={PATHS.newFinding}>Submit Report</Link>
+            </Button>
+            <Button variant="outline" size="medium" asChild>
+              <Link href={contest.repoUrl} target="_blank">
+                View Repo
+              </Link>
+            </Button>
+          </div>
+        )}
       </div>
       <div className="mt-12 grid grid-cols-4 grid-rows-2 gap-6">
         {contest.endDate < new Date() ? (
@@ -66,10 +80,12 @@ const ContestOverview = ({
         )}
         <div className="row-span-2 flex h-[296px] flex-col justify-between bg-grey-90 p-6">
           <h2 className="text-titleM">
-            {vulnerabilitiesCount ? 'Vulnerabilities found' : 'Total Rewards'}
+            {myProject ? 'Vulnerabilities found' : 'Total Rewards'}
           </h2>
           <span className="text-headlineS">
-            {vulnerabilitiesCount ?? formatAda(contest.rewardsAmount)}
+            {myProject
+              ? myProject.vulnerabilitiesCount
+              : formatAda(contest.rewardsAmount)}
           </span>
         </div>
         <div className="flex h-[136px] flex-col justify-between bg-grey-90 p-6">

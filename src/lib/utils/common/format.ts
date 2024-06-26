@@ -13,6 +13,7 @@ export const ellipsizeText = (text: string, maxLength: number) => {
 export const formatAda = (
   lovelaceAmount: string | number,
   maximumFractionDigits = 2,
+  showSymbol = true,
 ) => {
   const parsedAmount =
     typeof lovelaceAmount === 'string'
@@ -21,7 +22,7 @@ export const formatAda = (
 
   const adaAmount = parsedAmount / 1e6
 
-  return `₳ ${adaAmount.toLocaleString(APP_LOCALE, {
+  return `${showSymbol ? '₳ ' : ''}${adaAmount.toLocaleString(APP_LOCALE, {
     maximumFractionDigits,
   })}`
 }

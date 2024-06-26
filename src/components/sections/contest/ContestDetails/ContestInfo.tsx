@@ -5,12 +5,14 @@ import {LinkIcon} from 'lucide-react'
 
 import {Contest} from '@/server/actions/contest/getContest'
 import ContestSeverityWeightsDisplay from '@/components/ui/ContestSeverityWeightsDisplay'
+import {formatAda} from '@/lib/utils/common/format'
 
 type ContestInfoProps = {
   contest: Contest
+  isMyContest?: boolean
 }
 
-const ContestInfo = ({contest}: ContestInfoProps) => {
+const ContestInfo = ({contest, isMyContest}: ContestInfoProps) => {
   return (
     <div className="mt-12 xl:mx-[340px]">
       <div className="mb-12 flex flex-col gap-3">
@@ -26,12 +28,23 @@ const ContestInfo = ({contest}: ContestInfoProps) => {
       <div className="mb-12 flex flex-col gap-3">
         <h3 className="text-bodyL text-purple-light">Scope definition</h3>
         {contest.filesInScope.map((fileUrl) => (
-          <Link href={contest.repoUrl} key={fileUrl} className="flex gap-3">
+          <Link href={fileUrl} key={fileUrl} className="flex gap-3">
             <span>{fileUrl}</span>
             <LinkIcon width={24} height={24} />
           </Link>
         ))}
       </div>
+
+      {isMyContest && (
+        <div className="mb-12 flex flex-col gap-3">
+          <h3 className="text-bodyL text-purple-light">
+            Total rewards (in ADA)
+          </h3>
+          <p className="text-bodyM">
+            {formatAda(contest.rewardsAmount, 2, false)}
+          </p>
+        </div>
+      )}
 
       <div className="mb-12 flex flex-col gap-3">
         <h3 className="text-bodyL text-purple-light">Description</h3>
@@ -51,7 +64,7 @@ const ContestInfo = ({contest}: ContestInfoProps) => {
 
       <div className="mb-12 flex flex-col gap-3">
         <h3 className="text-bodyL text-purple-light">Custom conditions</h3>
-        <p className="text-bodyM">{contest.customConditions}</p>
+        <p className="text-bodyM">{contest.customConditions || '-'}</p>
       </div>
     </div>
   )
