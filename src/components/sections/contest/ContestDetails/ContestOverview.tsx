@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import {DateTime} from 'luxon'
 import {ArrowLeft} from 'lucide-react'
-import {useRouter} from 'next/navigation'
 
 import cardanoLogo from '@public/images/cardano-logo.png'
 import {Avatar, AvatarImage} from '@/components/ui/Avatar'
@@ -24,7 +23,6 @@ type ContestOverviewProps = {
 const ContestOverview = ({contest, myProject}: ContestOverviewProps) => {
   const projectType = translateEnum.projectCategory(contest.projectCategory)
   const projectLanguage = translateEnum.projectLanguage(contest.projectLanguage)
-  const router = useRouter()
 
   return (
     <div className="px-24">
@@ -34,9 +32,11 @@ const ContestOverview = ({contest, myProject}: ContestOverviewProps) => {
             variant="outline"
             size="small"
             className="flex gap-2 uppercase"
-            onClick={() => router.back()}>
-            <ArrowLeft width={16} height={16} />
-            Go Back
+            asChild>
+            <Link href={PATHS.myProjects}>
+              <ArrowLeft width={16} height={16} />
+              Go Back
+            </Link>
           </Button>
         )}
         <div className="flex items-center gap-6">
