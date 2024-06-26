@@ -84,7 +84,7 @@ const ContestOverview = ({contest, myProject}: ContestOverviewProps) => {
               ? 'Vulnerabilities found'
               : 'Total Rewards'}
           </h2>
-          <span className="text-headlineS">
+          <span className="break-words text-headlineS">
             {myProject?.vulnerabilitiesCount ??
               formatAda(contest.rewardsAmount)}
           </span>
