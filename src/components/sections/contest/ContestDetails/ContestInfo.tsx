@@ -31,7 +31,7 @@ const ContestInfo = ({
       <div className="mb-12 flex flex-col gap-3">
         <h3 className="text-bodyL text-purple-light">Scope definition</h3>
         {contest.filesInScope.map((fileUrl) => (
-          <Link href={fileUrl} key={fileUrl} className="flex gap-3">
+          <Link href={contest.repoUrl} key={fileUrl} className="flex gap-3">
             <span>{fileUrl}</span>
             <LinkIcon width={24} height={24} />
           </Link>
