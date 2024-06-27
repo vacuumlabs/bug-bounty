@@ -13,7 +13,11 @@ import {UserAvatar} from '@/components/ui/Avatar'
 import {cn} from '@/lib/utils/client/tailwind'
 import {useSearchParamsState} from '@/lib/hooks/useSearchParamsState'
 import {HomePageTab} from '@/lib/types/enums'
-import {PATHS, getDashboardPathByUserRole} from '@/lib/utils/common/paths'
+import {
+  PATHS,
+  getAboutUsPathByUserRoleAndHomePageTab,
+  getDashboardPathByUserRole,
+} from '@/lib/utils/common/paths'
 import SignOutButton from '@/components/ui/SignOutButon'
 import RoleSwitch from '@/components/ui/RoleSwitch'
 
@@ -47,8 +51,15 @@ const Navbar = () => {
           <Button
             asChild
             variant="link"
-            className={cn(pathname === PATHS.aboutUs && 'font-bold')}>
-            <Link href={PATHS.aboutUs}>About us</Link>
+            className={cn(
+              pathname ===
+                getAboutUsPathByUserRoleAndHomePageTab(role, currentTab) &&
+                'font-bold',
+            )}>
+            <Link
+              href={getAboutUsPathByUserRoleAndHomePageTab(role, currentTab)}>
+              About us
+            </Link>
           </Button>
           {isLoggedIn ? (
             <>

@@ -1,7 +1,11 @@
+import {HomePageTab} from '@/lib/types/enums'
 import {UserRole} from '@/server/db/models'
 
 export const PATHS = {
-  aboutUs: '/about-us',
+  aboutUs: (role: UserRole) =>
+    role === UserRole.PROJECT_OWNER
+      ? '/about-us/for-projects'
+      : '/about-us/for-hunters',
   connectWallet: '/profile/connect-wallet',
   selectRole: '/select-role',
   home: '/',
@@ -31,6 +35,21 @@ export const getDashboardPathByUserRole = (
     default:
       return PATHS.selectRole
   }
+}
+
+export const getAboutUsPathByUserRoleAndHomePageTab = (
+  role: UserRole | null | undefined,
+  tab?: string,
+) => {
+  if (role) {
+    return PATHS.aboutUs(role)
+  }
+
+  if (tab === HomePageTab.PROJECTS) {
+    return PATHS.aboutUs(UserRole.PROJECT_OWNER)
+  }
+
+  return PATHS.aboutUs(UserRole.AUDITOR)
 }
 
 export const DISCORD_URL = 'https://discord.gg/EkwDJ3X5Hd'
