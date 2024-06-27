@@ -25,6 +25,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/AlertDialog'
 import {useDeleteFinding} from '@/lib/queries/finding/deleteFinding'
+import {FindingStatus} from '@/server/db/models'
 
 type MyFindingDetailsProps = {
   findingId: string
@@ -54,6 +55,11 @@ const MyFindingDetails = ({findingId}: MyFindingDetailsProps) => {
   if (!data) {
     return notFound()
   }
+
+  const isFindingDeletable =
+    DateTime.fromJSDate(data.contest.endDate) > DateTime.now() &&
+    (data.status === FindingStatus.DRAFT ||
+      data.status === FindingStatus.PENDING)
 
   return (
     <>
@@ -156,33 +162,35 @@ const MyFindingDetails = ({findingId}: MyFindingDetailsProps) => {
           </div>
         </div>
         <div className="flex justify-between">
-          <AlertDialog>
-            <AlertDialogTrigger>
-              <Button variant="outline" className="flex gap-3">
-                <Trash2 width={16} height={16} />
-                <span className="uppercase">Delete report</span>
-              </Button>
-            </AlertDialogTrigger>
+          {isFindingDeletable && (
+            <AlertDialog>
+              <AlertDialogTrigger>
+                <Button variant="outline" className="flex gap-3">
+                  <Trash2 width={16} height={16} />
+                  <span className="uppercase">Delete report</span>
+                </Button>
+              </AlertDialogTrigger>
 
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle className="uppercase">
-                  Are you sure you want to delete this report?
-                </AlertDialogTitle>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() =>
-                    mutate(findingId, {
-                      onSuccess: () => router.push(PATHS.myFindings),
-                    })
-                  }>
-                  Yes, delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="uppercase">
+                    Are you sure you want to delete this report?
+                  </AlertDialogTitle>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() =>
+                      mutate(findingId, {
+                        onSuccess: () => router.push(PATHS.myFindings),
+                      })
+                    }>
+                    Yes, delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
 
           <Button variant="default" asChild>
             <Link href={PATHS.myFindings}>
