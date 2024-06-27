@@ -25,6 +25,11 @@ const ContestOverview = ({contest, myProject}: ContestOverviewProps) => {
   const projectType = translateEnum.projectCategory(contest.projectCategory)
   const projectLanguage = translateEnum.projectLanguage(contest.projectLanguage)
 
+  const isContestRunning =
+    DateTime.fromJSDate(contest.startDate) < DateTime.now() &&
+    DateTime.fromJSDate(contest.endDate) > DateTime.now() &&
+    contest.status === ContestStatus.APPROVED
+
   return (
     <div className="px-24">
       <div className="flex items-center gap-12">
@@ -56,9 +61,7 @@ const ContestOverview = ({contest, myProject}: ContestOverviewProps) => {
         )}
       </div>
       <div className="mt-12 grid grid-cols-4 grid-rows-2 gap-6">
-        {DateTime.fromJSDate(contest.startDate) < DateTime.now() &&
-        DateTime.fromJSDate(contest.endDate) > DateTime.now() &&
-        contest.status === ContestStatus.APPROVED ? (
+        {isContestRunning ? (
           <div className="row-span-2 flex h-[296px] flex-col justify-between bg-grey-90 p-6">
             <h2 className="text-titleM">Remaining Time</h2>
             <span className="text-headlineS">
