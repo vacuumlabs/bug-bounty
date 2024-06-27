@@ -155,7 +155,7 @@ const getDeduplicatedFindingsCountAction = async (contestId: string) => {
     .where(eq(deduplicatedFindings.contestId, contestId))
 
   if (!deduplicatedFindingsCount[0]) {
-    throw new ServerError('Failed to get rewards total size.')
+    throw new ServerError('Failed to get deduplicated findings total size.')
   }
 
   return {count: deduplicatedFindingsCount[0].count}
