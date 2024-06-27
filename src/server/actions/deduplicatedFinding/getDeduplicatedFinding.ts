@@ -1,6 +1,6 @@
 'use server'
 
-import {count, countDistinct, eq} from 'drizzle-orm'
+import {count, countDistinct, eq, sql} from 'drizzle-orm'
 
 import {serializeServerErrors} from '@/lib/utils/common/error'
 import {db} from '@/server/db'
@@ -10,7 +10,7 @@ import {ServerError} from '@/lib/types/error'
 import {findings} from '@/server/db/schema/finding'
 import {MyProjectVulnerabilitiesSorting, SortDirection} from '@/lib/types/enums'
 import {SortParams, sortByColumn} from '@/lib/utils/common/sorting'
-import {ContestStatus} from '@/server/db/models'
+import {ContestStatus, FindingSeverity} from '@/server/db/models'
 
 const getDeduplicatedFindingAction = async (deduplicatedFindingId: string) => {
   const session = await requireServerSession()
@@ -64,7 +64,7 @@ export const getDeduplicatedFindingsAction = async ({
   limit,
   offset = 0,
   sort = {
-    field: MyProjectVulnerabilitiesSorting.FOUND_BY,
+    field: MyProjectVulnerabilitiesSorting.SEVERITY,
     direction: SortDirection.DESC,
   },
 }: GetDeduplicatedFindingsParams) => {
@@ -88,8 +88,18 @@ export const getDeduplicatedFindingsAction = async ({
 
   const findingsCount = countDistinct(findings.id).as('findingsCount')
 
+  const severitySort = sql<number>`
+  CASE ${deduplicatedFindings.severity}
+    WHEN ${FindingSeverity.INFO} THEN 1
+    WHEN ${FindingSeverity.LOW} THEN 2
+    WHEN ${FindingSeverity.MEDIUM} THEN 3
+    WHEN ${FindingSeverity.HIGH} THEN 4
+    WHEN ${FindingSeverity.CRITICAL} THEN 5
+    ELSE 6
+  END`
+
   const sortFieldMap = {
-    [MyProjectVulnerabilitiesSorting.SEVERITY]: deduplicatedFindings.severity,
+    [MyProjectVulnerabilitiesSorting.SEVERITY]: severitySort,
     [MyProjectVulnerabilitiesSorting.FOUND_BY]: findingsCount,
     [MyProjectVulnerabilitiesSorting.VULNERABILITY]: deduplicatedFindings.title,
   }
