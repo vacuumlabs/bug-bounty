@@ -29,11 +29,7 @@ const ContestOverview = ({contest, myProject}: ContestOverviewProps) => {
     <div className="px-24">
       <div className="flex items-center gap-12">
         {myProject && (
-          <Button
-            variant="outline"
-            size="small"
-            className="flex gap-2 uppercase"
-            asChild>
+          <Button variant="outline" size="small" className="flex gap-2" asChild>
             <Link href={PATHS.myProjects}>
               <ArrowLeft width={16} height={16} />
               Go Back

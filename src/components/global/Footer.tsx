@@ -49,7 +49,7 @@ const Footer = () => {
         <nav className="flex items-center gap-10">
           {footerLinks.map(({title, url}) => (
             <Button key={title} asChild variant="link">
-              <Link className="uppercase text-white/60" href={url}>
+              <Link className="text-white/60" href={url}>
                 {title}
               </Link>
             </Button>

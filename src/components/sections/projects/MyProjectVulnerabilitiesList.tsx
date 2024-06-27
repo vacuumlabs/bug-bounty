@@ -113,9 +113,7 @@ const MyProjectVulnerabilitiesList = ({
               </TableCell>
               <TableCell className="text-right">
                 <Button asChild variant="outline" size="small">
-                  <Link
-                    href={PATHS.myProjectVulnerability(contestId, data.id)}
-                    className="uppercase">
+                  <Link href={PATHS.myProjectVulnerability(contestId, data.id)}>
                     see all reports
                   </Link>
                 </Button>
@@ -127,7 +125,7 @@ const MyProjectVulnerabilitiesList = ({
                         data.id,
                         data.bestFindingId,
                       )}
-                      className="ml-3 gap-2 uppercase">
+                      className="ml-3 gap-2">
                       <span>go to best report</span>
                       <ArrowRight width={16} height={16} />
                     </Link>
