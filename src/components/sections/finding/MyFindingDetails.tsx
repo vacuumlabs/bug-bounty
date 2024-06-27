@@ -32,7 +32,7 @@ type MyFindingDetailsProps = {
 
 const MyFindingDetails = ({findingId}: MyFindingDetailsProps) => {
   const {data, isLoading} = useGetMyFinding({findingId})
-  const {mutateAsync, isPending} = useDeleteFinding()
+  const {mutate, isPending} = useDeleteFinding()
   const router = useRouter()
 
   if (isLoading || isPending) {
@@ -173,10 +173,11 @@ const MyFindingDetails = ({findingId}: MyFindingDetailsProps) => {
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={async () => {
-                    await mutateAsync(findingId)
-                    router.push(PATHS.myFindings)
-                  }}>
+                  onClick={() =>
+                    mutate(findingId, {
+                      onSuccess: () => router.push(PATHS.myFindings),
+                    })
+                  }>
                   Yes, delete
                 </AlertDialogAction>
               </AlertDialogFooter>
