@@ -119,7 +119,7 @@ const NewContestFormPage2 = ({form}: NewContestFormPageProps) => {
             </FormItem>
           )}
         />
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-12">
           <FormField
             control={control}
             name="startDate"

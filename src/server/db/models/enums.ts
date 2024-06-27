@@ -24,6 +24,11 @@ export enum ContestView {
   LEADERBOARD = 'leaderboard',
 }
 
+export enum MyProjectDetailsView {
+  DETAILS = 'details',
+  VULNERABILITIES = 'vulnerabilities',
+}
+
 export enum FindingOccurence {
   PAST = 'past',
   PRESENT = 'present',

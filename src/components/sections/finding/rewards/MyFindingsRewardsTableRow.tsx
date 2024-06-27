@@ -54,7 +54,7 @@ const MyFindingsRewardsTableRow = ({data}: MyFindingsRewardsTableRowProps) => {
             <Link
               href={`https://cardanoscan.io/transaction/${txHash}`}
               target="_blank"
-              className="gap-2 text-buttonS uppercase">
+              className="gap-2 text-buttonS">
               TX detail
               <Wallet width={16} height={16} />
             </Link>

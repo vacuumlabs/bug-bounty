@@ -23,3 +23,9 @@ export enum MyFindingsRewardsSorting {
   REWARD = 'reward',
   STATE = 'state',
 }
+
+export enum MyProjectVulnerabilitiesSorting {
+  VULNERABILITY = 'vulnerability',
+  FOUND_BY = 'foundBy',
+  SEVERITY = 'severity',
+}

@@ -70,7 +70,7 @@ const DateTimePicker = ({
   }
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-3">
       <DatePicker
         selected={datePickerValue}
         onSelect={handleDatePickerChange}

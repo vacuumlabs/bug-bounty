@@ -12,6 +12,10 @@ import {GetMyContestsParams} from '@/server/actions/contest/getMyContests'
 import {GetMyFindingsParams} from '@/server/actions/finding/getMyFindings'
 import {GetMyFindingsRewardsParams} from '@/server/actions/reward/getMyFindingsRewards'
 import {GetContestLeaderboardParams} from '@/server/actions/contest/getContestLeaderboard'
+import {
+  GetFindingParams,
+  GetFindingsParams,
+} from '@/server/actions/finding/getFinding'
 
 export const queryKeys = createQueryKeyStore({
   users: {
@@ -38,9 +42,13 @@ export const queryKeys = createQueryKeyStore({
   findings: {
     mine: (params: GetMyFindingsParams) => [params],
     counts: null,
+    byDeduplicatedFinding: (params: GetFindingsParams) => [params],
+    one: (params: GetFindingParams) => [params],
   },
   deduplicatedFindings: {
     all: (params: GetDeduplicatedFindingsParams) => [params],
+    one: (deduplicatedFindingId: string) => [deduplicatedFindingId],
+    totalSize: (contestId: string) => [contestId],
   },
   gitHub: {
     publicRepos: (userId: string | undefined) => [userId],

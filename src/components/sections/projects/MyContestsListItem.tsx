@@ -9,19 +9,41 @@ import ListItemStyledValueText from './ListItemStyledValueText'
 
 import {Button} from '@/components/ui/Button'
 import {ContestStatus} from '@/server/db/models'
-import {ellipsizeText, formatAda} from '@/lib/utils/common/format'
+import {ellipsizeText, formatAda, formatDate} from '@/lib/utils/common/format'
 import type {ContestWithFindingCounts} from '@/server/actions/contest/getMyContests'
+import {PATHS} from '@/lib/utils/common/paths'
+import {useGetDeduplicatedFindingsCount} from '@/lib/queries/deduplicatedFinding/getDeduplicatedFinding'
 
 type MyContestsListItemProps = {
   contest: ContestWithFindingCounts
 }
 
 const MyContestsListItem = ({contest}: MyContestsListItemProps) => {
+  const {data: deduplicatedFindingsCount} = useGetDeduplicatedFindingsCount(
+    contest.id,
+    {
+      enabled: contest.status === ContestStatus.FINISHED,
+    },
+  )
+
   const leftValues = useMemo(() => {
     const isActiveContest =
       DateTime.fromJSDate(contest.startDate) < DateTime.now() &&
       (contest.status === ContestStatus.APPROVED ||
         contest.status === ContestStatus.FINISHED)
+
+    if (contest.status === ContestStatus.FINISHED) {
+      return [
+        {
+          label: 'Start day',
+          value: formatDate(contest.startDate, DateTime.DATETIME_MED),
+        },
+        {
+          label: 'End day',
+          value: formatDate(contest.endDate, DateTime.DATETIME_MED),
+        },
+      ]
+    }
 
     return isActiveContest
       ? [
@@ -42,6 +64,15 @@ const MyContestsListItem = ({contest}: MyContestsListItemProps) => {
   }, [contest])
 
   const rightValues = useMemo(() => {
+    if (contest.status === ContestStatus.FINISHED) {
+      return [
+        {
+          label: 'Vulnerabilities found',
+          value: deduplicatedFindingsCount?.count ?? '-',
+        },
+      ]
+    }
+
     const startDate = DateTime.fromJSDate(contest.startDate)
     const endDate = DateTime.fromJSDate(contest.endDate)
     const relevantDate = DateTime.now() < startDate ? startDate : endDate
@@ -66,7 +97,7 @@ const MyContestsListItem = ({contest}: MyContestsListItemProps) => {
         value: relevantDate.toRelative({locale: 'en'}),
       },
     ]
-  }, [contest])
+  }, [contest, deduplicatedFindingsCount])
 
   return (
     <div className="flex flex-col bg-grey-90 p-6">
@@ -76,8 +107,14 @@ const MyContestsListItem = ({contest}: MyContestsListItemProps) => {
           <ContestStatusBadge contest={contest} />
         </div>
         <Button variant="outline" asChild>
-          <Link href="#" className="gap-2">
-            {'Show details'}
+          <Link
+            href={
+              contest.status === ContestStatus.FINISHED
+                ? `${PATHS.myProjectDetails(contest.id)}?view=vulnerabilities`
+                : PATHS.myProjectDetails(contest.id)
+            }
+            className="gap-2">
+            Show details
             <ArrowRight />
           </Link>
         </Button>
