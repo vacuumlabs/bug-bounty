@@ -2,10 +2,16 @@ import {HomePageTab} from '@/lib/types/enums'
 import {UserRole} from '@/server/db/models'
 
 export const PATHS = {
-  aboutUs: (role: UserRole) =>
-    role === UserRole.PROJECT_OWNER
-      ? '/about-us/for-projects'
-      : '/about-us/for-hunters',
+  aboutUs: (role: UserRole) => {
+    switch (role) {
+      case UserRole.AUDITOR:
+        return '/about-us?tab=for-hunters'
+      case UserRole.PROJECT_OWNER:
+        return '/about-us?tab=for-projects'
+      default:
+        return '/about-us'
+    }
+  },
   connectWallet: '/profile/connect-wallet',
   selectRole: '/select-role',
   home: '/',
@@ -39,7 +45,7 @@ export const getDashboardPathByUserRole = (
 
 export const getAboutUsPathByUserRoleAndHomePageTab = (
   role: UserRole | null | undefined,
-  tab?: string,
+  tab: string | undefined,
 ) => {
   if (role) {
     return PATHS.aboutUs(role)

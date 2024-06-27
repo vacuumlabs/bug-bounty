@@ -3,6 +3,11 @@ export enum HomePageTab {
   PROJECTS = 'projects',
 }
 
+export enum AboutUsTab {
+  HUNTERS = 'for-hunters',
+  PROJECTS = 'for-projects',
+}
+
 export enum SortDirection {
   ASC = 'ASC',
   DESC = 'DESC',
