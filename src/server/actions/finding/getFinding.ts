@@ -35,6 +35,7 @@ const getFindingAction = async ({findingId}: GetFindingParams) => {
       },
       contest: {
         columns: {
+          repoUrl: true,
           authorId: true,
         },
       },
