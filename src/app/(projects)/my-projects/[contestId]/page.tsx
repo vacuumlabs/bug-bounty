@@ -9,7 +9,6 @@ import {
   prefetchGetDeduplicatedFindingsCount,
 } from '@/lib/queries/deduplicatedFinding/getDeduplicatedFinding'
 import {MY_PROJECT_VULNERABILITIES_PAGE_SIZE} from '@/components/sections/projects/MyProjectVulnerabilitiesList'
-import {MyProjectVulnerabilitiesSorting, SortDirection} from '@/lib/types/enums'
 import {requirePageSession} from '@/server/utils/auth'
 
 const MyProjectDetailPage = async ({params}: {params: {contestId: string}}) => {
@@ -21,10 +20,7 @@ const MyProjectDetailPage = async ({params}: {params: {contestId: string}}) => {
       contestId: params.contestId,
       limit: MY_PROJECT_VULNERABILITIES_PAGE_SIZE,
       offset: 0,
-      sort: {
-        field: MyProjectVulnerabilitiesSorting.FOUND_BY,
-        direction: SortDirection.DESC,
-      },
+      sort: undefined,
     }),
     prefetchGetDeduplicatedFindingsCount(params.contestId),
   ])
