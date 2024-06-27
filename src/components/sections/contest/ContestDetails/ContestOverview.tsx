@@ -12,6 +12,7 @@ import {translateEnum} from '@/lib/utils/common/enums'
 import {formatAda, formatTimeRemaining} from '@/lib/utils/common/format'
 import {Contest} from '@/server/actions/contest/getContest'
 import {getContestStatus} from '@/lib/utils/common/contest'
+import {ContestStatus} from '@/server/db/models'
 
 type ContestOverviewProps = {
   contest: Contest
@@ -59,7 +60,16 @@ const ContestOverview = ({contest, myProject}: ContestOverviewProps) => {
         )}
       </div>
       <div className="mt-12 grid grid-cols-4 grid-rows-2 gap-6">
-        {contest.endDate < new Date() ? (
+        {DateTime.fromJSDate(contest.startDate) < DateTime.now() &&
+        DateTime.fromJSDate(contest.endDate) > DateTime.now() &&
+        contest.status === ContestStatus.APPROVED ? (
+          <div className="row-span-2 flex h-[296px] flex-col justify-between bg-grey-90 p-6">
+            <h2 className="text-titleM">Remaining Time</h2>
+            <span className="text-headlineS">
+              {formatTimeRemaining(contest.endDate)}
+            </span>
+          </div>
+        ) : (
           <div className="row-span-2 flex h-[296px] flex-col justify-between bg-grey-90 p-6">
             <h2 className="text-titleM">Status</h2>
             <span className="text-headlineS capitalize">
@@ -68,13 +78,6 @@ const ContestOverview = ({contest, myProject}: ContestOverviewProps) => {
                 endDate: contest.endDate,
                 status: contest.status,
               })}
-            </span>
-          </div>
-        ) : (
-          <div className="row-span-2 flex h-[296px] flex-col justify-between bg-grey-90 p-6">
-            <h2 className="text-titleM">Remaining Time</h2>
-            <span className="text-headlineS">
-              {formatTimeRemaining(contest.endDate)}
             </span>
           </div>
         )}
