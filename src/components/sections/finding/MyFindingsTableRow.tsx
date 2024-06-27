@@ -6,7 +6,7 @@ import {DateTime} from 'luxon'
 import MyFindingsSeverityBadge from './MyFindingsSeverityBadge'
 
 import cardanoLogo from '@public/images/cardano-logo.png'
-import {MyFinding} from '@/server/actions/finding/getMyFindings'
+import {MyFinding} from '@/server/actions/finding/getMyFinding'
 import {TableCell, TableRow} from '@/components/ui/Table'
 import {Avatar, AvatarImage} from '@/components/ui/Avatar'
 import {Button} from '@/components/ui/Button'
@@ -45,7 +45,9 @@ const MyFindingsTableRow = ({finding}: MyFindingsTableRowProps) => {
       <TableCell className="text-bodyM capitalize">{finding.status}</TableCell>
       <TableCell className="text-right">
         <Button asChild variant="outline" size="small">
-          <Link href={PATHS.finding(finding.id)} className="gap-2 text-buttonS">
+          <Link
+            href={PATHS.myFinding(finding.id)}
+            className="gap-2 text-buttonS">
             Show report
             <ArrowRight width={16} height={16} />
           </Link>

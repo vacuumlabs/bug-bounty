@@ -7,6 +7,53 @@ import {db} from '@/server/db'
 import {FindingOccurence} from '@/server/db/models'
 import {requireServerSession} from '@/server/utils/auth'
 import {contests} from '@/server/db/schema/contest'
+import {ServerError} from '@/lib/types/error'
+
+export type GetMyFindingParams = {
+  findingId: string
+}
+
+const getMyFindingAction = async ({findingId}: GetMyFindingParams) => {
+  const session = await requireServerSession()
+
+  const finding = await db.query.findings.findFirst({
+    where: (findings, {eq}) => eq(findings.id, findingId),
+    with: {
+      reward: {
+        columns: {
+          amount: true,
+        },
+      },
+      findingAttachments: {
+        columns: {
+          attachmentUrl: true,
+          fileName: true,
+        },
+      },
+      author: {
+        columns: {
+          id: true,
+        },
+      },
+      contest: {
+        columns: {
+          title: true,
+          startDate: true,
+          endDate: true,
+          status: true,
+        },
+      },
+    },
+  })
+
+  if (finding?.author.id !== session.user.id) {
+    throw new ServerError('Unauthorized access to finding.')
+  }
+
+  return finding
+}
+
+export const getMyFinding = serializeServerErrors(getMyFindingAction)
 
 export type GetMyFindingsParams = {
   type?: FindingOccurence
