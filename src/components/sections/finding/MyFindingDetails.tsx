@@ -114,7 +114,10 @@ const MyFindingDetails = ({findingId}: MyFindingDetailsProps) => {
             Links to affected code
           </h3>
           {data.affectedFiles.map((fileUrl) => (
-            <Link href={fileUrl} key={fileUrl} className="flex gap-3">
+            <Link
+              href={data.contest.repoUrl}
+              key={fileUrl}
+              className="flex gap-3">
               <span>{fileUrl}</span>
               <LinkIcon width={24} height={24} />
             </Link>
