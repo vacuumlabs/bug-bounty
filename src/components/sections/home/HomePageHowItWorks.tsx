@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import {cva} from 'class-variance-authority'
 
+import HowItWorks from '@/components/ui/HowItWorks'
 import {HomePageTab} from '@/lib/types/enums'
 import {PATHS} from '@/lib/utils/common/paths'
 
@@ -88,44 +88,15 @@ const projectsItems = [
   },
 ]
 
-const howItWorksItemVariants = cva(
-  'flex flex-grow basis-1/4 flex-col gap-4 border-b border-transparent p-4 hover:border-white hover:bg-white/5',
-  {
-    variants: {
-      color: {
-        black: 'bg-black',
-        grey: 'bg-grey-90',
-      },
-    },
-  },
-)
-
-type HowItWorksProps = {
+type HomePageHowItWorksProps = {
   variant: HomePageTab
 }
 
-const HowItWorks = ({variant}: HowItWorksProps) => {
+const HomePageHowItWorks = ({variant}: HomePageHowItWorksProps) => {
   const items = variant === HomePageTab.HUNTERS ? huntersItems : projectsItems
-  const color = variant === HomePageTab.HUNTERS ? 'black' : 'grey'
+  const color = variant === HomePageTab.HUNTERS ? 'bg-black' : 'bg-grey-90'
 
-  return (
-    <div className="flex flex-col gap-11">
-      <h2 className="text-headlineM uppercase">How it works?</h2>
-      <div className="flex flex-wrap gap-11">
-        {items.map((item, index) => (
-          <div
-            key={`${variant}-${index}`}
-            className={howItWorksItemVariants({color})}>
-            <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white text-titleM">
-              {index + 1}
-            </div>
-            <span className="text-titleM">{item.title}</span>
-            <p className="text-bodyM">{item.description}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
+  return <HowItWorks items={items} color={color} header="How it works?" />
 }
 
-export default HowItWorks
+export default HomePageHowItWorks

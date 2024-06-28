@@ -6,11 +6,16 @@ import {Button} from '../ui/Button'
 
 import vacuumlabsLogo from '@public/images/vacuumlabs-logo-light.png'
 import {PATHS} from '@/lib/utils/common/paths'
+import {UserRole} from '@/server/db/models'
 
 const footerLinks = [
   {
-    title: 'About us',
-    url: PATHS.aboutUs,
+    title: 'For Hunters',
+    url: PATHS.aboutUs(UserRole.AUDITOR),
+  },
+  {
+    title: 'For Projects',
+    url: PATHS.aboutUs(UserRole.PROJECT_OWNER),
   },
   {
     title: 'Login',
