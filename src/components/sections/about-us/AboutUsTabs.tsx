@@ -1,6 +1,6 @@
 'use client'
 
-import HowItWorks from '../home/HowItWorks'
+import AboutUsHowItWorks from './AboutUsHowItWorks'
 
 import {useSearchParamsEnumState} from '@/lib/hooks/useSearchParamsState'
 import {AboutUsTab} from '@/lib/types/enums'
@@ -25,12 +25,12 @@ const AboutUsTabs = () => {
         </TabsList>
         <TabsContent value={AboutUsTab.HUNTERS}>
           <div className="pt-6">
-            <HowItWorks variant={AboutUsTab.HUNTERS} />
+            <AboutUsHowItWorks variant={AboutUsTab.HUNTERS} />
           </div>
         </TabsContent>
         <TabsContent value={AboutUsTab.PROJECTS}>
           <div className="pt-6">
-            <HowItWorks variant={AboutUsTab.PROJECTS} />
+            <AboutUsHowItWorks variant={AboutUsTab.PROJECTS} />
           </div>
         </TabsContent>
       </Tabs>

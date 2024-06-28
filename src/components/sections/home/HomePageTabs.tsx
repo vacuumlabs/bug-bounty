@@ -3,8 +3,8 @@
 import Image from 'next/image'
 
 import Contests from '../contest/Contests'
-import HowItWorks from './HowItWorks'
 import HomePageCta from './HomePageCta'
+import HomePageHowItWorks from './HomePageHowItWorks'
 
 import Separator from '@/components/ui/Separator'
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/Tabs'
@@ -39,12 +39,12 @@ const HomePageTabs = () => {
             alt="Overlay graphic"
             width={514}
           />
-          <HowItWorks variant={HomePageTab.HUNTERS} />
+          <HomePageHowItWorks variant={HomePageTab.HUNTERS} />
         </div>
       </TabsContent>
       <TabsContent value={HomePageTab.PROJECTS}>
         <div className="overflow-hidden bg-black p-24">
-          <HowItWorks variant={HomePageTab.PROJECTS} />
+          <HomePageHowItWorks variant={HomePageTab.PROJECTS} />
         </div>
       </TabsContent>
       <div className="p-24">
