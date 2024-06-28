@@ -22,7 +22,7 @@ import {InsertFinding} from '@/server/db/schema/finding'
 import {
   MyFinding,
   getMyFindingsAction,
-} from '@/server/actions/finding/getMyFindings'
+} from '@/server/actions/finding/getMyFinding'
 import {TEST_WALLET_ADDRESS} from '@/server/utils/test'
 
 const userId = uuidv4()

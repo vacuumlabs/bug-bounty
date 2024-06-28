@@ -1,4 +1,4 @@
-import {ContestSorting} from '@/lib/types/enums'
+import {ContestSorting, ContestStatusText} from '@/lib/types/enums'
 import {
   ContestStatus,
   FindingSeverity,
@@ -38,6 +38,17 @@ const translations = {
     [ContestStatus.APPROVED]: 'Approved',
     [ContestStatus.REJECTED]: 'Rejected',
     [ContestStatus.FINISHED]: 'Finished',
+  },
+  contestStatusText: {
+    [ContestStatusText.draft]: 'Draft',
+    [ContestStatusText.rejected]: 'Rejected',
+    [ContestStatusText.finished]: 'Finished',
+    [ContestStatusText.notApproved]: 'Not Approved',
+    [ContestStatusText.inReview]: 'In Review',
+    [ContestStatusText.pending]: 'Pending',
+    [ContestStatusText.judging]: 'Judging',
+    [ContestStatusText.live]: 'Live',
+    [ContestStatusText.approved]: 'Approved',
   },
   contestSorting: {
     [ContestSorting.START_DATE]: 'Start date',
@@ -95,6 +106,7 @@ export const translateEnum = {
   findingSeverity: getTranslations(translations.findingSeverity),
   findingStatus: getTranslations(translations.findingStatus),
   contestStatus: getTranslations(translations.contestStatus),
+  contestStatusText: getTranslations(translations.contestStatusText),
   contestSorting: getTranslations(translations.contestSorting),
   projectLanguage: getTranslations(translations.projectLanguage),
   projectCategory: getTranslations(translations.projectCategory),

@@ -19,7 +19,7 @@ export const PATHS = {
   myProjectsRewards: '/my-projects/rewards',
   myFindings: '/my-findings',
   myFindingsRewards: '/my-findings/rewards',
-  finding: (id?: string) => (id ? `/finding/${id}` : '/finding'),
+  myFinding: (id: string) => `/my-findings/${id}`,
   newFinding: '/finding/new',
   newFindingSuccess: '/finding/new/success',
   newProject: '/my-projects/new',

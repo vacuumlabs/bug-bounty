@@ -5,7 +5,7 @@ import MyFindingsTableRow from './MyFindingsTableRow'
 
 import {Button} from '@/components/ui/Button'
 import {PATHS} from '@/lib/utils/common/paths'
-import {MyFinding} from '@/server/actions/finding/getMyFindings'
+import {MyFinding} from '@/server/actions/finding/getMyFinding'
 import {
   Table,
   TableBody,

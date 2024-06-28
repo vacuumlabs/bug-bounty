@@ -11,7 +11,7 @@ import {PATHS} from '@/lib/utils/common/paths'
 import {translateEnum} from '@/lib/utils/common/enums'
 import {formatAda, formatTimeRemaining} from '@/lib/utils/common/format'
 import {Contest} from '@/server/actions/contest/getContest'
-import {getContestStatus} from '@/lib/utils/common/contest'
+import {getContestStatusText} from '@/lib/utils/common/contest'
 import {ContestStatus} from '@/server/db/models'
 
 type ContestOverviewProps = {
@@ -29,6 +29,12 @@ const ContestOverview = ({contest, myProject}: ContestOverviewProps) => {
     DateTime.fromJSDate(contest.startDate) < DateTime.now() &&
     DateTime.fromJSDate(contest.endDate) > DateTime.now() &&
     contest.status === ContestStatus.APPROVED
+
+  const contestStatusText = getContestStatusText({
+    startDate: contest.startDate,
+    endDate: contest.endDate,
+    status: contest.status,
+  })
 
   return (
     <div className="px-24">
@@ -72,11 +78,7 @@ const ContestOverview = ({contest, myProject}: ContestOverviewProps) => {
           <div className="row-span-2 flex h-[296px] flex-col justify-between bg-grey-90 p-6">
             <h2 className="text-titleM">Status</h2>
             <span className="text-headlineS capitalize">
-              {getContestStatus({
-                startDate: contest.startDate,
-                endDate: contest.endDate,
-                status: contest.status,
-              })}
+              {translateEnum.contestStatusText(contestStatusText)}
             </span>
           </div>
         )}

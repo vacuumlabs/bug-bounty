@@ -1,6 +1,7 @@
 import {DateTime} from 'luxon'
 
 import {ContestStatus, FindingSeverity} from '@/server/db/models'
+import {ContestStatusText} from '@/lib/types/enums'
 
 export const defaultSeverityWeights: Record<FindingSeverity, number> = {
   [FindingSeverity.CRITICAL]: 36,
@@ -10,7 +11,7 @@ export const defaultSeverityWeights: Record<FindingSeverity, number> = {
   [FindingSeverity.INFO]: 0,
 }
 
-export const getContestStatus = ({
+export const getContestStatusText = ({
   startDate,
   endDate,
   status,
@@ -18,36 +19,36 @@ export const getContestStatus = ({
   startDate: Date
   endDate: Date
   status: ContestStatus
-}) => {
+}): ContestStatusText => {
   if (status === ContestStatus.DRAFT) {
-    return 'draft'
+    return ContestStatusText.draft
   }
   if (status === ContestStatus.REJECTED) {
-    return 'rejected'
+    return ContestStatusText.rejected
   }
   if (status === ContestStatus.FINISHED) {
-    return 'finished'
+    return ContestStatusText.finished
   }
   if (
     status !== ContestStatus.APPROVED &&
     DateTime.fromJSDate(startDate) < DateTime.now()
   ) {
-    return 'notApproved'
+    return ContestStatusText.notApproved
   }
   if (status === ContestStatus.IN_REVIEW) {
-    return 'inReview'
+    return ContestStatusText.inReview
   }
   if (status === ContestStatus.PENDING) {
-    return 'pending'
+    return ContestStatusText.pending
   }
   if (DateTime.fromJSDate(endDate) < DateTime.now()) {
-    return 'judging'
+    return ContestStatusText.judging
   }
   if (
     DateTime.fromJSDate(startDate) < DateTime.now() &&
     DateTime.fromJSDate(endDate) > DateTime.now()
   ) {
-    return 'live'
+    return ContestStatusText.live
   }
-  return 'approved'
+  return ContestStatusText.approved
 }

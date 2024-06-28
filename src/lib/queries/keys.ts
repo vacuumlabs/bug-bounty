@@ -9,7 +9,10 @@ import {
 } from '@/server/actions/github/getGithub'
 import {GetPublicContestCountsParams} from '@/server/actions/contest/getPublicContestCounts'
 import {GetMyContestsParams} from '@/server/actions/contest/getMyContests'
-import {GetMyFindingsParams} from '@/server/actions/finding/getMyFindings'
+import {
+  GetMyFindingParams,
+  GetMyFindingsParams,
+} from '@/server/actions/finding/getMyFinding'
 import {GetMyFindingsRewardsParams} from '@/server/actions/reward/getMyFindingsRewards'
 import {GetContestLeaderboardParams} from '@/server/actions/contest/getContestLeaderboard'
 import {
@@ -41,6 +44,7 @@ export const queryKeys = createQueryKeyStore({
   },
   findings: {
     mine: (params: GetMyFindingsParams) => [params],
+    mineOne: (params: GetMyFindingParams) => [params],
     counts: null,
     byDeduplicatedFinding: (params: GetFindingsParams) => [params],
     one: (params: GetFindingParams) => [params],
