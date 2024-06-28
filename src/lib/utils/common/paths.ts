@@ -43,7 +43,7 @@ export const getDashboardPathByUserRole = (
   }
 }
 
-export const getAboutUsPathByUserRoleAndHomePageTab = (
+export const getAboutUsPath = (
   role: UserRole | null | undefined,
   tab: string | undefined,
 ) => {

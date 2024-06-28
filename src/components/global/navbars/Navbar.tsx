@@ -15,7 +15,7 @@ import {useSearchParamsState} from '@/lib/hooks/useSearchParamsState'
 import {HomePageTab} from '@/lib/types/enums'
 import {
   PATHS,
-  getAboutUsPathByUserRoleAndHomePageTab,
+  getAboutUsPath,
   getDashboardPathByUserRole,
 } from '@/lib/utils/common/paths'
 import SignOutButton from '@/components/ui/SignOutButon'
@@ -52,14 +52,9 @@ const Navbar = () => {
             asChild
             variant="link"
             className={cn(
-              pathname ===
-                getAboutUsPathByUserRoleAndHomePageTab(role, currentTab) &&
-                'font-bold',
+              pathname === getAboutUsPath(role, currentTab) && 'font-bold',
             )}>
-            <Link
-              href={getAboutUsPathByUserRoleAndHomePageTab(role, currentTab)}>
-              About us
-            </Link>
+            <Link href={getAboutUsPath(role, currentTab)}>About us</Link>
           </Button>
           {isLoggedIn ? (
             <>
