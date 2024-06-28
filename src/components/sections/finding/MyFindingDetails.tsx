@@ -11,7 +11,7 @@ import {Button} from '@/components/ui/Button'
 import Separator from '@/components/ui/Separator'
 import Skeleton from '@/components/ui/Skeleton'
 import {formatAda, formatDate} from '@/lib/utils/common/format'
-import {getContestStatus} from '@/lib/utils/common/contest'
+import {getContestStatusText} from '@/lib/utils/common/contest'
 import {useGetMyFinding} from '@/lib/queries/finding/getMyFinding'
 import {PATHS} from '@/lib/utils/common/paths'
 import {
@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/AlertDialog'
 import {useDeleteFinding} from '@/lib/queries/finding/deleteFinding'
 import {FindingStatus} from '@/server/db/models'
+import {translateEnum} from '@/lib/utils/common/enums'
 
 type MyFindingDetailsProps = {
   findingId: string
@@ -61,6 +62,12 @@ const MyFindingDetails = ({findingId}: MyFindingDetailsProps) => {
     (data.status === FindingStatus.DRAFT ||
       data.status === FindingStatus.PENDING)
 
+  const contestStatusText = getContestStatusText({
+    startDate: data.contest.startDate,
+    endDate: data.contest.endDate,
+    status: data.contest.status,
+  })
+
   return (
     <>
       <div className="flex h-[136px] items-center gap-12 px-24">
@@ -94,11 +101,7 @@ const MyFindingDetails = ({findingId}: MyFindingDetailsProps) => {
           <div className="flex flex-col">
             <span className="text-bodyL text-purple-light">Project state</span>
             <span className="text-bodyM capitalize">
-              {getContestStatus({
-                startDate: data.contest.startDate,
-                endDate: data.contest.endDate,
-                status: data.contest.status,
-              })}
+              {translateEnum.contestStatusText(contestStatusText)}
             </span>
           </div>
           <div className="flex flex-col">

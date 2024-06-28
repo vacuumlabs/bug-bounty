@@ -29,3 +29,15 @@ export enum MyProjectVulnerabilitiesSorting {
   FOUND_BY = 'foundBy',
   SEVERITY = 'severity',
 }
+
+export enum ContestStatusText {
+  draft = 'draft',
+  rejected = 'rejected',
+  finished = 'finished',
+  notApproved = 'notApproved',
+  inReview = 'inReview',
+  pending = 'pending',
+  judging = 'judging',
+  live = 'live',
+  approved = 'approved',
+}
