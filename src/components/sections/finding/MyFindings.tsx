@@ -7,11 +7,19 @@ import MyFindingsTable from './MyFindingsTable'
 
 import Skeleton from '@/components/ui/Skeleton'
 import {Tabs, TabsList, TabsTrigger} from '@/components/ui/Tabs'
-import {useSearchParamsEnumState} from '@/lib/hooks/useSearchParamsState'
+import {
+  useSearchParamsEnumState,
+  useSearchParamsNumericState,
+} from '@/lib/hooks/useSearchParamsState'
 import {formatTabCount} from '@/lib/utils/common/format'
 import Separator from '@/components/ui/Separator'
 import {FindingOccurence} from '@/server/db/models'
 import {useGetMyFindings} from '@/lib/queries/finding/getMyFinding'
+import TablePagination from '@/components/ui/TablePagination'
+import {MyFindingsSorting} from '@/lib/types/enums'
+import {useSortingSearchParams} from '@/lib/hooks/useSortingSearchParams'
+
+export const MY_FINDINGS_PAGE_SIZE = 7
 
 const MyFindings = () => {
   const [findingType, {setValue: setFindingType}] = useSearchParamsEnumState(
@@ -20,7 +28,22 @@ const MyFindings = () => {
     FindingOccurence.PRESENT,
   )
 
-  const {data: findings, isLoading} = useGetMyFindings({})
+  const [page, {getSearchParamsUpdater: updatePageSearchParams}] =
+    useSearchParamsNumericState('page', 1)
+  const [sortParams, {getSortParamsUpdaters: updateSortSearchParams}] =
+    useSortingSearchParams(MyFindingsSorting)
+
+  const {
+    data: {data: findings, isLoading},
+    pageParams: {totalCount},
+  } = useGetMyFindings({
+    type: findingType,
+    pageParams: {
+      limit: MY_FINDINGS_PAGE_SIZE,
+      offset: (page - 1) * MY_FINDINGS_PAGE_SIZE,
+    },
+    sort: sortParams,
+  })
 
   const liveFindings = useMemo(
     () =>
@@ -71,7 +94,21 @@ const MyFindings = () => {
           {isLoading ? (
             <Skeleton className="h-[240px]" />
           ) : (
-            <MyFindingsTable findings={currentFindings} />
+            <>
+              <MyFindingsTable
+                findings={currentFindings}
+                sortParams={sortParams}
+                updatePageSearchParams={updatePageSearchParams}
+                updateSortSearchParams={updateSortSearchParams}
+              />
+              {!!totalCount && (
+                <TablePagination
+                  className="mt-12"
+                  pageSize={MY_FINDINGS_PAGE_SIZE}
+                  totalCount={totalCount}
+                />
+              )}
+            </>
           )}
         </div>
       </Tabs>

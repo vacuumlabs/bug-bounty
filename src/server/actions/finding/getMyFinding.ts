@@ -1,6 +1,6 @@
 'use server'
 
-import {gte, lte} from 'drizzle-orm'
+import {and, count, eq, gte, inArray, lte} from 'drizzle-orm'
 
 import {serializeServerErrors} from '@/lib/utils/common/error'
 import {db} from '@/server/db'
@@ -8,6 +8,14 @@ import {FindingOccurence} from '@/server/db/models'
 import {requireServerSession} from '@/server/utils/auth'
 import {contests} from '@/server/db/schema/contest'
 import {ServerError} from '@/lib/types/error'
+import {findings} from '@/server/db/schema/finding'
+import {PaginatedParams} from '@/lib/utils/common/pagination'
+import {
+  SortParams,
+  myFindingsSortFieldMap,
+  sortByColumn,
+} from '@/lib/utils/common/sorting'
+import {MyFindingsSorting, SortDirection} from '@/lib/types/enums'
 
 export type GetMyFindingParams = {
   findingId: string
@@ -56,13 +64,23 @@ const getMyFindingAction = async ({findingId}: GetMyFindingParams) => {
 
 export const getMyFinding = serializeServerErrors(getMyFindingAction)
 
-export type GetMyFindingsParams = {
-  type?: FindingOccurence
-}
+export type GetMyFindingsParams = PaginatedParams<
+  {
+    type?: FindingOccurence
+  },
+  SortParams<MyFindingsSorting>
+>
 
 export type MyFinding = Awaited<ReturnType<typeof getMyFindingsAction>>[number]
 
-export const getMyFindingsAction = async ({type}: GetMyFindingsParams) => {
+export const getMyFindingsAction = async ({
+  type,
+  pageParams: {limit, offset = 0},
+  sort = {
+    direction: SortDirection.DESC,
+    field: MyFindingsSorting.SUBMITTED,
+  },
+}: GetMyFindingsParams) => {
   const session = await requireServerSession()
 
   return db.query.findings.findMany({
@@ -99,7 +117,54 @@ export const getMyFindingsAction = async ({type}: GetMyFindingsParams) => {
         },
       },
     },
+    limit,
+    offset,
+    orderBy: sortByColumn(sort.direction, myFindingsSortFieldMap[sort.field]),
   })
 }
 
 export const getMyFindings = serializeServerErrors(getMyFindingsAction)
+
+const getMyFindingsCountAction = async (type?: FindingOccurence) => {
+  const session = await requireServerSession()
+
+  const myFindingsCount = await db
+    .select({
+      count: count(),
+    })
+    .from(findings)
+    .where(
+      and(
+        eq(findings.authorId, session.user.id),
+        inArray(
+          findings.contestId,
+          db
+            .select({contestId: contests.id})
+            .from(contests)
+            .where(
+              and(
+                type === FindingOccurence.PAST
+                  ? lte(contests.endDate, new Date())
+                  : undefined,
+                type === FindingOccurence.PRESENT
+                  ? and(
+                      lte(contests.startDate, new Date()),
+                      gte(contests.endDate, new Date()),
+                    )
+                  : undefined,
+              ),
+            ),
+        ),
+      ),
+    )
+
+  if (!myFindingsCount[0]) {
+    throw new ServerError('Failed to get my findings total size.')
+  }
+
+  return {count: myFindingsCount[0].count}
+}
+
+export const getMyFindingsCount = serializeServerErrors(
+  getMyFindingsCountAction,
+)

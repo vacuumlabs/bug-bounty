@@ -1,4 +1,4 @@
-import {AnyColumn, SQLWrapper, asc, desc} from 'drizzle-orm'
+import {AnyColumn, SQLWrapper, asc, desc, sql} from 'drizzle-orm'
 
 import {translateEnum} from './enums'
 
@@ -6,10 +6,12 @@ import {contests} from '@/server/db/schema/contest'
 import {
   ContestSorting,
   MyFindingsRewardsSorting,
+  MyFindingsSorting,
   SortDirection,
 } from '@/lib/types/enums'
 import {rewards} from '@/server/db/schema/reward'
 import {findings} from '@/server/db/schema/finding'
+import {ContestStatus, FindingSeverity, FindingStatus} from '@/server/db/models'
 
 export type SortParams<T extends string> = {
   direction: SortDirection
@@ -73,7 +75,48 @@ export const myFindingsRewardsSortFieldMap = {
   [MyFindingsRewardsSorting.PROJECT]: contests.title,
   [MyFindingsRewardsSorting.SUBMITTED]: findings.createdAt,
   [MyFindingsRewardsSorting.REVIEWED]: findings.updatedAt,
-  [MyFindingsRewardsSorting.SEVERITY]: findings.severity,
+  [MyFindingsRewardsSorting.SEVERITY]: sql<number>`
+  CASE ${findings.severity}
+    WHEN ${FindingSeverity.INFO} THEN 1
+    WHEN ${FindingSeverity.LOW} THEN 2
+    WHEN ${FindingSeverity.MEDIUM} THEN 3
+    WHEN ${FindingSeverity.HIGH} THEN 4
+    WHEN ${FindingSeverity.CRITICAL} THEN 5
+    ELSE 6
+  END`,
   [MyFindingsRewardsSorting.REWARD]: rewards.amount,
   [MyFindingsRewardsSorting.STATE]: rewards.transferTxHash,
+}
+
+export const myFindingsSortFieldMap = {
+  [MyFindingsSorting.PROJECT]: contests.title,
+  [MyFindingsSorting.FINDING]: findings.title,
+  [MyFindingsSorting.SUBMITTED]: findings.createdAt,
+  [MyFindingsSorting.SEVERITY]: sql<number>`
+  CASE ${findings.severity}
+    WHEN ${FindingSeverity.INFO} THEN 1
+    WHEN ${FindingSeverity.LOW} THEN 2
+    WHEN ${FindingSeverity.MEDIUM} THEN 3
+    WHEN ${FindingSeverity.HIGH} THEN 4
+    WHEN ${FindingSeverity.CRITICAL} THEN 5
+    ELSE 6
+  END`,
+  [MyFindingsSorting.PROJECT_STATE]: sql<number>`
+  CASE ${contests.status}
+    WHEN ${ContestStatus.REJECTED} THEN 1
+    WHEN ${ContestStatus.DRAFT} THEN 2
+    WHEN ${ContestStatus.PENDING} THEN 3
+    WHEN ${ContestStatus.APPROVED} THEN 4
+    WHEN ${ContestStatus.IN_REVIEW} THEN 5
+    WHEN ${ContestStatus.FINISHED} THEN 6
+    ELSE 7
+  END`,
+  [MyFindingsSorting.STATUS]: sql<number>`
+  CASE ${findings.status}
+    WHEN ${FindingStatus.REJECTED} THEN 1
+    WHEN ${FindingStatus.DRAFT} THEN 2
+    WHEN ${FindingStatus.PENDING} THEN 3
+    WHEN ${FindingStatus.APPROVED} THEN 4
+    ELSE 5
+  END`,
 }
