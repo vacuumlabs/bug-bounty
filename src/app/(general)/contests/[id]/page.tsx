@@ -12,8 +12,10 @@ const ContestDetailPage = async ({params}: {params: {id: string}}) => {
     prefetchGetContest(params.id),
     prefetchGetContestLeaderboard({
       contestId: params.id,
-      offset: 0,
-      limit: CONTEST_LEADERBOARD_PAGE_SIZE,
+      pageParams: {
+        offset: 0,
+        limit: CONTEST_LEADERBOARD_PAGE_SIZE,
+      },
     }),
   ])
 
