@@ -9,12 +9,11 @@ import {findings} from '@/server/db/schema/finding'
 import {rewards} from '@/server/db/schema/reward'
 import {users} from '@/server/db/schema/user'
 import {ContestStatus} from '@/server/db/models'
+import {PaginatedParams} from '@/lib/utils/common/pagination'
 
-export type GetContestLeaderboardParams = {
+export type GetContestLeaderboardParams = PaginatedParams<{
   contestId: string
-  limit: number
-  offset?: number
-}
+}>
 
 export type ContestLeaderboard = Awaited<
   ReturnType<typeof getContestLeaderboardAction>
@@ -22,8 +21,7 @@ export type ContestLeaderboard = Awaited<
 
 const getContestLeaderboardAction = async ({
   contestId,
-  limit,
-  offset = 0,
+  pageParams: {limit, offset = 0},
 }: GetContestLeaderboardParams) => {
   const contest = await db.query.contests.findFirst({
     where: (contests, {eq}) => eq(contests.id, contestId),

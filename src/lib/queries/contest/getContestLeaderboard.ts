@@ -10,6 +10,7 @@ import {
   getContestLeaderboard,
   getContestLeaderboardCount,
 } from '@/server/actions/contest/getContestLeaderboard'
+import {PaginatedResponse} from '@/lib/utils/common/pagination'
 
 const getContestLeaderboardQueryOptions = (
   params: GetContestLeaderboardParams,
@@ -24,16 +25,16 @@ const getContestLeaderboardQueryOptions = (
   }),
 })
 
-export const useGetContestLeaderboard = (
-  params: GetContestLeaderboardParams,
-  options?: Partial<UseQueryOptions<ContestLeaderboard>>,
-) => useQuery({...getContestLeaderboardQueryOptions(params), ...options})
-
 export const prefetchGetContestLeaderboard = async (
   params: GetContestLeaderboardParams,
 ) => {
   const queryClient = getServerQueryClient()
-  await queryClient.prefetchQuery(getContestLeaderboardQueryOptions(params))
+  await Promise.all([
+    queryClient.prefetchQuery(getContestLeaderboardQueryOptions(params)),
+    queryClient.prefetchQuery(
+      getContestLeaderboardCountQueryOptions(params.contestId),
+    ),
+  ])
 }
 
 const getContestLeaderboardCountQueryOptions = (
@@ -49,15 +50,16 @@ const getContestLeaderboardCountQueryOptions = (
   }),
 })
 
-export const useGetContestLeaderboardCount = (
-  contestId: string | undefined,
-  options?: Partial<UseQueryOptions<{count: number}>>,
-) =>
-  useQuery({...getContestLeaderboardCountQueryOptions(contestId), ...options})
-
-export const prefetchGetContestLeaderboardCount = async (contestId: string) => {
-  const queryClient = getServerQueryClient()
-  await queryClient.prefetchQuery(
-    getContestLeaderboardCountQueryOptions(contestId),
+export const useGetContestLeaderboard = (
+  params: GetContestLeaderboardParams,
+  options?: Partial<UseQueryOptions<ContestLeaderboard>>,
+): PaginatedResponse<ContestLeaderboard> => {
+  const {data: countData} = useQuery(
+    getContestLeaderboardCountQueryOptions(params.contestId),
   )
+
+  return {
+    data: useQuery({...getContestLeaderboardQueryOptions(params), ...options}),
+    pageParams: {totalCount: countData?.count},
+  }
 }

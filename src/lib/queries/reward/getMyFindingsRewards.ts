@@ -7,9 +7,11 @@ import {withApiErrorHandler} from '@/lib/utils/common/error'
 import {useUserId} from '@/lib/hooks/useUserId'
 import {
   GetMyFindingsRewardsParams,
+  MyFindingsReward,
   getMyFindingsRewards,
   getMyFindingsRewardsCount,
 } from '@/server/actions/reward/getMyFindingsRewards'
+import {PaginatedResponse} from '@/lib/utils/common/pagination'
 
 const getMyFindingsRewardsQueryOptions = (
   userId: string | undefined,
@@ -19,20 +21,15 @@ const getMyFindingsRewardsQueryOptions = (
   queryFn: withApiErrorHandler(() => getMyFindingsRewards(params)),
 })
 
-export const useGetMyFindingsRewards = (params: GetMyFindingsRewardsParams) => {
-  const userId = useUserId()
-
-  return useQuery(getMyFindingsRewardsQueryOptions(userId, params))
-}
-
 export const prefetchGetMyFindingsRewards = async (
   userId: string,
   params: GetMyFindingsRewardsParams,
 ) => {
   const queryClient = getServerQueryClient()
-  await queryClient.prefetchQuery(
-    getMyFindingsRewardsQueryOptions(userId, params),
-  )
+  await Promise.all([
+    queryClient.prefetchQuery(getMyFindingsRewardsQueryOptions(userId, params)),
+    queryClient.prefetchQuery(getMyFindingsRewardsCountQueryOptions(userId)),
+  ])
 }
 
 const getMyFindingsRewardsCountQueryOptions = (userId: string | undefined) => ({
@@ -40,13 +37,17 @@ const getMyFindingsRewardsCountQueryOptions = (userId: string | undefined) => ({
   queryFn: withApiErrorHandler(() => getMyFindingsRewardsCount()),
 })
 
-export const useGetMyFindingsRewardsCount = () => {
+export const useGetMyFindingsRewards = (
+  params: GetMyFindingsRewardsParams,
+): PaginatedResponse<MyFindingsReward[]> => {
   const userId = useUserId()
 
-  return useQuery(getMyFindingsRewardsCountQueryOptions(userId))
-}
+  const {data: countData} = useQuery(
+    getMyFindingsRewardsCountQueryOptions(userId),
+  )
 
-export const prefetchGetMyFindingsRewardsCount = async (userId: string) => {
-  const queryClient = getServerQueryClient()
-  await queryClient.prefetchQuery(getMyFindingsRewardsCountQueryOptions(userId))
+  return {
+    data: useQuery(getMyFindingsRewardsQueryOptions(userId, params)),
+    pageParams: {totalCount: countData?.count},
+  }
 }

@@ -15,10 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/Table'
 import {PATHS} from '@/lib/utils/common/paths'
-import {
-  useGetMyFindingsRewards,
-  useGetMyFindingsRewardsCount,
-} from '@/lib/queries/reward/getMyFindingsRewards'
+import {useGetMyFindingsRewards} from '@/lib/queries/reward/getMyFindingsRewards'
 import TablePagination from '@/components/ui/TablePagination'
 import {useSearchParamsNumericState} from '@/lib/hooks/useSearchParamsState'
 import {useSortingSearchParams} from '@/lib/hooks/useSortingSearchParams'
@@ -33,10 +30,14 @@ const MyFindingsRewardsTable = () => {
   const [sortParams, {getSortParamsUpdaters: updateSortSearchParams}] =
     useSortingSearchParams(MyFindingsRewardsSorting)
 
-  const {data: totalSize} = useGetMyFindingsRewardsCount()
-  const {data, isLoading} = useGetMyFindingsRewards({
-    limit: MY_FINDINGS_REWARDS_PAGE_SIZE,
-    offset: (page - 1) * MY_FINDINGS_REWARDS_PAGE_SIZE,
+  const {
+    data: {data, isLoading},
+    pageParams: {totalCount},
+  } = useGetMyFindingsRewards({
+    pageParams: {
+      limit: MY_FINDINGS_REWARDS_PAGE_SIZE,
+      offset: (page - 1) * MY_FINDINGS_REWARDS_PAGE_SIZE,
+    },
     sort: sortParams,
   })
 
@@ -123,11 +124,11 @@ const MyFindingsRewardsTable = () => {
         </TableBody>
       </Table>
 
-      {!!totalSize?.count && (
+      {!!totalCount && (
         <TablePagination
           className="mt-12"
           pageSize={MY_FINDINGS_REWARDS_PAGE_SIZE}
-          totalCount={totalSize.count}
+          totalCount={totalCount}
         />
       )}
     </>

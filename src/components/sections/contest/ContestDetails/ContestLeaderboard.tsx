@@ -11,10 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/Table'
-import {
-  useGetContestLeaderboard,
-  useGetContestLeaderboardCount,
-} from '@/lib/queries/contest/getContestLeaderboard'
+import {useGetContestLeaderboard} from '@/lib/queries/contest/getContestLeaderboard'
 import {formatAda} from '@/lib/utils/common/format'
 import {useSearchParamsNumericState} from '@/lib/hooks/useSearchParamsState'
 import TablePagination from '@/components/ui/TablePagination'
@@ -27,11 +24,15 @@ export const CONTEST_LEADERBOARD_PAGE_SIZE = 7
 
 const ContestLeaderboard = ({contestId}: ContestLeaderboardProps) => {
   const [page] = useSearchParamsNumericState('page', 1)
-  const {data: totalSize} = useGetContestLeaderboardCount(contestId)
-  const {data: leaderboard, isLoading} = useGetContestLeaderboard({
+  const {
+    data: {data: leaderboard, isLoading},
+    pageParams: {totalCount},
+  } = useGetContestLeaderboard({
     contestId: contestId,
-    limit: CONTEST_LEADERBOARD_PAGE_SIZE,
-    offset: (page - 1) * CONTEST_LEADERBOARD_PAGE_SIZE,
+    pageParams: {
+      limit: CONTEST_LEADERBOARD_PAGE_SIZE,
+      offset: (page - 1) * CONTEST_LEADERBOARD_PAGE_SIZE,
+    },
   })
 
   if (isLoading) {
@@ -99,11 +100,11 @@ const ContestLeaderboard = ({contestId}: ContestLeaderboardProps) => {
         </TableBody>
       </Table>
 
-      {!!totalSize?.count && (
+      {!!totalCount && (
         <TablePagination
           className="mt-12"
           pageSize={CONTEST_LEADERBOARD_PAGE_SIZE}
-          totalCount={totalSize.count}
+          totalCount={totalCount}
         />
       )}
     </>

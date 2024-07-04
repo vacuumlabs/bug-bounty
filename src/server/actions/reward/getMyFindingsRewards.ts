@@ -15,20 +15,19 @@ import {
 import {MyFindingsRewardsSorting, SortDirection} from '@/lib/types/enums'
 import {findings} from '@/server/db/schema/finding'
 import {contests} from '@/server/db/schema/contest'
+import {PaginatedParams} from '@/lib/utils/common/pagination'
 
 export type MyFindingsReward = Awaited<
   ReturnType<typeof getMyFindingsRewardsAction>
 >[number]
 
-export type GetMyFindingsRewardsParams = {
-  limit: number
-  offset?: number
-  sort?: SortParams<MyFindingsRewardsSorting>
-}
+export type GetMyFindingsRewardsParams = PaginatedParams<
+  undefined,
+  SortParams<MyFindingsRewardsSorting>
+>
 
 const getMyFindingsRewardsAction = async ({
-  limit,
-  offset = 0,
+  pageParams: {limit, offset = 0},
   sort = {
     field: MyFindingsRewardsSorting.SUBMITTED,
     direction: SortDirection.DESC,
