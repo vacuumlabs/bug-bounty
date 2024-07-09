@@ -1,5 +1,5 @@
 import {describe, it, expect, vi, Mock, beforeEach} from 'vitest'
-import {addDays} from 'date-fns'
+import {subDays} from 'date-fns'
 import {getServerSession} from 'next-auth'
 import {v4 as uuidv4} from 'uuid'
 import {faker} from '@faker-js/faker'
@@ -26,10 +26,10 @@ const contestsToInsert: InsertContest = {
   rewardsAmount: '1000',
   customConditions: 'There are four custom conditions.',
   filesInScope: faker.helpers.multiple(() => faker.internet.url()),
-  status: ContestStatus.APPROVED,
+  status: ContestStatus.FINISHED,
   distributedRewardsAmount: '0',
-  startDate: addDays(new Date(), 1),
-  endDate: addDays(new Date(), 2),
+  startDate: subDays(new Date(), 2),
+  endDate: subDays(new Date(), 1),
 }
 
 const deduplicatedFindingsToInsert: InsertDeduplicatedFinding[] = [
@@ -97,8 +97,22 @@ describe('getDeduplicatedFinding', () => {
       throw new Error('Failed to insert deduplicated findings')
     }
 
-    const result = await getDeduplicatedFindingsAction({contestId})
+    const result = await getDeduplicatedFindingsAction({
+      contestId,
+      pageParams: {limit: 10, offset: 0},
+      sort: undefined,
+    })
 
-    expect(result).toEqual(insertedDeduplicatedFindings)
+    const expectedResult = insertedDeduplicatedFindings.map(
+      (deduplicatedFinding) => ({
+        bestFindingId: null,
+        findingsCount: 0,
+        id: deduplicatedFinding.id,
+        severity: deduplicatedFinding.severity,
+        title: deduplicatedFinding.title,
+      }),
+    )
+
+    expect(result).toEqual(expectedResult)
   })
 })

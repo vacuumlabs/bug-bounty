@@ -90,14 +90,18 @@ export const getMyFindingsAction = async ({
     SELECT ${contests.id}
     FROM ${contests}
     WHERE ${contests.endDate} <= NOW()
-  ))`.as('pastCount')
+  ))`
+      .mapWith(Number)
+      .as('pastCount')
 
   const presentCount =
     sql<number>`COUNT(*) FILTER (WHERE ${findings.contestId} IN (
     SELECT ${contests.id}
     FROM ${contests}
     WHERE ${contests.startDate} <= NOW() AND ${contests.endDate} >= NOW()
-  ))`.as('presentCount')
+  ))`
+      .mapWith(Number)
+      .as('presentCount')
 
   const myFindingsCountQuery = db
     .select({
