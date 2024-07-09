@@ -1,5 +1,3 @@
-import {UseQueryResult} from '@tanstack/react-query'
-
 export type PaginatedParams<T = undefined, S = undefined> = (T extends undefined
   ? object
   : T) & {
@@ -8,10 +6,3 @@ export type PaginatedParams<T = undefined, S = undefined> = (T extends undefined
     offset?: number
   }
 } & (S extends undefined ? object : {sort: S | undefined})
-
-export type PaginatedResponse<T> = {
-  data: UseQueryResult<T>
-  pageParams: {
-    totalCount: number | undefined
-  }
-}

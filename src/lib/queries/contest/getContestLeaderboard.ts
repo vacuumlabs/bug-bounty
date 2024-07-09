@@ -8,9 +8,7 @@ import {
   ContestLeaderboard,
   GetContestLeaderboardParams,
   getContestLeaderboard,
-  getContestLeaderboardCount,
 } from '@/server/actions/contest/getContestLeaderboard'
-import {PaginatedResponse} from '@/lib/utils/common/pagination'
 
 const getContestLeaderboardQueryOptions = (
   params: GetContestLeaderboardParams,
@@ -29,37 +27,10 @@ export const prefetchGetContestLeaderboard = async (
   params: GetContestLeaderboardParams,
 ) => {
   const queryClient = getServerQueryClient()
-  await Promise.all([
-    queryClient.prefetchQuery(getContestLeaderboardQueryOptions(params)),
-    queryClient.prefetchQuery(
-      getContestLeaderboardCountQueryOptions(params.contestId),
-    ),
-  ])
+  await queryClient.prefetchQuery(getContestLeaderboardQueryOptions(params))
 }
-
-const getContestLeaderboardCountQueryOptions = (
-  contestId: string | undefined,
-) => ({
-  queryKey: queryKeys.contests.leaderboardCount(contestId).queryKey,
-  queryFn: withApiErrorHandler(() => {
-    if (!contestId) {
-      throw new Error('Contest ID is required.')
-    }
-
-    return getContestLeaderboardCount(contestId)
-  }),
-})
 
 export const useGetContestLeaderboard = (
   params: GetContestLeaderboardParams,
   options?: Partial<UseQueryOptions<ContestLeaderboard>>,
-): PaginatedResponse<ContestLeaderboard> => {
-  const {data: countData} = useQuery(
-    getContestLeaderboardCountQueryOptions(params.contestId),
-  )
-
-  return {
-    data: useQuery({...getContestLeaderboardQueryOptions(params), ...options}),
-    pageParams: {totalCount: countData?.count},
-  }
-}
+) => useQuery({...getContestLeaderboardQueryOptions(params), ...options})

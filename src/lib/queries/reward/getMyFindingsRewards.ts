@@ -7,11 +7,8 @@ import {withApiErrorHandler} from '@/lib/utils/common/error'
 import {useUserId} from '@/lib/hooks/useUserId'
 import {
   GetMyFindingsRewardsParams,
-  MyFindingsReward,
   getMyFindingsRewards,
-  getMyFindingsRewardsCount,
 } from '@/server/actions/reward/getMyFindingsRewards'
-import {PaginatedResponse} from '@/lib/utils/common/pagination'
 
 const getMyFindingsRewardsQueryOptions = (
   userId: string | undefined,
@@ -26,28 +23,13 @@ export const prefetchGetMyFindingsRewards = async (
   params: GetMyFindingsRewardsParams,
 ) => {
   const queryClient = getServerQueryClient()
-  await Promise.all([
-    queryClient.prefetchQuery(getMyFindingsRewardsQueryOptions(userId, params)),
-    queryClient.prefetchQuery(getMyFindingsRewardsCountQueryOptions(userId)),
-  ])
+  await queryClient.prefetchQuery(
+    getMyFindingsRewardsQueryOptions(userId, params),
+  )
 }
 
-const getMyFindingsRewardsCountQueryOptions = (userId: string | undefined) => ({
-  queryKey: queryKeys.rewards.totalSize(userId).queryKey,
-  queryFn: withApiErrorHandler(() => getMyFindingsRewardsCount()),
-})
-
-export const useGetMyFindingsRewards = (
-  params: GetMyFindingsRewardsParams,
-): PaginatedResponse<MyFindingsReward[]> => {
+export const useGetMyFindingsRewards = (params: GetMyFindingsRewardsParams) => {
   const userId = useUserId()
 
-  const {data: countData} = useQuery(
-    getMyFindingsRewardsCountQueryOptions(userId),
-  )
-
-  return {
-    data: useQuery(getMyFindingsRewardsQueryOptions(userId, params)),
-    pageParams: {totalCount: countData?.count},
-  }
+  return useQuery(getMyFindingsRewardsQueryOptions(userId, params))
 }

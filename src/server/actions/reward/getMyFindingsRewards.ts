@@ -19,7 +19,7 @@ import {PaginatedParams} from '@/lib/utils/common/pagination'
 
 export type MyFindingsReward = Awaited<
   ReturnType<typeof getMyFindingsRewardsAction>
->[number]
+>['data'][number]
 
 export type GetMyFindingsRewardsParams = PaginatedParams<
   undefined,
@@ -35,7 +35,7 @@ const getMyFindingsRewardsAction = async ({
 }: GetMyFindingsRewardsParams) => {
   const session = await requireServerSession()
 
-  return db
+  const myFindingsRewardsQuery = db
     .select({
       reward: {
         id: rewards.id,
@@ -60,29 +60,29 @@ const getMyFindingsRewardsAction = async ({
     )
     .limit(limit)
     .offset(offset)
-}
 
-export const getMyFindingsRewards = serializeServerErrors(
-  getMyFindingsRewardsAction,
-)
-
-const getMyFindingsRewardsCountAction = async () => {
-  const session = await requireServerSession()
-
-  const rewardsCount = await db
+  const myFindingsRewardsCountQuery = db
     .select({
       count: count(),
     })
     .from(rewards)
     .where(eq(rewards.userId, session.user.id))
 
-  if (!rewardsCount[0]) {
+  const [myFindingsRewards, myFindingsRewardsCount] = await Promise.all([
+    myFindingsRewardsQuery,
+    myFindingsRewardsCountQuery,
+  ])
+
+  if (!myFindingsRewardsCount[0]) {
     throw new ServerError('Failed to get rewards total size.')
   }
 
-  return {count: rewardsCount[0].count}
+  return {
+    data: myFindingsRewards,
+    pageParams: {totalCount: myFindingsRewardsCount[0].count},
+  }
 }
 
-export const getMyFindingsRewardsCount = serializeServerErrors(
-  getMyFindingsRewardsCountAction,
+export const getMyFindingsRewards = serializeServerErrors(
+  getMyFindingsRewardsAction,
 )

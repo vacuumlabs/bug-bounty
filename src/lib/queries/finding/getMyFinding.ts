@@ -7,14 +7,10 @@ import {withApiErrorHandler} from '@/lib/utils/common/error'
 import {
   GetMyFindingParams,
   GetMyFindingsParams,
-  MyFinding,
   getMyFinding,
   getMyFindings,
-  getMyFindingsCount,
 } from '@/server/actions/finding/getMyFinding'
-import {FindingOccurence} from '@/server/db/models'
 import {useUserId} from '@/lib/hooks/useUserId'
-import {PaginatedResponse} from '@/lib/utils/common/pagination'
 
 const getGetMyFindingQueryOptions = (params: GetMyFindingParams) => ({
   queryKey: queryKeys.findings.mineOne(params).queryKey,
@@ -37,31 +33,13 @@ const getGetMyFindingsQueryOptions = (
   queryFn: withApiErrorHandler(() => getMyFindings(params)),
 })
 
-const getGetMyFindingsCountQueryOptions = (
-  userId?: string,
-  type?: FindingOccurence,
-) => ({
-  queryKey: queryKeys.findings.mineTotalSize(userId, type).queryKey,
-  queryFn: withApiErrorHandler(() => getMyFindingsCount(type)),
-})
-
-export const useGetMyFindings = (
-  params: GetMyFindingsParams,
-): PaginatedResponse<MyFinding[]> => {
+export const useGetMyFindings = (params: GetMyFindingsParams) => {
   const userId = useUserId()
 
-  const {data: countData} = useQuery({
-    ...getGetMyFindingsCountQueryOptions(userId, params.type),
+  return useQuery({
+    ...getGetMyFindingsQueryOptions(userId, params),
     enabled: !!userId,
   })
-
-  return {
-    data: useQuery({
-      ...getGetMyFindingsQueryOptions(userId, params),
-      enabled: !!userId,
-    }),
-    pageParams: {totalCount: countData?.count},
-  }
 }
 
 export const prefetchGetMyFindings = async (
@@ -69,10 +47,5 @@ export const prefetchGetMyFindings = async (
   params: GetMyFindingsParams,
 ) => {
   const queryClient = getServerQueryClient()
-  await Promise.all([
-    queryClient.prefetchQuery(getGetMyFindingsQueryOptions(userId, params)),
-    queryClient.prefetchQuery(
-      getGetMyFindingsCountQueryOptions(userId, params.type),
-    ),
-  ])
+  await queryClient.prefetchQuery(getGetMyFindingsQueryOptions(userId, params))
 }

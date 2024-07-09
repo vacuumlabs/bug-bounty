@@ -24,10 +24,7 @@ export const CONTEST_LEADERBOARD_PAGE_SIZE = 7
 
 const ContestLeaderboard = ({contestId}: ContestLeaderboardProps) => {
   const [page] = useSearchParamsNumericState('page', 1)
-  const {
-    data: {data: leaderboard, isLoading},
-    pageParams: {totalCount},
-  } = useGetContestLeaderboard({
+  const {data: leaderboard, isLoading} = useGetContestLeaderboard({
     contestId: contestId,
     pageParams: {
       limit: CONTEST_LEADERBOARD_PAGE_SIZE,
@@ -47,7 +44,7 @@ const ContestLeaderboard = ({contestId}: ContestLeaderboardProps) => {
     )
   }
 
-  if (!leaderboard) {
+  if (!leaderboard?.data) {
     return notFound()
   }
 
@@ -69,7 +66,7 @@ const ContestLeaderboard = ({contestId}: ContestLeaderboardProps) => {
           </TableRow>
         </TableHeader>
         <TableBody className="[&_tr]:border-b-0">
-          {leaderboard.map((leaderboard, idx) => (
+          {leaderboard.data.map((leaderboard, idx) => (
             <TableRow key={leaderboard.userId} className="bg-grey-90">
               <TableCell className="text-titleS">
                 {idx + 1}. {leaderboard.alias ?? leaderboard.userId}
@@ -100,11 +97,11 @@ const ContestLeaderboard = ({contestId}: ContestLeaderboardProps) => {
         </TableBody>
       </Table>
 
-      {!!totalCount && (
+      {!!leaderboard.pageParams.totalCount && (
         <TablePagination
           className="mt-12"
           pageSize={CONTEST_LEADERBOARD_PAGE_SIZE}
-          totalCount={totalCount}
+          totalCount={leaderboard.pageParams.totalCount}
         />
       )}
     </>

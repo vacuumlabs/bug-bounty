@@ -19,7 +19,6 @@ import {
   GetFindingParams,
   GetFindingsParams,
 } from '@/server/actions/finding/getFinding'
-import {FindingOccurence} from '@/server/db/models'
 
 export const queryKeys = createQueryKeyStore({
   users: {
@@ -31,13 +30,11 @@ export const queryKeys = createQueryKeyStore({
       userId,
       params,
     ],
-    totalSize: (userId: string | undefined) => [userId],
     calculated: (contestId: string) => [contestId],
   },
   contests: {
     one: (contestId: string | undefined) => [contestId],
     leaderboard: (params: GetContestLeaderboardParams) => [params],
-    leaderboardCount: (contestId: string | undefined) => [contestId],
     mine: (params: GetMyContestsParams) => [params],
     reportCounts: null,
     public: (params: GetPublicContestsParams) => [params],
@@ -47,10 +44,6 @@ export const queryKeys = createQueryKeyStore({
     mine: (userId: string | undefined, params: GetMyFindingsParams) => [
       userId,
       params,
-    ],
-    mineTotalSize: (userId: string | undefined, type?: FindingOccurence) => [
-      userId,
-      type,
     ],
     mineOne: (params: GetMyFindingParams) => [params],
     counts: null,

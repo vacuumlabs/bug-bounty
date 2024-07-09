@@ -30,10 +30,7 @@ const MyFindingsRewardsTable = () => {
   const [sortParams, {getSortParamsUpdaters: updateSortSearchParams}] =
     useSortingSearchParams(MyFindingsRewardsSorting)
 
-  const {
-    data: {data, isLoading},
-    pageParams: {totalCount},
-  } = useGetMyFindingsRewards({
+  const {data, isLoading} = useGetMyFindingsRewards({
     pageParams: {
       limit: MY_FINDINGS_REWARDS_PAGE_SIZE,
       offset: (page - 1) * MY_FINDINGS_REWARDS_PAGE_SIZE,
@@ -53,7 +50,7 @@ const MyFindingsRewardsTable = () => {
     )
   }
 
-  if (!data?.length) {
+  if (!data?.data.length) {
     return (
       <div className="flex h-[450px] flex-col items-center justify-center">
         <p className="mb-12 text-titleL uppercase">There is nothing yet...</p>
@@ -118,17 +115,17 @@ const MyFindingsRewardsTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody className="[&_tr]:border-b-0">
-          {data.map((data) => (
+          {data.data.map((data) => (
             <MyFindingsRewardsTableRow key={data.reward.id} data={data} />
           ))}
         </TableBody>
       </Table>
 
-      {!!totalCount && (
+      {!!data.pageParams.totalCount && (
         <TablePagination
           className="mt-12"
           pageSize={MY_FINDINGS_REWARDS_PAGE_SIZE}
-          totalCount={totalCount}
+          totalCount={data.pageParams.totalCount}
         />
       )}
     </>

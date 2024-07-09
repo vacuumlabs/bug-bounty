@@ -1,6 +1,6 @@
 'use server'
 
-import {and, count, eq, gte, inArray, lte} from 'drizzle-orm'
+import {and, eq, gte, lte, sql} from 'drizzle-orm'
 
 import {serializeServerErrors} from '@/lib/utils/common/error'
 import {db} from '@/server/db'
@@ -71,7 +71,9 @@ export type GetMyFindingsParams = PaginatedParams<
   SortParams<MyFindingsSorting>
 >
 
-export type MyFinding = Awaited<ReturnType<typeof getMyFindingsAction>>[number]
+export type MyFinding = Awaited<
+  ReturnType<typeof getMyFindingsAction>
+>['data'][number]
 
 export const getMyFindingsAction = async ({
   type,
@@ -83,7 +85,29 @@ export const getMyFindingsAction = async ({
 }: GetMyFindingsParams) => {
   const session = await requireServerSession()
 
-  return db.query.findings.findMany({
+  const pastCount =
+    sql<number>`COUNT(*) FILTER (WHERE ${findings.contestId} IN (
+    SELECT ${contests.id}
+    FROM ${contests}
+    WHERE ${contests.endDate} <= NOW()
+  ))`.as('pastCount')
+
+  const presentCount =
+    sql<number>`COUNT(*) FILTER (WHERE ${findings.contestId} IN (
+    SELECT ${contests.id}
+    FROM ${contests}
+    WHERE ${contests.startDate} <= NOW() AND ${contests.endDate} >= NOW()
+  ))`.as('presentCount')
+
+  const myFindingsCountQuery = db
+    .select({
+      pastCount,
+      presentCount,
+    })
+    .from(findings)
+    .where(and(eq(findings.authorId, session.user.id)))
+
+  const myFindingsQuery = db.query.findings.findMany({
     where: (findings, {eq, and, inArray}) =>
       and(
         eq(findings.authorId, session.user.id),
@@ -121,50 +145,23 @@ export const getMyFindingsAction = async ({
     offset,
     orderBy: sortByColumn(sort.direction, myFindingsSortFieldMap[sort.field]),
   })
-}
 
-export const getMyFindings = serializeServerErrors(getMyFindingsAction)
-
-const getMyFindingsCountAction = async (type?: FindingOccurence) => {
-  const session = await requireServerSession()
-
-  const myFindingsCount = await db
-    .select({
-      count: count(),
-    })
-    .from(findings)
-    .where(
-      and(
-        eq(findings.authorId, session.user.id),
-        inArray(
-          findings.contestId,
-          db
-            .select({contestId: contests.id})
-            .from(contests)
-            .where(
-              and(
-                type === FindingOccurence.PAST
-                  ? lte(contests.endDate, new Date())
-                  : undefined,
-                type === FindingOccurence.PRESENT
-                  ? and(
-                      lte(contests.startDate, new Date()),
-                      gte(contests.endDate, new Date()),
-                    )
-                  : undefined,
-              ),
-            ),
-        ),
-      ),
-    )
+  const [myFindings, myFindingsCount] = await Promise.all([
+    myFindingsQuery,
+    myFindingsCountQuery,
+  ])
 
   if (!myFindingsCount[0]) {
     throw new ServerError('Failed to get my findings total size.')
   }
 
-  return {count: myFindingsCount[0].count}
+  return {
+    data: myFindings,
+    pageParams: {
+      liveCount: myFindingsCount[0].presentCount,
+      pastCount: myFindingsCount[0].pastCount,
+    },
+  }
 }
 
-export const getMyFindingsCount = serializeServerErrors(
-  getMyFindingsCountAction,
-)
+export const getMyFindings = serializeServerErrors(getMyFindingsAction)

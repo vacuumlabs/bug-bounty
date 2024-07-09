@@ -33,10 +33,7 @@ const MyFindings = () => {
   const [sortParams, {getSortParamsUpdaters: updateSortSearchParams}] =
     useSortingSearchParams(MyFindingsSorting)
 
-  const {
-    data: {data: findings, isLoading},
-    pageParams: {totalCount},
-  } = useGetMyFindings({
+  const {data: findings, isLoading} = useGetMyFindings({
     type: findingType,
     pageParams: {
       limit: MY_FINDINGS_PAGE_SIZE,
@@ -47,7 +44,7 @@ const MyFindings = () => {
 
   const liveFindings = useMemo(
     () =>
-      findings?.filter(
+      findings?.data.filter(
         (finding) =>
           DateTime.fromJSDate(finding.contest.startDate) < DateTime.now() &&
           DateTime.fromJSDate(finding.contest.endDate) > DateTime.now(),
@@ -57,7 +54,7 @@ const MyFindings = () => {
 
   const pastFindings = useMemo(
     () =>
-      findings?.filter(
+      findings?.data.filter(
         (finding) =>
           DateTime.fromJSDate(finding.contest.endDate) < DateTime.now(),
       ),
@@ -73,6 +70,18 @@ const MyFindings = () => {
     }
   }, [findingType, liveFindings, pastFindings])
 
+  const pastCount = findings?.pageParams.pastCount
+  const liveCount = findings?.pageParams.liveCount
+
+  const currentCount = useMemo(() => {
+    switch (findingType) {
+      case FindingOccurence.PRESENT:
+        return liveCount
+      case FindingOccurence.PAST:
+        return pastCount
+    }
+  }, [findingType, liveCount, pastCount])
+
   return (
     <div className="flex flex-grow flex-col">
       <Tabs
@@ -83,11 +92,11 @@ const MyFindings = () => {
           <TabsTrigger
             value={
               FindingOccurence.PRESENT
-            }>{`Live${formatTabCount(liveFindings?.length)}`}</TabsTrigger>
+            }>{`Live${liveCount ? formatTabCount(liveCount) : ''}`}</TabsTrigger>
           <TabsTrigger
             value={
               FindingOccurence.PAST
-            }>{`Past${formatTabCount(pastFindings?.length)}`}</TabsTrigger>
+            }>{`Past${pastCount ? formatTabCount(pastCount) : ''}`}</TabsTrigger>
         </TabsList>
         <Separator />
         <div className="flex flex-grow flex-col bg-black px-24 pb-24 pt-12">
@@ -101,11 +110,11 @@ const MyFindings = () => {
                 updatePageSearchParams={updatePageSearchParams}
                 updateSortSearchParams={updateSortSearchParams}
               />
-              {!!totalCount && (
+              {!!currentCount && (
                 <TablePagination
                   className="mt-12"
                   pageSize={MY_FINDINGS_PAGE_SIZE}
-                  totalCount={totalCount}
+                  totalCount={currentCount}
                 />
               )}
             </>

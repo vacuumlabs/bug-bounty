@@ -70,7 +70,7 @@ const getContestLeaderboardAction = async ({
     .groupBy(findings.authorId)
     .as('userRewards')
 
-  const contestLeaderboard = await db
+  const contestLeaderboardQuery = db
     .select({
       userId: users.id,
       alias: users.alias,
@@ -88,28 +88,28 @@ const getContestLeaderboardAction = async ({
     .offset(offset)
     .orderBy(desc(userRewards.totalRewards))
 
-  return contestLeaderboard
-}
-
-export const getContestLeaderboard = serializeServerErrors(
-  getContestLeaderboardAction,
-)
-
-const getContestLeaderboardCountAction = async (contestId: string) => {
-  const findingAuthorsCount = await db
+  const findingAuthorsCountQuery = db
     .select({
       count: countDistinct(findings.authorId),
     })
     .from(findings)
     .where(eq(findings.contestId, contestId))
 
+  const [contestLeaderboard, findingAuthorsCount] = await Promise.all([
+    contestLeaderboardQuery,
+    findingAuthorsCountQuery,
+  ])
+
   if (!findingAuthorsCount[0]) {
     throw new ServerError('Failed to get findings authours total size.')
   }
 
-  return {count: findingAuthorsCount[0].count}
+  return {
+    data: contestLeaderboard,
+    pageParams: {totalCount: findingAuthorsCount[0].count},
+  }
 }
 
-export const getContestLeaderboardCount = serializeServerErrors(
-  getContestLeaderboardCountAction,
+export const getContestLeaderboard = serializeServerErrors(
+  getContestLeaderboardAction,
 )
