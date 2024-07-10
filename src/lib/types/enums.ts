@@ -20,6 +20,15 @@ export enum ContestSorting {
   TITLE = 'title',
 }
 
+export enum MyFindingsSorting {
+  PROJECT = 'project',
+  FINDING = 'finding',
+  SUBMITTED = 'submitted',
+  SEVERITY = 'severity',
+  PROJECT_STATE = 'projectState',
+  STATUS = 'status',
+}
+
 export enum MyFindingsRewardsSorting {
   PROJECT = 'project',
   SUBMITTED = 'submitted',

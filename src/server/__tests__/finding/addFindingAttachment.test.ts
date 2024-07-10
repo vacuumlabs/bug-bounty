@@ -111,6 +111,7 @@ describe('addFindingAttachment', () => {
     const request: AddFindingAttachmentRequest = {
       attachmentUrl: 'https://example-file.com/file.txt',
       findingId: insertedFindingId,
+      fileName: 'file.pdf',
     }
 
     const result = await addFindingAttachmentAction(request)
@@ -129,6 +130,7 @@ describe('addFindingAttachment', () => {
       findingId: insertedFindingId,
       id: expectAnyString,
       mimeType: null,
+      fileName: request.fileName,
     }
 
     expect(result).toEqual([expectedFindingAttachment])

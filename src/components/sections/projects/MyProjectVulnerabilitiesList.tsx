@@ -43,8 +43,10 @@ const MyProjectVulnerabilitiesList = ({
     useGetDeduplicatedFindingsCount(contestId)
   const {data, isLoading} = useGetDeduplicatedFindings({
     contestId,
-    limit: MY_PROJECT_VULNERABILITIES_PAGE_SIZE,
-    offset: (page - 1) * MY_PROJECT_VULNERABILITIES_PAGE_SIZE,
+    pageParams: {
+      limit: MY_PROJECT_VULNERABILITIES_PAGE_SIZE,
+      offset: (page - 1) * MY_PROJECT_VULNERABILITIES_PAGE_SIZE,
+    },
     sort: sortParams,
   })
 

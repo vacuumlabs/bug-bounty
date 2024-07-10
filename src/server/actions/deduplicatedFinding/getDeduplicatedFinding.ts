@@ -11,6 +11,7 @@ import {findings} from '@/server/db/schema/finding'
 import {MyProjectVulnerabilitiesSorting, SortDirection} from '@/lib/types/enums'
 import {SortParams, sortByColumn} from '@/lib/utils/common/sorting'
 import {ContestStatus, FindingSeverity} from '@/server/db/models'
+import {PaginatedParams} from '@/lib/utils/common/pagination'
 
 const getDeduplicatedFindingAction = async (deduplicatedFindingId: string) => {
   const session = await requireServerSession()
@@ -52,17 +53,16 @@ export const getDeduplicatedFinding = serializeServerErrors(
   getDeduplicatedFindingAction,
 )
 
-export type GetDeduplicatedFindingsParams = {
-  contestId: string
-  limit: number
-  offset?: number
-  sort?: SortParams<MyProjectVulnerabilitiesSorting>
-}
+export type GetDeduplicatedFindingsParams = PaginatedParams<
+  {
+    contestId: string
+  },
+  SortParams<MyProjectVulnerabilitiesSorting>
+>
 
 export const getDeduplicatedFindingsAction = async ({
   contestId,
-  limit,
-  offset = 0,
+  pageParams: {limit, offset = 0},
   sort = {
     field: MyProjectVulnerabilitiesSorting.SEVERITY,
     direction: SortDirection.DESC,

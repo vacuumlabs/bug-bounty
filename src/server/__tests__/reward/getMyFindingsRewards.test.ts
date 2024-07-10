@@ -22,10 +22,7 @@ import {InsertFinding} from '@/server/db/schema/finding'
 import {InsertDeduplicatedFinding} from '@/server/db/schema/deduplicatedFinding'
 import {InsertReward} from '@/server/db/schema/reward'
 import {TEST_WALLET_ADDRESS} from '@/server/utils/test'
-import {
-  getMyFindingsRewards,
-  getMyFindingsRewardsCount,
-} from '@/server/actions/reward/getMyFindingsRewards'
+import {getMyFindingsRewards} from '@/server/actions/reward/getMyFindingsRewards'
 
 const contestId = uuidv4()
 const contestAuthorId = uuidv4()
@@ -157,29 +154,33 @@ describe('getMyFindingsRewards', () => {
     await db.insert(schema.rewards).values(rewardToInsert)
 
     const result = await getMyFindingsRewards({
-      limit: 10,
+      pageParams: {
+        limit: 10,
+      },
+      sort: undefined,
     })
 
-    const size = await getMyFindingsRewardsCount()
-
-    expect(result).toEqual([
-      {
-        reward: {
-          id: expectAnyString,
-          amount: rewardToInsert.amount,
-          transferTxHash: rewardToInsert.transferTxHash,
+    expect(result).toEqual({
+      data: [
+        {
+          reward: {
+            id: expectAnyString,
+            amount: rewardToInsert.amount,
+            transferTxHash: rewardToInsert.transferTxHash,
+          },
+          finding: {
+            severity: findingsToInsert[0]?.severity,
+            updatedAt: expectAnyDate,
+            createdAt: expectAnyDate,
+          },
+          contest: {
+            title: contestToInsert.title,
+          },
         },
-        finding: {
-          severity: findingsToInsert[0]?.severity,
-          updatedAt: expectAnyDate,
-          createdAt: expectAnyDate,
-        },
-        contest: {
-          title: contestToInsert.title,
-        },
+      ],
+      pageParams: {
+        totalCount: 1,
       },
-    ])
-
-    expect(size).toEqual({count: 1})
+    })
   })
 })

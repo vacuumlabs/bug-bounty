@@ -10,6 +10,7 @@ import {
   getMyFinding,
   getMyFindings,
 } from '@/server/actions/finding/getMyFinding'
+import {useUserId} from '@/lib/hooks/useUserId'
 
 const getGetMyFindingQueryOptions = (params: GetMyFindingParams) => ({
   queryKey: queryKeys.findings.mineOne(params).queryKey,
@@ -24,15 +25,27 @@ export const prefetchGetMyFinding = async (params: GetMyFindingParams) => {
   await queryClient.prefetchQuery(getGetMyFindingQueryOptions(params))
 }
 
-const getGetMyFindingsQueryOptions = (params: GetMyFindingsParams) => ({
-  queryKey: queryKeys.findings.mine(params).queryKey,
+const getGetMyFindingsQueryOptions = (
+  userId: string | undefined,
+  params: GetMyFindingsParams,
+) => ({
+  queryKey: queryKeys.findings.mine(userId, params).queryKey,
   queryFn: withApiErrorHandler(() => getMyFindings(params)),
 })
 
-export const useGetMyFindings = (params: GetMyFindingsParams) =>
-  useQuery(getGetMyFindingsQueryOptions(params))
+export const useGetMyFindings = (params: GetMyFindingsParams) => {
+  const userId = useUserId()
 
-export const prefetchGetMyFindings = async (params: GetMyFindingsParams) => {
+  return useQuery({
+    ...getGetMyFindingsQueryOptions(userId, params),
+    enabled: !!userId,
+  })
+}
+
+export const prefetchGetMyFindings = async (
+  userId: string,
+  params: GetMyFindingsParams,
+) => {
   const queryClient = getServerQueryClient()
-  await queryClient.prefetchQuery(getGetMyFindingsQueryOptions(params))
+  await queryClient.prefetchQuery(getGetMyFindingsQueryOptions(userId, params))
 }

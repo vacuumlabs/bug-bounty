@@ -6,6 +6,7 @@ import {eq} from 'drizzle-orm'
 import {faker} from '@faker-js/faker'
 
 import {trunacateDb} from '../utils/db'
+import {expectAnyString} from '../utils/expect'
 
 import {
   ContestStatus,
@@ -232,49 +233,59 @@ describe('getContestLeaderboard', () => {
 
     await finalizeRewardsAction(contestId)
 
-    const result = await getContestLeaderboard({contestId})
+    const result = await getContestLeaderboard({
+      contestId,
+      pageParams: {limit: 0},
+    })
 
-    expect(result).toEqual([
-      {
-        alias: 'bob',
-        criticalFindings: 1,
-        highFindings: 0,
-        infoFindings: 0,
-        lowFindings: 0,
-        mediumFindings: 0,
-        totalBugs: 1,
-        totalRewards: 834,
-      },
-      {
-        alias: 'alice',
-        criticalFindings: 0,
-        highFindings: 1,
-        infoFindings: 0,
-        lowFindings: 0,
-        mediumFindings: 0,
-        totalBugs: 1,
-        totalRewards: 93,
-      },
-      {
-        alias: 'david',
-        criticalFindings: 0,
-        highFindings: 1,
-        infoFindings: 0,
-        lowFindings: 0,
-        mediumFindings: 0,
-        totalBugs: 1,
-        totalRewards: 72,
-      },
-      {
-        alias: 'charlie',
-        criticalFindings: 0,
-        highFindings: 0,
-        infoFindings: 1,
-        lowFindings: 0,
-        mediumFindings: 0,
-        totalBugs: 1,
-        totalRewards: 0,
-      },
-    ])
+    expect(result).toEqual({
+      data: [
+        {
+          userId: expectAnyString,
+          alias: 'bob',
+          criticalFindings: 1,
+          highFindings: 0,
+          infoFindings: 0,
+          lowFindings: 0,
+          mediumFindings: 0,
+          totalBugs: 1,
+          totalRewards: 834,
+        },
+        {
+          userId: expectAnyString,
+          alias: 'alice',
+          criticalFindings: 0,
+          highFindings: 1,
+          infoFindings: 0,
+          lowFindings: 0,
+          mediumFindings: 0,
+          totalBugs: 1,
+          totalRewards: 93,
+        },
+        {
+          userId: expectAnyString,
+          alias: 'david',
+          criticalFindings: 0,
+          highFindings: 1,
+          infoFindings: 0,
+          lowFindings: 0,
+          mediumFindings: 0,
+          totalBugs: 1,
+          totalRewards: 72,
+        },
+        {
+          userId: expectAnyString,
+          alias: 'charlie',
+          criticalFindings: 0,
+          highFindings: 0,
+          infoFindings: 1,
+          lowFindings: 0,
+          mediumFindings: 0,
+          totalBugs: 1,
+          totalRewards: 0,
+        },
+      ],
+      pageParams: {totalCount: 4},
+    })
   })
 })

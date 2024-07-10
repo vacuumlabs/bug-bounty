@@ -15,10 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/Table'
 import {PATHS} from '@/lib/utils/common/paths'
-import {
-  useGetMyFindingsRewards,
-  useGetMyFindingsRewardsCount,
-} from '@/lib/queries/reward/getMyFindingsRewards'
+import {useGetMyFindingsRewards} from '@/lib/queries/reward/getMyFindingsRewards'
 import TablePagination from '@/components/ui/TablePagination'
 import {useSearchParamsNumericState} from '@/lib/hooks/useSearchParamsState'
 import {useSortingSearchParams} from '@/lib/hooks/useSortingSearchParams'
@@ -33,10 +30,11 @@ const MyFindingsRewardsTable = () => {
   const [sortParams, {getSortParamsUpdaters: updateSortSearchParams}] =
     useSortingSearchParams(MyFindingsRewardsSorting)
 
-  const {data: totalSize} = useGetMyFindingsRewardsCount()
   const {data, isLoading} = useGetMyFindingsRewards({
-    limit: MY_FINDINGS_REWARDS_PAGE_SIZE,
-    offset: (page - 1) * MY_FINDINGS_REWARDS_PAGE_SIZE,
+    pageParams: {
+      limit: MY_FINDINGS_REWARDS_PAGE_SIZE,
+      offset: (page - 1) * MY_FINDINGS_REWARDS_PAGE_SIZE,
+    },
     sort: sortParams,
   })
 
@@ -52,7 +50,7 @@ const MyFindingsRewardsTable = () => {
     )
   }
 
-  if (!data?.length) {
+  if (!data?.data.length) {
     return (
       <div className="flex h-[450px] flex-col items-center justify-center">
         <p className="mb-12 text-titleL uppercase">There is nothing yet...</p>
@@ -117,17 +115,17 @@ const MyFindingsRewardsTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody className="[&_tr]:border-b-0">
-          {data.map((data) => (
+          {data.data.map((data) => (
             <MyFindingsRewardsTableRow key={data.reward.id} data={data} />
           ))}
         </TableBody>
       </Table>
 
-      {!!totalSize?.count && (
+      {!!data.pageParams.totalCount && (
         <TablePagination
           className="mt-12"
           pageSize={MY_FINDINGS_REWARDS_PAGE_SIZE}
-          totalCount={totalSize.count}
+          totalCount={data.pageParams.totalCount}
         />
       )}
     </>

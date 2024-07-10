@@ -8,7 +8,6 @@ import {useUserId} from '@/lib/hooks/useUserId'
 import {
   GetMyFindingsRewardsParams,
   getMyFindingsRewards,
-  getMyFindingsRewardsCount,
 } from '@/server/actions/reward/getMyFindingsRewards'
 
 const getMyFindingsRewardsQueryOptions = (
@@ -18,12 +17,6 @@ const getMyFindingsRewardsQueryOptions = (
   queryKey: queryKeys.rewards.mine(userId, params).queryKey,
   queryFn: withApiErrorHandler(() => getMyFindingsRewards(params)),
 })
-
-export const useGetMyFindingsRewards = (params: GetMyFindingsRewardsParams) => {
-  const userId = useUserId()
-
-  return useQuery(getMyFindingsRewardsQueryOptions(userId, params))
-}
 
 export const prefetchGetMyFindingsRewards = async (
   userId: string,
@@ -35,18 +28,8 @@ export const prefetchGetMyFindingsRewards = async (
   )
 }
 
-const getMyFindingsRewardsCountQueryOptions = (userId: string | undefined) => ({
-  queryKey: queryKeys.rewards.totalSize(userId).queryKey,
-  queryFn: withApiErrorHandler(() => getMyFindingsRewardsCount()),
-})
-
-export const useGetMyFindingsRewardsCount = () => {
+export const useGetMyFindingsRewards = (params: GetMyFindingsRewardsParams) => {
   const userId = useUserId()
 
-  return useQuery(getMyFindingsRewardsCountQueryOptions(userId))
-}
-
-export const prefetchGetMyFindingsRewardsCount = async (userId: string) => {
-  const queryClient = getServerQueryClient()
-  await queryClient.prefetchQuery(getMyFindingsRewardsCountQueryOptions(userId))
+  return useQuery(getMyFindingsRewardsQueryOptions(userId, params))
 }

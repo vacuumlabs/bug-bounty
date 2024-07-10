@@ -161,6 +161,11 @@ describe('getMyFindings', () => {
 
     const myFindingsRequestPast = await getMyFindingsAction({
       type: FindingOccurence.PAST,
+      pageParams: {
+        limit: 10,
+        offset: 0,
+      },
+      sort: undefined,
     })
 
     const expectedPastFinding: MyFinding = {
@@ -177,10 +182,18 @@ describe('getMyFindings', () => {
       },
     }
 
-    expect(myFindingsRequestPast).toEqual([expectedPastFinding])
+    expect(myFindingsRequestPast).toEqual({
+      data: [expectedPastFinding],
+      pageParams: {liveCount: 1, pastCount: 1},
+    })
 
     const myFindingsRequestPresent = await getMyFindingsAction({
       type: FindingOccurence.PRESENT,
+      pageParams: {
+        limit: 10,
+        offset: 0,
+      },
+      sort: undefined,
     })
 
     const expectedPresentFinding: MyFinding = {
@@ -197,13 +210,21 @@ describe('getMyFindings', () => {
       },
     }
 
-    expect(myFindingsRequestPresent).toEqual([expectedPresentFinding])
+    expect(myFindingsRequestPresent).toEqual({
+      data: [expectedPresentFinding],
+      pageParams: {liveCount: 1, pastCount: 1},
+    })
 
-    const myFindingsRequestAll = await getMyFindingsAction({})
+    const myFindingsRequestAll = await getMyFindingsAction({
+      pageParams: {
+        limit: 10,
+      },
+      sort: undefined,
+    })
 
-    expect(myFindingsRequestAll).toEqual([
-      expectedPastFinding,
-      expectedPresentFinding,
-    ])
+    expect(myFindingsRequestAll).toEqual({
+      data: [expectedPastFinding, expectedPresentFinding],
+      pageParams: {liveCount: 1, pastCount: 1},
+    })
   })
 })

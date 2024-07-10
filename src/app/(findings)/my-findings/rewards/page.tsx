@@ -7,22 +7,18 @@ import Separator from '@/components/ui/Separator'
 import MyFindingsRewardsTable, {
   MY_FINDINGS_REWARDS_PAGE_SIZE,
 } from '@/components/sections/finding/rewards/MyFindingsRewardsTable'
-import {
-  prefetchGetMyFindingsRewards,
-  prefetchGetMyFindingsRewardsCount,
-} from '@/lib/queries/reward/getMyFindingsRewards'
+import {prefetchGetMyFindingsRewards} from '@/lib/queries/reward/getMyFindingsRewards'
 
 const myFindingsRewardsPage = async () => {
   const {user} = await requirePageSession()
 
-  await Promise.all([
-    prefetchGetMyFindingsRewards(user.id, {
+  await prefetchGetMyFindingsRewards(user.id, {
+    pageParams: {
       limit: MY_FINDINGS_REWARDS_PAGE_SIZE,
       offset: 0,
-      sort: undefined,
-    }),
-    prefetchGetMyFindingsRewardsCount(user.id),
-  ])
+    },
+    sort: undefined,
+  })
 
   return (
     <main className="mt-12 flex flex-grow flex-col">

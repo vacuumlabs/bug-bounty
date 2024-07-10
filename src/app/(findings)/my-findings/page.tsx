@@ -6,12 +6,20 @@ import {requirePageSession} from '@/server/utils/auth'
 import {prefetchGetMyFindings} from '@/lib/queries/finding/getMyFinding'
 import {prefetchGetMyFindingsCounts} from '@/lib/queries/finding/getMyFindingsCounts'
 import FindingsDashboardOverview from '@/components/sections/finding/FindingsDashboardOverview'
-import MyFindings from '@/components/sections/finding/MyFindings'
+import MyFindings, {
+  MY_FINDINGS_PAGE_SIZE,
+} from '@/components/sections/finding/MyFindings'
 
 const MySubmissionsPage = async () => {
-  await requirePageSession()
+  const session = await requirePageSession()
 
-  await Promise.all([prefetchGetMyFindingsCounts(), prefetchGetMyFindings({})])
+  await Promise.all([
+    prefetchGetMyFindingsCounts(),
+    prefetchGetMyFindings(session.user.id, {
+      pageParams: {limit: MY_FINDINGS_PAGE_SIZE, offset: 0},
+      sort: undefined,
+    }),
+  ])
 
   return (
     <main className="mt-12 flex flex-grow flex-col">

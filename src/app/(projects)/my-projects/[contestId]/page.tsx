@@ -18,8 +18,10 @@ const MyProjectDetailPage = async ({params}: {params: {contestId: string}}) => {
     prefetchGetContest(params.contestId),
     prefetchGetDeduplicatedFindings({
       contestId: params.contestId,
-      limit: MY_PROJECT_VULNERABILITIES_PAGE_SIZE,
-      offset: 0,
+      pageParams: {
+        limit: MY_PROJECT_VULNERABILITIES_PAGE_SIZE,
+        offset: 0,
+      },
       sort: undefined,
     }),
     prefetchGetDeduplicatedFindingsCount(params.contestId),
