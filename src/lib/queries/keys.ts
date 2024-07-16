@@ -68,5 +68,6 @@ export const queryKeys = createQueryKeyStore({
   },
   judges: {
     contestCounts: null,
+    contests: (params: GetJudgeContestsParams) => [params],
   },
 })
