@@ -31,8 +31,8 @@ const JudgesNavbar = () => {
           <Button
             asChild
             variant="link"
-            className={cn(pathname === PATHS.myProjects && 'font-bold')}>
-            <Link href={PATHS.myProjects}>Contests</Link>
+            className={cn(pathname === PATHS.judgeContests && 'font-bold')}>
+            <Link href={PATHS.judgeContests}>Contests</Link>
           </Button>
         </nav>
         <div className="flex items-center gap-10">
