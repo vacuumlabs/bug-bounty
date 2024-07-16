@@ -63,8 +63,4 @@ export const queryKeys = createQueryKeyStore({
     repoBranches: (params: GetRepoBranchesParams | undefined) => [params],
     repoFiles: (params: GetRepoFilesParams | undefined) => [params],
   },
-  judges: {
-    contestCounts: null,
-    contests: (params: GetJudgeContestsParams) => [params],
-  },
 })
