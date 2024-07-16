@@ -37,6 +37,7 @@ export const PATHS = {
   profile: '/profile',
   signIn: '/auth/signin',
   signOut: '/api/auth/signout',
+  judgeContests: '/judge/contests',
 } as const
 
 export const getDashboardPathByUserRole = (
@@ -47,6 +48,8 @@ export const getDashboardPathByUserRole = (
       return PATHS.myFindings
     case UserRole.PROJECT_OWNER:
       return PATHS.myProjects
+    case UserRole.JUDGE:
+      return PATHS.judgeContests
     default:
       return PATHS.selectRole
   }

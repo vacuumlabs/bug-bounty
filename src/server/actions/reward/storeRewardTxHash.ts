@@ -5,7 +5,7 @@ import {z} from 'zod'
 
 import {db} from '../../db'
 import {rewards} from '../../db/schema/reward'
-import {requireJudgeAuth} from '../../utils/auth'
+import {requireJudgeServerSession} from '../../utils/auth'
 
 import {serializeServerErrors} from '@/lib/utils/common/error'
 import {ServerError} from '@/lib/types/error'
@@ -20,7 +20,7 @@ type StoreRewardTxHashRequest = z.infer<typeof storeRewardTxHashSchema>
 export const storeRewardTxHashAction = async (
   request: StoreRewardTxHashRequest,
 ) => {
-  await requireJudgeAuth()
+  await requireJudgeServerSession()
   const {rewardId, txHash} = storeRewardTxHashSchema.parse(request)
 
   const reward = await db.query.rewards.findFirst({

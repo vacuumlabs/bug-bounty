@@ -6,7 +6,7 @@ import {calculateRewardsAction} from './calculateRewards'
 
 import {db, schema} from '@/server/db'
 import {ContestStatus} from '@/server/db/models'
-import {requireJudgeAuth} from '@/server/utils/auth'
+import {requireJudgeServerSession} from '@/server/utils/auth'
 import {serializeServerErrors} from '@/lib/utils/common/error'
 
 export type FinalizeRewardsResponse = Awaited<
@@ -14,7 +14,7 @@ export type FinalizeRewardsResponse = Awaited<
 >
 
 export const finalizeRewardsAction = async (contestId: string) => {
-  await requireJudgeAuth()
+  await requireJudgeServerSession()
 
   const {totalRewards, rewards} = await calculateRewardsAction(contestId)
 

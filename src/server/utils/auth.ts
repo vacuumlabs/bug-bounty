@@ -1,4 +1,4 @@
-import {redirect} from 'next/navigation'
+import {notFound, redirect} from 'next/navigation'
 import {Session, getServerSession} from 'next-auth'
 import {headers} from 'next/headers'
 
@@ -44,6 +44,16 @@ export const requirePageSession = async () => {
 
   if (!session.user.role && relativePathName !== PATHS.selectRole) {
     return redirect(`${PATHS.selectRole}?callbackUrl=${pathName}`)
+  }
+
+  return session
+}
+
+export const requireJudgeSession = async () => {
+  const session = await getServerAuthSession()
+
+  if (!session || !isJudge(session)) {
+    return notFound()
   }
 
   return session
