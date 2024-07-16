@@ -10,7 +10,7 @@ import JudgeContests, {
   JUDGE_CONTESTS_PAGE_SIZE,
 } from '@/components/sections/judge/JudgeContests'
 
-const MyProjectsPage = async () => {
+const JudgeContestsPage = async () => {
   await requireJudgeSession()
 
   await Promise.all([
@@ -48,4 +48,4 @@ const MyProjectsPage = async () => {
   )
 }
 
-export default MyProjectsPage
+export default JudgeContestsPage
