@@ -7,7 +7,7 @@ import {withApiErrorHandler} from '@/lib/utils/common/error'
 import {getJudgeContestCounts} from '@/server/actions/contest/getJudgeContestCounts'
 
 const queryOptions = {
-  queryKey: queryKeys.judges.contestCounts.queryKey,
+  queryKey: queryKeys.contests.judgesContestCounts.queryKey,
   queryFn: withApiErrorHandler(() => getJudgeContestCounts()),
 }
 

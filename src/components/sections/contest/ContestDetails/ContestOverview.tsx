@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import {DateTime} from 'luxon'
 import {ArrowLeft} from 'lucide-react'
+import {useSession} from 'next-auth/react'
 
 import cardanoLogo from '@public/images/cardano-logo.png'
 import {Avatar, AvatarImage} from '@/components/ui/Avatar'
@@ -12,7 +13,7 @@ import {translateEnum} from '@/lib/utils/common/enums'
 import {formatAda, formatTimeRemaining} from '@/lib/utils/common/format'
 import {Contest} from '@/server/actions/contest/getContest'
 import {getContestStatusText} from '@/lib/utils/common/contest'
-import {ContestStatus} from '@/server/db/models'
+import {ContestStatus, UserRole} from '@/server/db/models'
 
 type ContestOverviewProps = {
   contest: Contest
@@ -22,6 +23,7 @@ type ContestOverviewProps = {
 }
 
 const ContestOverview = ({contest, myProject}: ContestOverviewProps) => {
+  const {data: session} = useSession()
   const projectType = translateEnum.projectCategory(contest.projectCategory)
   const projectLanguage = translateEnum.projectLanguage(contest.projectLanguage)
 
@@ -41,7 +43,12 @@ const ContestOverview = ({contest, myProject}: ContestOverviewProps) => {
       <div className="flex items-center gap-12">
         {myProject && (
           <Button variant="outline" size="small" className="flex gap-2" asChild>
-            <Link href={PATHS.myProjects}>
+            <Link
+              href={
+                session?.user.role === UserRole.JUDGE
+                  ? PATHS.judgeContests
+                  : PATHS.myProjects
+              }>
               <ArrowLeft width={16} height={16} />
               Go Back
             </Link>

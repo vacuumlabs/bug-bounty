@@ -9,6 +9,7 @@ import {formatAda, formatDate} from '@/lib/utils/common/format'
 import {translateEnum} from '@/lib/utils/common/enums'
 import {JudgeContest} from '@/server/actions/contest/getJudgeContests'
 import {ContestOccurence} from '@/server/db/models'
+import {PATHS} from '@/lib/utils/common/paths'
 
 type JudgeContestsTableRowProps = {
   contest: JudgeContest
@@ -66,7 +67,9 @@ const JudgeContestsTableRow = ({
       </TableCell>
       <TableCell className="text-right">
         <Button asChild variant="outline" size="small">
-          <Link href="#" className="gap-2 text-buttonS">
+          <Link
+            href={PATHS.judgeContestDetails(contest.id)}
+            className="gap-2 text-buttonS">
             Details
           </Link>
         </Button>

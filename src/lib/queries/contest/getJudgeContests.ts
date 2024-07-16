@@ -10,7 +10,7 @@ import {
 } from '@/server/actions/contest/getJudgeContests'
 
 const getQueryOptions = (params: GetJudgeContestsParams) => ({
-  queryKey: queryKeys.judges.contests(params).queryKey,
+  queryKey: queryKeys.contests.judgeContests(params).queryKey,
   queryFn: withApiErrorHandler(() => getJudgeContests(params)),
 })
 

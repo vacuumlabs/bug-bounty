@@ -4,7 +4,7 @@ import {count, countDistinct, eq, sql} from 'drizzle-orm'
 
 import {serializeServerErrors} from '@/lib/utils/common/error'
 import {db} from '@/server/db'
-import {requireServerSession} from '@/server/utils/auth'
+import {isJudge, requireServerSession} from '@/server/utils/auth'
 import {deduplicatedFindings} from '@/server/db/schema/deduplicatedFinding'
 import {ServerError} from '@/lib/types/error'
 import {findings} from '@/server/db/schema/finding'
@@ -78,7 +78,11 @@ export const getDeduplicatedFindingsAction = async ({
     where: (contests, {eq}) => eq(contests.id, contestId),
   })
 
-  if (contest?.authorId !== session.user.id) {
+  if (!contest) {
+    throw new ServerError('Contest not found.')
+  }
+
+  if (contest.authorId !== session.user.id && !isJudge(session)) {
     throw new ServerError('Unauthorized access to contest.')
   }
 
@@ -139,7 +143,11 @@ const getDeduplicatedFindingsCountAction = async (contestId: string) => {
     where: (contests, {eq}) => eq(contests.id, contestId),
   })
 
-  if (contest?.authorId !== session.user.id) {
+  if (!contest) {
+    throw new ServerError('Contest not found.')
+  }
+
+  if (contest.authorId !== session.user.id && !isJudge(session)) {
     throw new ServerError('Unauthorized access to contest.')
   }
 

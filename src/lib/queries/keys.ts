@@ -40,6 +40,8 @@ export const queryKeys = createQueryKeyStore({
     reportCounts: null,
     public: (params: GetPublicContestsParams) => [params],
     publicCounts: (params: GetPublicContestCountsParams) => [params],
+    judgesContestCounts: null,
+    judgeContests: (params: GetJudgeContestsParams) => [params],
   },
   findings: {
     mine: (userId: string | undefined, params: GetMyFindingsParams) => [
@@ -60,9 +62,5 @@ export const queryKeys = createQueryKeyStore({
     publicRepos: (userId: string | undefined) => [userId],
     repoBranches: (params: GetRepoBranchesParams | undefined) => [params],
     repoFiles: (params: GetRepoFilesParams | undefined) => [params],
-  },
-  judges: {
-    contestCounts: null,
-    contests: (params: GetJudgeContestsParams) => [params],
   },
 })
