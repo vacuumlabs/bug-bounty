@@ -1,10 +1,14 @@
 'use server'
 
-import {sql} from 'drizzle-orm'
+import {inArray, ne, sql} from 'drizzle-orm'
 
 import {serializeServerErrors} from '@/lib/utils/common/error'
 import {db} from '@/server/db'
-import {ContestOccurence, FindingStatus} from '@/server/db/models'
+import {
+  ContestOccurence,
+  ContestStatus,
+  FindingStatus,
+} from '@/server/db/models'
 import {requireJudgeServerSession} from '@/server/utils/auth'
 import {PaginatedParams} from '@/lib/utils/common/pagination'
 import {contests} from '@/server/db/schema/contest'
@@ -19,6 +23,7 @@ import {JudgeContestSorting, SortDirection} from '@/lib/types/enums'
 export type GetJudgeContestsParams = PaginatedParams<
   {
     type?: ContestOccurence
+    status?: ContestStatus[]
   },
   SortParams<JudgeContestSorting>
 >
@@ -29,6 +34,7 @@ export type JudgeContest = Awaited<
 
 export const getJudgeContestsAction = async ({
   type,
+  status,
   pageParams: {limit, offset = 0},
   sort = {
     direction: SortDirection.DESC,
@@ -75,6 +81,10 @@ export const getJudgeContestsAction = async ({
         type === ContestOccurence.FUTURE
           ? gte(contests.startDate, new Date())
           : undefined,
+        status && status.length > 0
+          ? inArray(contests.status, status)
+          : undefined,
+        ne(contests.status, ContestStatus.DRAFT),
       ),
     extras: {
       pendingFindingsCount:

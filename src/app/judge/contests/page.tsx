@@ -17,6 +17,7 @@ const MyProjectsPage = async () => {
     prefetchGetJudgeContestCounts(),
     prefetchGetJudgeContests({
       type: undefined,
+      status: undefined,
       pageParams: {
         limit: JUDGE_CONTESTS_PAGE_SIZE,
         offset: 0,

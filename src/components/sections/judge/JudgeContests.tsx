@@ -8,30 +8,34 @@ import JudgeContestsTable from './JudgeContestTable'
 import Skeleton from '@/components/ui/Skeleton'
 import {Tabs, TabsList, TabsTrigger} from '@/components/ui/Tabs'
 import {
+  mergeSearchParamsUpdaters,
+  useSearchParamsEnumArrayState,
   useSearchParamsEnumState,
   useSearchParamsNumericState,
+  useUpdateSearchParams,
 } from '@/lib/hooks/useSearchParamsState'
 import {formatTabCount} from '@/lib/utils/common/format'
 import Separator from '@/components/ui/Separator'
-import {ContestOccurence} from '@/server/db/models'
+import {ContestOccurence, ContestStatus} from '@/server/db/models'
 import TablePagination from '@/components/ui/TablePagination'
 import {JudgeContestSorting} from '@/lib/types/enums'
 import {useSortingSearchParams} from '@/lib/hooks/useSortingSearchParams'
 import {useGetJudgeContests} from '@/lib/queries/contest/getJudgeContests'
+import {Filter, FilterControls} from '@/components/ui/Filter'
+import {selectOptions} from '@/lib/utils/common/enums'
 
 export const JUDGE_CONTESTS_PAGE_SIZE = 10
 
 const JudgeContests = () => {
-  const [contestType, {setValue: setContestType}] = useSearchParamsEnumState(
-    'type',
-    ContestOccurence,
-    ContestOccurence.FUTURE,
-  )
-
+  const updateSearchParams = useUpdateSearchParams()
+  const [contestType, {getSearchParamsUpdater: updateContestTypeSearchParams}] =
+    useSearchParamsEnumState('type', ContestOccurence, ContestOccurence.FUTURE)
   const [page, {getSearchParamsUpdater: updatePageSearchParams}] =
     useSearchParamsNumericState('page', 1)
   const [sortParams, {getSortParamsUpdaters: updateSortSearchParams}] =
     useSortingSearchParams(JudgeContestSorting)
+  const [contestStatus, {getSearchParamsUpdater: updateStatusSearchParams}] =
+    useSearchParamsEnumArrayState('status', ContestStatus)
 
   const {data: contests, isLoading} = useGetJudgeContests({
     type: contestType,
@@ -40,6 +44,7 @@ const JudgeContests = () => {
       offset: (page - 1) * JUDGE_CONTESTS_PAGE_SIZE,
     },
     sort: sortParams,
+    status: contestStatus,
   })
 
   const liveContests = useMemo(
@@ -94,11 +99,65 @@ const JudgeContests = () => {
     }
   }, [contestType, liveCount, pastCount, futureCount])
 
+  const getStatusOptions = useMemo(() => {
+    switch (contestType) {
+      case ContestOccurence.PAST:
+        return selectOptions.contestStatus.filter(
+          (status) =>
+            status.value === ContestStatus.PENDING ||
+            status.value === ContestStatus.FINISHED ||
+            status.value === ContestStatus.APPROVED,
+        )
+      case ContestOccurence.PRESENT:
+        return selectOptions.contestStatus.filter(
+          (status) =>
+            status.value === ContestStatus.APPROVED ||
+            status.value === ContestStatus.IN_REVIEW,
+        )
+      case ContestOccurence.FUTURE:
+        return selectOptions.contestStatus.filter(
+          (status) =>
+            status.value === ContestStatus.IN_REVIEW ||
+            status.value === ContestStatus.REJECTED ||
+            status.value === ContestStatus.APPROVED,
+        )
+    }
+  }, [contestType])
+
+  const filters: Filter[] = useMemo(
+    () => [
+      {
+        label: 'Status',
+        values: contestStatus,
+        getSearchParamsUpdater: (newValue) =>
+          mergeSearchParamsUpdaters([
+            updatePageSearchParams(null),
+            updateStatusSearchParams(newValue),
+          ]),
+        options: getStatusOptions,
+      },
+    ],
+    [
+      contestStatus,
+      updateStatusSearchParams,
+      updatePageSearchParams,
+      getStatusOptions,
+    ],
+  )
+
+  const onContestOccurenceChange = (value: ContestOccurence) => {
+    updateSearchParams([
+      updatePageSearchParams(null),
+      updateStatusSearchParams([]),
+      updateContestTypeSearchParams(value),
+    ])
+  }
+
   return (
     <div className="flex flex-grow flex-col">
       <Tabs
         value={contestType}
-        onValueChange={setContestType}
+        onValueChange={onContestOccurenceChange}
         className="flex flex-grow flex-col">
         <TabsList className="self-start px-24">
           <TabsTrigger
@@ -120,6 +179,9 @@ const JudgeContests = () => {
             <Skeleton className="h-[240px]" />
           ) : (
             <>
+              <div>
+                <FilterControls filters={filters} />
+              </div>
               <JudgeContestsTable
                 contests={currentContests}
                 sortParams={sortParams}

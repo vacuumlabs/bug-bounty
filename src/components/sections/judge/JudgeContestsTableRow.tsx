@@ -1,4 +1,3 @@
-import {useMemo} from 'react'
 import Link from 'next/link'
 import {DateTime} from 'luxon'
 
@@ -6,7 +5,6 @@ import cardanoLogo from '@public/images/cardano-logo.png'
 import {TableCell, TableRow} from '@/components/ui/Table'
 import {Avatar, AvatarImage} from '@/components/ui/Avatar'
 import {Button} from '@/components/ui/Button'
-import {getContestStatusText} from '@/lib/utils/common/contest'
 import {formatAda, formatDate} from '@/lib/utils/common/format'
 import {translateEnum} from '@/lib/utils/common/enums'
 import {JudgeContest} from '@/server/actions/contest/getJudgeContests'
@@ -21,11 +19,6 @@ const JudgeContestsTableRow = ({
   contest,
   contestOccurence,
 }: JudgeContestsTableRowProps) => {
-  const contestStatusText = useMemo(
-    () => getContestStatusText(contest),
-    [contest],
-  )
-
   return (
     <TableRow className="bg-grey-90">
       <TableCell>
@@ -69,7 +62,7 @@ const JudgeContestsTableRow = ({
         </>
       )}
       <TableCell className="text-bodyM capitalize">
-        {translateEnum.contestStatusText(contestStatusText)}
+        {translateEnum.contestStatus(contest.status)}
       </TableCell>
       <TableCell className="text-right">
         <Button asChild variant="outline" size="small">
