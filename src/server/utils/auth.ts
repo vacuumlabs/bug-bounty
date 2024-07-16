@@ -59,7 +59,7 @@ export const requireJudgeSession = async () => {
   return session
 }
 
-export const requireJudgeAuth = async () => {
+export const requireJudgeServerSession = async () => {
   const session = await getServerAuthSession()
 
   if (!session || session.user.role !== UserRole.JUDGE) {

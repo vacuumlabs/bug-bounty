@@ -20,6 +20,19 @@ export enum ContestSorting {
   TITLE = 'title',
 }
 
+export enum JudgeContestSorting {
+  TITLE = 'title',
+  SUBMITTED = 'submitted',
+  START_DATE = 'startDate',
+  END_DATE = 'endDate',
+  REWARDS_AMOUNT = 'rewardsAmount',
+  PENDING_FINDINGS = 'pendingFindings',
+  APPROVED_FINDINGS = 'approvedFindings',
+  REJECTED_FINDINGS = 'rejectedFindings',
+  REWARDED_AUDITORS = 'rewardedAuditors',
+  STATUS = 'status',
+}
+
 export enum MyFindingsSorting {
   PROJECT = 'project',
   FINDING = 'finding',
