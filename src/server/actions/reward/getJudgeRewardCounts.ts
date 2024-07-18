@@ -1,6 +1,15 @@
 'use server'
 
-import {and, count, eq, isNotNull, isNull, lt, sum} from 'drizzle-orm'
+import {
+  and,
+  count,
+  countDistinct,
+  eq,
+  isNotNull,
+  isNull,
+  lt,
+  sumDistinct,
+} from 'drizzle-orm'
 
 import {db} from '@/server/db'
 import {ContestStatus} from '@/server/db/models'
@@ -15,10 +24,16 @@ export const getJudgeRewardCountsAction = async () => {
   await requireJudgeServerSession()
 
   const contestsToPayoutPromise = db
-    .select({count: count(), sum: sum(contests.distributedRewardsAmount)})
+    .select({
+      count: countDistinct(contests.id),
+      sum: sumDistinct(contests.distributedRewardsAmount),
+    })
     .from(contests)
+    .leftJoin(findings, eq(contests.id, findings.contestId))
+    .leftJoin(rewards, eq(findings.id, rewards.findingId))
     .where(
       and(
+        isNull(rewards.transferTxHash),
         isNotNull(contests.rewardsTransferTxHash),
         eq(contests.status, ContestStatus.FINISHED),
         lt(contests.endDate, new Date()),
@@ -39,29 +54,12 @@ export const getJudgeRewardCountsAction = async () => {
       ),
     )
 
-  const pendingContestsCountPromise = db
-    .select({count: count()})
-    .from(contests)
-    .where(
-      and(
-        isNull(contests.rewardsTransferTxHash),
-        eq(contests.status, ContestStatus.FINISHED),
-        lt(contests.endDate, new Date()),
-      ),
-    )
+  const [contestsToPayout, individualsToPayout] = await Promise.all([
+    contestsToPayoutPromise,
+    individualsToPayoutPromise,
+  ])
 
-  const [contestsToPayout, pendingContestsCount, individualsToPayout] =
-    await Promise.all([
-      contestsToPayoutPromise,
-      pendingContestsCountPromise,
-      individualsToPayoutPromise,
-    ])
-
-  if (
-    !contestsToPayout[0] ||
-    !pendingContestsCount[0] ||
-    !individualsToPayout[0]
-  ) {
+  if (!contestsToPayout[0] || !individualsToPayout[0]) {
     throw new ServerError('Failed to get judge reward counts.')
   }
 
@@ -69,7 +67,6 @@ export const getJudgeRewardCountsAction = async () => {
     contestsToPayoutCount: contestsToPayout[0].count,
     contestsToPayoutAmount: contestsToPayout[0].sum,
     individualsToPayout: individualsToPayout[0].count,
-    pendingContests: pendingContestsCount[0].count,
   }
 }
 

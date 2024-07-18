@@ -28,10 +28,6 @@ const JudgeRewardOverview = ({className}: JudgeRewardOverviewProps) => {
         title: 'Amount to payout',
         count: data?.contestsToPayoutAmount ?? '-',
       },
-      {
-        title: 'Pending contests',
-        count: data?.pendingContests ?? '-',
-      },
     ],
     [data],
   )

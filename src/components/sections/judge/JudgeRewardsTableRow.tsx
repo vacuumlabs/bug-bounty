@@ -14,9 +14,7 @@ type JudgeRewardsTableRowProps = {
   rewardContest: JudgeReward
 }
 
-const JudgeRewardContestsTableRow = ({
-  rewardContest,
-}: JudgeRewardsTableRowProps) => {
+const JudgeRewardsTableRow = ({rewardContest}: JudgeRewardsTableRowProps) => {
   const rewardsAmount = rewardContest.distributedRewardsAmount
     ? formatAda(rewardContest.distributedRewardsAmount)
     : '-'
@@ -76,4 +74,4 @@ const JudgeRewardContestsTableRow = ({
   )
 }
 
-export default JudgeRewardContestsTableRow
+export default JudgeRewardsTableRow

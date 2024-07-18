@@ -25,8 +25,12 @@ const JudgeContestOverview = ({className}: JudgeContestOverviewProps) => {
         count: data?.toJudge ?? '-',
       },
       {
-        title: 'To reward',
-        count: data?.toReward ?? '-',
+        title: 'To finalize',
+        count: data?.toFinalize ?? '-',
+      },
+      {
+        title: 'To payout',
+        count: data?.toPayout ?? '-',
       },
     ],
     [data],

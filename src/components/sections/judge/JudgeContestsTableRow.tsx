@@ -8,7 +8,7 @@ import {Button} from '@/components/ui/Button'
 import {formatAda, formatDate} from '@/lib/utils/common/format'
 import {translateEnum} from '@/lib/utils/common/enums'
 import {JudgeContest} from '@/server/actions/contest/getJudgeContests'
-import {ContestOccurence} from '@/server/db/models'
+import {ContestOccurence, ContestStatus} from '@/server/db/models'
 import {PATHS} from '@/lib/utils/common/paths'
 
 type JudgeContestsTableRowProps = {
@@ -20,6 +20,80 @@ const JudgeContestsTableRow = ({
   contest,
   contestOccurence,
 }: JudgeContestsTableRowProps) => {
+  const getActionButton = () => {
+    if (
+      contestOccurence === ContestOccurence.FUTURE &&
+      contest.status === ContestStatus.PENDING
+    ) {
+      return (
+        <Button asChild variant="outline" size="small">
+          <Link
+            href={PATHS.judgeContestDetails(contest.id)}
+            className="gap-2 text-buttonS">
+            Approve or Reject
+          </Link>
+        </Button>
+      )
+    }
+
+    if (
+      contestOccurence === ContestOccurence.FUTURE &&
+      contest.status === ContestStatus.IN_REVIEW
+    ) {
+      return (
+        <Button asChild variant="outline" size="small">
+          <Link
+            href={PATHS.judgeContestDetails(contest.id)}
+            className="gap-2 text-buttonS">
+            Mark as Pending
+          </Link>
+        </Button>
+      )
+    }
+
+    if (
+      contestOccurence === ContestOccurence.PAST &&
+      contest.status === ContestStatus.APPROVED &&
+      contest.pendingFindingsCount > 0
+    ) {
+      return (
+        <Button asChild variant="outline" size="small">
+          <Link href="#" className="gap-2 text-buttonS">
+            Judge findings
+          </Link>
+        </Button>
+      )
+    }
+
+    if (
+      contest.pendingFindingsCount === 0 &&
+      contestOccurence === ContestOccurence.PAST &&
+      contest.status === ContestStatus.APPROVED
+    ) {
+      return (
+        <Button asChild variant="outline" size="small">
+          <Link href="#" className="gap-2 text-buttonS">
+            Finalize Rewards
+          </Link>
+        </Button>
+      )
+    }
+
+    if (
+      contestOccurence === ContestOccurence.PAST &&
+      contest.status === ContestStatus.FINISHED &&
+      contest.rewardsToPay > 0
+    ) {
+      return (
+        <Button asChild variant="outline" size="small">
+          <Link href="#" className="gap-2 text-buttonS">
+            Payout Rewards
+          </Link>
+        </Button>
+      )
+    }
+  }
+
   return (
     <TableRow className="bg-grey-90">
       <TableCell>
@@ -27,7 +101,12 @@ const JudgeContestsTableRow = ({
           <Avatar>
             <AvatarImage src={cardanoLogo.src} />
           </Avatar>
-          <span className="text-titleS">{contest.title}</span>
+
+          <Link
+            href={PATHS.judgeContestDetails(contest.id)}
+            className="gap-2 underline">
+            <span className="text-titleS">{contest.title}</span>
+          </Link>
         </div>
       </TableCell>
       {contestOccurence === ContestOccurence.FUTURE && (
@@ -65,15 +144,7 @@ const JudgeContestsTableRow = ({
       <TableCell className="text-bodyM capitalize">
         {translateEnum.contestStatus(contest.status)}
       </TableCell>
-      <TableCell className="text-right">
-        <Button asChild variant="outline" size="small">
-          <Link
-            href={PATHS.judgeContestDetails(contest.id)}
-            className="gap-2 text-buttonS">
-            Details
-          </Link>
-        </Button>
-      </TableCell>
+      <TableCell className="text-right">{getActionButton()}</TableCell>
     </TableRow>
   )
 }

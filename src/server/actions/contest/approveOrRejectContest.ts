@@ -40,13 +40,8 @@ export const approveOrRejectContestAction = async (
     throw new ServerError('Contest not found.')
   }
 
-  if (
-    contest.status !== ContestStatus.PENDING &&
-    contest.status !== ContestStatus.IN_REVIEW
-  ) {
-    throw new ServerError(
-      'Only pending and in review contests can be approved/rejected.',
-    )
+  if (contest.status !== ContestStatus.PENDING) {
+    throw new ServerError('Only pending contests can be approved/rejected.')
   }
 
   return db

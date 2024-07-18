@@ -103,6 +103,10 @@ export const getJudgeContestsAction = async ({
         sql<number>`(SELECT count(distinct "finding"."authorId")::int from finding where finding.status = ${FindingStatus.APPROVED} and "finding"."contestId" = contests.id)`.as(
           'rewardedAuditorsCount',
         ),
+      rewardsToPay:
+        sql<number>`(SELECT count(*)::int FROM reward r INNER JOIN finding f ON r."findingId" = f.id WHERE f."contestId" = contests.id AND r."transferTxHash" IS NULL)`.as(
+          'rewardsToPay',
+        ),
     },
     limit,
     offset,

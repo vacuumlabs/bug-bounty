@@ -1,6 +1,8 @@
 'use client'
 
-import JudgeRewardContestsTableRow from './JudgeRewardContestsTableRow'
+import Link from 'next/link'
+
+import JudgeRewardsTableRow from './JudgeRewardsTableRow'
 
 import {Table, TableBody, TableHeader, TableRow} from '@/components/ui/Table'
 import TableHeadWithSort from '@/components/ui/TableHeadWithSort'
@@ -10,6 +12,8 @@ import {useGetJudgeRewards} from '@/lib/queries/reward/getJudgeRewards'
 import {JudgeRewardSorting} from '@/lib/types/enums'
 import Skeleton from '@/components/ui/Skeleton'
 import TablePagination from '@/components/ui/TablePagination'
+import {Button} from '@/components/ui/Button'
+import {PATHS} from '@/lib/utils/common/paths'
 
 export const JUDGE_REWARDS_PAGE_SIZE = 10
 
@@ -40,6 +44,13 @@ const JudgeRewardsTable = () => {
     return (
       <div className="flex h-[450px] flex-col items-center justify-center">
         <p className="mb-12 text-titleL uppercase">No rewards to payout...</p>
+        <Button asChild>
+          <Link
+            href={`${PATHS.judgeContests}/?type=past&status=APPROVED`}
+            className="gap-3">
+            Judge contests
+          </Link>
+        </Button>
       </div>
     )
   }
@@ -81,7 +92,7 @@ const JudgeRewardsTable = () => {
         </TableHeader>
         <TableBody className="[&_tr]:border-b-0">
           {rewardContests.data.map((rewardContest) => (
-            <JudgeRewardContestsTableRow
+            <JudgeRewardsTableRow
               key={rewardContest.id}
               rewardContest={rewardContest}
             />
