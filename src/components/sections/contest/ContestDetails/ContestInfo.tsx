@@ -37,6 +37,30 @@ const ContestInfo = ({
 
   const {mutate} = useApproveOrRejectContest()
 
+  const approveContest = () => {
+    mutate(
+      {
+        contestId: contest.id,
+        newStatus: ContestStatus.APPROVED,
+      },
+      {
+        onSuccess: () => router.push(PATHS.judgeContests),
+      },
+    )
+  }
+
+  const rejectContest = () => {
+    mutate(
+      {
+        contestId: contest.id,
+        newStatus: ContestStatus.REJECTED,
+      },
+      {
+        onSuccess: () => router.push(PATHS.judgeContests),
+      },
+    )
+  }
+
   return (
     <div className="mt-12 xl:mx-[340px]">
       <div className="mb-12 flex flex-col gap-3">
@@ -109,18 +133,7 @@ const ContestInfo = ({
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() =>
-                      mutate(
-                        {
-                          contestId: contest.id,
-                          newStatus: ContestStatus.APPROVED,
-                        },
-                        {
-                          onSuccess: () => router.push(PATHS.judgeContests),
-                        },
-                      )
-                    }>
+                  <AlertDialogAction onClick={approveContest}>
                     Yes, approve
                   </AlertDialogAction>
                 </AlertDialogFooter>
@@ -142,18 +155,7 @@ const ContestInfo = ({
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() =>
-                      mutate(
-                        {
-                          contestId: contest.id,
-                          newStatus: ContestStatus.REJECTED,
-                        },
-                        {
-                          onSuccess: () => router.push(PATHS.judgeContests),
-                        },
-                      )
-                    }>
+                  <AlertDialogAction onClick={rejectContest}>
                     Yes, reject
                   </AlertDialogAction>
                 </AlertDialogFooter>
