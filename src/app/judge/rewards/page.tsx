@@ -3,15 +3,26 @@ import Image from 'next/image'
 import HydrationBoundary from '@/components/helpers/HydrationBoundary'
 import backgroundImage from '@public/images/thin-overlay.png'
 import {requireJudgeSession} from '@/server/utils/auth'
-import JudgeRewardsList, {
+import JudgeRewardOverview from '@/components/sections/judge/JudgeRewardOverview'
+import {prefetchGetJudgeRewardCounts} from '@/lib/queries/reward/getJudgeRewardCounts'
+import JudgeRewardsTable, {
   JUDGE_REWARDS_PAGE_SIZE,
-} from '@/components/sections/judge/JudgeRewardsList'
-import {prefetchGetRewards} from '@/lib/queries/reward/getRewards'
+} from '@/components/sections/judge/JudgeRewardsTable'
+import {prefetchGetJudgeRewards} from '@/lib/queries/reward/getJudgeRewards'
 
 const JudgeContestsPage = async () => {
   await requireJudgeSession()
 
-  await prefetchGetRewards({limit: JUDGE_REWARDS_PAGE_SIZE})
+  await Promise.all([
+    prefetchGetJudgeRewards({
+      pageParams: {
+        limit: JUDGE_REWARDS_PAGE_SIZE,
+        offset: 0,
+      },
+      sort: undefined,
+    }),
+    prefetchGetJudgeRewardCounts(),
+  ])
 
   return (
     <main className="mt-12 flex flex-grow flex-col">
@@ -28,9 +39,8 @@ const JudgeContestsPage = async () => {
       />
       <h1 className="mx-24 mb-6 text-headlineS uppercase">Rewards</h1>
       <HydrationBoundary>
-        <div className="mx-64 mb-12">
-          <JudgeRewardsList />
-        </div>
+        <JudgeRewardOverview className="mx-24 mb-12" />
+        <JudgeRewardsTable />
       </HydrationBoundary>
     </main>
   )

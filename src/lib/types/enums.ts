@@ -33,6 +33,13 @@ export enum JudgeContestSorting {
   STATUS = 'status',
 }
 
+export enum JudgeRewardSorting {
+  TITLE = 'title',
+  REWARDS_AMOUNT = 'rewardsAmount',
+  TRANSFER_TX = 'rewardsTransferTxHash',
+  END_DATE = 'endDate',
+}
+
 export enum MyFindingsSorting {
   PROJECT = 'project',
   FINDING = 'finding',
