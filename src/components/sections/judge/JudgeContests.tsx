@@ -25,6 +25,26 @@ import {selectOptions} from '@/lib/utils/common/enums'
 
 export const JUDGE_CONTESTS_PAGE_SIZE = 10
 
+const judgeContestStatusOptions = {
+  [ContestOccurence.PAST]: [
+    ContestStatus.PENDING,
+    ContestStatus.FINISHED,
+    ContestStatus.APPROVED,
+    ContestStatus.REJECTED,
+    ContestStatus.IN_REVIEW,
+  ],
+  [ContestOccurence.PRESENT]: [
+    ContestStatus.IN_REVIEW,
+    ContestStatus.APPROVED,
+    ContestStatus.REJECTED,
+  ],
+  [ContestOccurence.FUTURE]: [
+    ContestStatus.IN_REVIEW,
+    ContestStatus.APPROVED,
+    ContestStatus.REJECTED,
+  ],
+}
+
 const JudgeContests = () => {
   const updateSearchParams = useUpdateSearchParams()
   const [contestType, {getSearchParamsUpdater: updateContestTypeSearchParams}] =
@@ -61,31 +81,6 @@ const JudgeContests = () => {
     }
   }, [contestType, liveCount, pastCount, futureCount])
 
-  const getStatusOptions = useMemo(() => {
-    switch (contestType) {
-      case ContestOccurence.PAST:
-        return selectOptions.contestStatus.filter(
-          (status) =>
-            status.value === ContestStatus.PENDING ||
-            status.value === ContestStatus.FINISHED ||
-            status.value === ContestStatus.APPROVED,
-        )
-      case ContestOccurence.PRESENT:
-        return selectOptions.contestStatus.filter(
-          (status) =>
-            status.value === ContestStatus.APPROVED ||
-            status.value === ContestStatus.IN_REVIEW,
-        )
-      case ContestOccurence.FUTURE:
-        return selectOptions.contestStatus.filter(
-          (status) =>
-            status.value === ContestStatus.IN_REVIEW ||
-            status.value === ContestStatus.REJECTED ||
-            status.value === ContestStatus.APPROVED,
-        )
-    }
-  }, [contestType])
-
   const filters: Filter[] = useMemo(
     () => [
       {
@@ -96,14 +91,16 @@ const JudgeContests = () => {
             updatePageSearchParams(null),
             updateStatusSearchParams(newValue),
           ]),
-        options: getStatusOptions,
+        options: selectOptions.contestStatus.filter((status) =>
+          judgeContestStatusOptions[contestType].includes(status.value),
+        ),
       },
     ],
     [
       contestStatus,
-      updateStatusSearchParams,
       updatePageSearchParams,
-      getStatusOptions,
+      updateStatusSearchParams,
+      contestType,
     ],
   )
 
@@ -129,7 +126,7 @@ const JudgeContests = () => {
           <TabsTrigger
             value={
               ContestOccurence.PRESENT
-            }>{`Live${liveCount ? formatTabCount(liveCount) : ''}`}</TabsTrigger>
+            }>{`Present${liveCount ? formatTabCount(liveCount) : ''}`}</TabsTrigger>
           <TabsTrigger
             value={
               ContestOccurence.FUTURE
