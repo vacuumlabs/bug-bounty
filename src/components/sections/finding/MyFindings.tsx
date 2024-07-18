@@ -1,6 +1,5 @@
 'use client'
 
-import {DateTime} from 'luxon'
 import {useMemo} from 'react'
 
 import MyFindingsTable from './MyFindingsTable'
@@ -42,34 +41,6 @@ const MyFindings = () => {
     sort: sortParams,
   })
 
-  const liveFindings = useMemo(
-    () =>
-      findings?.data.filter(
-        (finding) =>
-          DateTime.fromJSDate(finding.contest.startDate) < DateTime.now() &&
-          DateTime.fromJSDate(finding.contest.endDate) > DateTime.now(),
-      ),
-    [findings],
-  )
-
-  const pastFindings = useMemo(
-    () =>
-      findings?.data.filter(
-        (finding) =>
-          DateTime.fromJSDate(finding.contest.endDate) < DateTime.now(),
-      ),
-    [findings],
-  )
-
-  const currentFindings = useMemo(() => {
-    switch (findingType) {
-      case FindingOccurence.PRESENT:
-        return liveFindings
-      case FindingOccurence.PAST:
-        return pastFindings
-    }
-  }, [findingType, liveFindings, pastFindings])
-
   const pastCount = findings?.pageParams.pastCount
   const liveCount = findings?.pageParams.liveCount
 
@@ -105,7 +76,7 @@ const MyFindings = () => {
           ) : (
             <>
               <MyFindingsTable
-                findings={currentFindings}
+                findings={findings?.data}
                 sortParams={sortParams}
                 updatePageSearchParams={updatePageSearchParams}
                 updateSortSearchParams={updateSortSearchParams}

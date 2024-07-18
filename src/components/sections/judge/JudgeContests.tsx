@@ -1,6 +1,5 @@
 'use client'
 
-import {DateTime} from 'luxon'
 import {useMemo} from 'react'
 
 import JudgeContestsTable from './JudgeContestTable'
@@ -46,43 +45,6 @@ const JudgeContests = () => {
     sort: sortParams,
     status: contestStatus,
   })
-
-  const liveContests = useMemo(
-    () =>
-      contests?.data.filter(
-        (contest) =>
-          DateTime.fromJSDate(contest.startDate) < DateTime.now() &&
-          DateTime.fromJSDate(contest.endDate) > DateTime.now(),
-      ),
-    [contests],
-  )
-
-  const futureContests = useMemo(
-    () =>
-      contests?.data.filter(
-        (contest) => DateTime.fromJSDate(contest.startDate) > DateTime.now(),
-      ),
-    [contests],
-  )
-
-  const pastContests = useMemo(
-    () =>
-      contests?.data.filter(
-        (contest) => DateTime.fromJSDate(contest.endDate) < DateTime.now(),
-      ),
-    [contests],
-  )
-
-  const currentContests = useMemo(() => {
-    switch (contestType) {
-      case ContestOccurence.PRESENT:
-        return liveContests
-      case ContestOccurence.FUTURE:
-        return futureContests
-      case ContestOccurence.PAST:
-        return pastContests
-    }
-  }, [contestType, liveContests, futureContests, pastContests])
 
   const pastCount = contests?.pageParams.pastCount
   const liveCount = contests?.pageParams.liveCount
@@ -183,7 +145,7 @@ const JudgeContests = () => {
                 <FilterControls filters={filters} />
               </div>
               <JudgeContestsTable
-                contests={currentContests}
+                contests={contests?.data}
                 sortParams={sortParams}
                 updatePageSearchParams={updatePageSearchParams}
                 updateSortSearchParams={updateSortSearchParams}
