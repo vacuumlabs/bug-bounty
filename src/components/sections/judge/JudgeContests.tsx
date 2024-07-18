@@ -27,19 +27,21 @@ export const JUDGE_CONTESTS_PAGE_SIZE = 10
 
 const judgeContestStatusOptions = {
   [ContestOccurence.PAST]: [
+    ContestStatus.IN_REVIEW,
     ContestStatus.PENDING,
     ContestStatus.FINISHED,
     ContestStatus.APPROVED,
     ContestStatus.REJECTED,
-    ContestStatus.IN_REVIEW,
   ],
   [ContestOccurence.PRESENT]: [
     ContestStatus.IN_REVIEW,
+    ContestStatus.PENDING,
     ContestStatus.APPROVED,
     ContestStatus.REJECTED,
   ],
   [ContestOccurence.FUTURE]: [
     ContestStatus.IN_REVIEW,
+    ContestStatus.PENDING,
     ContestStatus.APPROVED,
     ContestStatus.REJECTED,
   ],
