@@ -9,7 +9,7 @@ import {requireJudgeServerSession} from '@/server/utils/auth'
 import {serializeServerErrors} from '@/lib/utils/common/error'
 import {ServerError} from '@/lib/types/error'
 
-const approveOrRejectContestSchema = z
+const reviewContestSchema = z
   .object({
     contestId: z.string().uuid(),
     newStatus: z.enum([
@@ -17,22 +17,20 @@ const approveOrRejectContestSchema = z
       ContestStatus.REJECTED,
       ContestStatus.PENDING,
     ]),
+    rewardsTransferAddress: z.string().min(1).max(64).optional(),
   })
   .strict()
 
-export type ApproveOrRejectContestRequest = z.infer<
-  typeof approveOrRejectContestSchema
->
+export type ReviewContestRequest = z.infer<typeof reviewContestSchema>
 
-export const approveOrRejectContestAction = async (
-  request: ApproveOrRejectContestRequest,
-) => {
+export const reviewContestAction = async (request: ReviewContestRequest) => {
   await requireJudgeServerSession()
 
-  const {contestId, newStatus} = approveOrRejectContestSchema.parse(request)
+  const {contestId, newStatus, rewardsTransferAddress} =
+    reviewContestSchema.parse(request)
 
   const contest = await db.query.contests.findFirst({
-    columns: {status: true},
+    columns: {status: true, rewardsTransferTxHash: true},
     where: (contests, {eq}) => eq(contests.id, contestId),
   })
 
@@ -40,8 +38,19 @@ export const approveOrRejectContestAction = async (
     throw new ServerError('Contest not found.')
   }
 
-  if (contest.status !== ContestStatus.PENDING) {
-    throw new ServerError('Only pending contests can be approved/rejected.')
+  if (
+    contest.status !== ContestStatus.IN_REVIEW &&
+    contest.status !== ContestStatus.PENDING
+  ) {
+    throw new ServerError(
+      'Only pending and in review contests can be reviewed.',
+    )
+  }
+
+  if (newStatus === ContestStatus.PENDING && !rewardsTransferAddress) {
+    throw new ServerError(
+      'Transfer wallet address is required to mark contest as pending.',
+    )
   }
 
   return db
@@ -51,6 +60,4 @@ export const approveOrRejectContestAction = async (
     .returning()
 }
 
-export const approveOrRejectContest = serializeServerErrors(
-  approveOrRejectContestAction,
-)
+export const reviewContest = serializeServerErrors(reviewContestAction)

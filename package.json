@@ -14,7 +14,7 @@
     "format:check": "prettier -c .",
     "check-all": "yarn lint; yarn tsc; yarn format:check",
     "fix-all": "yarn lint:fix; yarn format; yarn tsc",
-    "db:push": "drizzle-kit push:pg",
+    "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx --env-file=.env.local ./src/scripts/seedDb.ts",
     "db:clear": "tsx --env-file=.env.local ./src/scripts/clearDb.ts",

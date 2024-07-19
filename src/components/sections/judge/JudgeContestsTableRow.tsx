@@ -23,29 +23,15 @@ const JudgeContestsTableRow = ({
   const getActionButton = () => {
     if (
       contestOccurence === ContestOccurence.FUTURE &&
-      contest.status === ContestStatus.PENDING
+      (contest.status === ContestStatus.PENDING ||
+        contest.status === ContestStatus.IN_REVIEW)
     ) {
       return (
         <Button asChild variant="outline" size="small">
           <Link
             href={PATHS.judgeContestDetails(contest.id)}
             className="gap-2 text-buttonS">
-            Approve or Reject
-          </Link>
-        </Button>
-      )
-    }
-
-    if (
-      contestOccurence === ContestOccurence.FUTURE &&
-      contest.status === ContestStatus.IN_REVIEW
-    ) {
-      return (
-        <Button asChild variant="outline" size="small">
-          <Link
-            href={PATHS.judgeContestDetails(contest.id)}
-            className="gap-2 text-buttonS">
-            Mark as Pending
+            Review contest
           </Link>
         </Button>
       )

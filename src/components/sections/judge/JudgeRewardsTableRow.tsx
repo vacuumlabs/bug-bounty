@@ -49,7 +49,7 @@ const JudgeRewardsTableRow = ({rewardContest}: JudgeRewardsTableRowProps) => {
             </Link>
           </Button>
         ) : (
-          'pending'
+          <span className="text-bodyM">-</span>
         )}
       </TableCell>
 
