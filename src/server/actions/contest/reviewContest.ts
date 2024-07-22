@@ -8,6 +8,7 @@ import {ContestStatus} from '@/server/db/models'
 import {requireJudgeServerSession} from '@/server/utils/auth'
 import {serializeServerErrors} from '@/lib/utils/common/error'
 import {ServerError} from '@/lib/types/error'
+import {rewardsTransferAddressSchema} from '@/server/utils/validations/schemas'
 
 const reviewContestSchema = z
   .object({
@@ -17,7 +18,7 @@ const reviewContestSchema = z
       ContestStatus.REJECTED,
       ContestStatus.PENDING,
     ]),
-    rewardsTransferAddress: z.string().min(1).max(64).optional(),
+    rewardsTransferAddress: rewardsTransferAddressSchema.optional(),
   })
   .strict()
 
@@ -53,9 +54,15 @@ export const reviewContestAction = async (request: ReviewContestRequest) => {
     )
   }
 
+  if (newStatus !== ContestStatus.PENDING && rewardsTransferAddress) {
+    throw new ServerError(
+      'Transfer wallet address is only required when marking contest as pending.',
+    )
+  }
+
   return db
     .update(schema.contests)
-    .set({status: newStatus})
+    .set({status: newStatus, rewardsTransferAddress})
     .where(eq(schema.contests.id, contestId))
     .returning()
 }

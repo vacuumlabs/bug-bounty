@@ -42,3 +42,5 @@ export const addFindingAttachmentSchema = insertFindingAttachmentSchema.omit({
   findingId: true,
   id: true,
 })
+
+export const rewardsTransferAddressSchema = z.string().min(1).max(128)

@@ -1,6 +1,9 @@
 import {useSession} from 'next-auth/react'
-import {useRouter} from 'next/navigation'
 import Link from 'next/link'
+import {useForm} from 'react-hook-form'
+import {zodResolver} from '@hookform/resolvers/zod'
+import {z} from 'zod'
+import {useState} from 'react'
 
 import {Button} from '@/components/ui/Button'
 import {ContestStatus, UserRole} from '@/server/db/models'
@@ -14,20 +17,52 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
+  AlertDialogDescription,
 } from '@/components/ui/AlertDialog'
-import {PATHS} from '@/lib/utils/common/paths'
 import {Contest} from '@/server/actions/contest/getContest'
+import {
+  DialogRoot,
+  DialogHeader,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/Dialog'
+import {Input} from '@/components/ui/Input'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/Form'
+import {toast} from '@/components/ui/Toast'
+import {rewardsTransferAddressSchema} from '@/server/utils/validations/schemas'
 
 type ContestInfoJudgeProps = {
   contest: Contest
 }
 
+const formSchema = z.object({
+  rewardsTransferAddress: rewardsTransferAddressSchema,
+})
+
+type FormValues = z.infer<typeof formSchema>
+
 const ContestInfoJudge = ({contest}: ContestInfoJudgeProps) => {
   const {data: session} = useSession()
 
-  const router = useRouter()
-
   const {mutate: reviewContestMutate} = useReviewContest()
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      rewardsTransferAddress: '',
+    },
+  })
+
+  const [openMarkAsPending, setOpenMarkAsPending] = useState(false)
 
   if (session?.user.role !== UserRole.JUDGE) {
     return null
@@ -40,7 +75,8 @@ const ContestInfoJudge = ({contest}: ContestInfoJudgeProps) => {
         newStatus: ContestStatus.APPROVED,
       },
       {
-        onSuccess: () => router.push(PATHS.judgeContests),
+        onSuccess: () =>
+          toast({title: 'Success', description: 'Contest has been approved.'}),
       },
     )
   }
@@ -52,19 +88,27 @@ const ContestInfoJudge = ({contest}: ContestInfoJudgeProps) => {
         newStatus: ContestStatus.REJECTED,
       },
       {
-        onSuccess: () => router.push(PATHS.judgeContests),
+        onSuccess: () =>
+          toast({title: 'Success', description: 'Contest has been rejected.'}),
       },
     )
   }
 
-  const markContestAsPending = () => {
+  const markContestAsPending = ({rewardsTransferAddress}: FormValues) => {
     reviewContestMutate(
       {
         contestId: contest.id,
         newStatus: ContestStatus.PENDING,
+        rewardsTransferAddress,
       },
       {
-        onSuccess: () => router.push(PATHS.judgeContests),
+        onSuccess: () => {
+          setOpenMarkAsPending(false)
+          toast({
+            title: 'Success',
+            description: 'Contest has been marked as pending.',
+          })
+        },
       },
     )
   }
@@ -89,27 +133,47 @@ const ContestInfoJudge = ({contest}: ContestInfoJudgeProps) => {
       {(contest.status === ContestStatus.IN_REVIEW ||
         contest.status === ContestStatus.PENDING) && (
         <div className="flex gap-8">
-          <AlertDialog>
-            <AlertDialogTrigger>
+          <DialogRoot
+            open={openMarkAsPending}
+            onOpenChange={setOpenMarkAsPending}>
+            <DialogTrigger>
               <Button variant="outline" className="flex gap-3">
                 <span className="uppercase">Mark as pending</span>
               </Button>
-            </AlertDialogTrigger>
+            </DialogTrigger>
 
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle className="uppercase">
-                  Are you sure you want to mark this contest as pending?
-                </AlertDialogTitle>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={markContestAsPending}>
-                  Yes, mark as pending
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+            <DialogContent className="border-0 bg-grey-90">
+              <Form {...form} onSubmit={markContestAsPending}>
+                <DialogHeader>
+                  <DialogTitle className="text-titleM uppercase">
+                    Mark as pending
+                  </DialogTitle>
+                  <DialogDescription className="text-bodyM text-white">
+                    Provide the address the contest rewards should be
+                    transferred to
+                  </DialogDescription>
+                </DialogHeader>
+
+                <FormField
+                  control={form.control}
+                  name="rewardsTransferAddress"
+                  render={({field}) => (
+                    <FormItem>
+                      <FormLabel>Rewards transfer Address</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="flex w-full justify-end">
+                  <Button type="submit">Save</Button>
+                </div>
+              </Form>
+            </DialogContent>
+          </DialogRoot>
 
           <AlertDialog>
             <AlertDialogTrigger>
@@ -124,6 +188,10 @@ const ContestInfoJudge = ({contest}: ContestInfoJudgeProps) => {
                   Are you sure you want to approve this contest?
                 </AlertDialogTitle>
               </AlertDialogHeader>
+              <AlertDialogDescription className="sr-only">
+                By approving this contest, you confirm that the contest meets
+                all the requirements and is ready to be published.
+              </AlertDialogDescription>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction onClick={approveContest}>
@@ -146,6 +214,10 @@ const ContestInfoJudge = ({contest}: ContestInfoJudgeProps) => {
                   Are you sure you want to reject this contest?
                 </AlertDialogTitle>
               </AlertDialogHeader>
+              <AlertDialogDescription className="sr-only">
+                By rejecting this contest, you confirm that the contest does not
+                meet the requirements and should not be published.
+              </AlertDialogDescription>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction onClick={rejectContest}>
