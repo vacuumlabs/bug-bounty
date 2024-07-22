@@ -45,6 +45,14 @@ export const formatTimeRemaining = (endDate: Date) => {
   return `${days} days ${hours} hours`
 }
 
-export const formatTxHash = (txHash: string, startChars = 6, endChars = 6) => {
+export const formatTxHash = (
+  txHash: string | null,
+  startChars = 6,
+  endChars = 6,
+) => {
+  if (!txHash) {
+    return '-'
+  }
+
   return `${txHash.slice(0, startChars)}..${txHash.slice(-endChars)}`
 }

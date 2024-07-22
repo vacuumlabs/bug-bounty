@@ -79,6 +79,7 @@ export const judgeContestSortFieldMap = {
   [JudgeContestSorting.END_DATE]: contests.endDate,
   [JudgeContestSorting.SUBMITTED]: contests.createdAt,
   [JudgeContestSorting.REWARDS_AMOUNT]: contests.rewardsAmount,
+  [JudgeContestSorting.TRANSFER_TX_HASH]: contests.rewardsTransferTxHash,
   [JudgeContestSorting.STATUS]: sql<number>`
   CASE ${contests.status}
     WHEN ${ContestStatus.DRAFT} THEN 1

@@ -30,6 +30,7 @@ export enum JudgeContestSorting {
   APPROVED_FINDINGS = 'approvedFindings',
   REJECTED_FINDINGS = 'rejectedFindings',
   REWARDED_AUDITORS = 'rewardedAuditors',
+  TRANSFER_TX_HASH = 'transferTxHash',
   STATUS = 'status',
 }
 
