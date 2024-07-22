@@ -114,7 +114,9 @@ const MyContestsListItem = ({contest}: MyContestsListItemProps) => {
                 : PATHS.myProjectDetails(contest.id)
             }
             className="gap-2">
-            Show details
+            {contest.status === ContestStatus.PENDING
+              ? 'Transfer Rewards'
+              : 'Show details'}
             <ArrowRight />
           </Link>
         </Button>

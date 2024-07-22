@@ -8,7 +8,9 @@ import {
 } from '@/server/actions/contest/reviewContest'
 import {Contest} from '@/server/db/schema/contest'
 import {
+  AddContestRewardsTransferTxHashRequest,
   EditContestRequest,
+  addContestRewardsTransferTxHash,
   editContest,
 } from '@/server/actions/contest/editContest'
 import {withApiErrorHandler} from '@/lib/utils/common/error'
@@ -37,6 +39,26 @@ export const useEditContest = (
   return useMutation({
     ...options,
     mutationFn: withApiErrorHandler(editContest),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.contests._def,
+      })
+    },
+  })
+}
+
+export const useAddContestRewardsTransferTxHash = (
+  options?: MutateOptions<
+    Contest[],
+    Error,
+    AddContestRewardsTransferTxHashRequest
+  >,
+) => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    ...options,
+    mutationFn: withApiErrorHandler(addContestRewardsTransferTxHash),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: queryKeys.contests._def,

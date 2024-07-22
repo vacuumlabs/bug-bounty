@@ -10,6 +10,7 @@ import {
   isNull,
   lt,
   ne,
+  or,
   sumDistinct,
 } from 'drizzle-orm'
 
@@ -30,7 +31,10 @@ export const getJudgeContestCountsAction = async () => {
     .from(contests)
     .where(
       and(
-        eq(contests.status, ContestStatus.IN_REVIEW),
+        or(
+          eq(contests.status, ContestStatus.PENDING),
+          eq(contests.status, ContestStatus.IN_REVIEW),
+        ),
         gt(contests.startDate, new Date()),
       ),
     )

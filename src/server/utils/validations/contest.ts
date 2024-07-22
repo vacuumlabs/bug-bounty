@@ -13,6 +13,7 @@ export const requireEditableContest = async (contestId: string) => {
       endDate: true,
       startDate: true,
       status: true,
+      rewardsTransferAddress: true,
     },
     where: (contests, {eq}) => eq(contests.id, contestId),
   })

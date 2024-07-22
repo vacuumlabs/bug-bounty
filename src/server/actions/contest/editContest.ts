@@ -10,8 +10,10 @@ import {serializeServerErrors} from '@/lib/utils/common/error'
 import {
   addContestSchema,
   addContestSeverityWeightsSchema,
+  rewardsTransferTxHashSchema,
 } from '@/server/utils/validations/schemas'
 import {ServerError} from '@/lib/types/error'
+import {ContestStatus} from '@/server/db/models'
 
 const editContestSchema = addContestSchema.partial().required({id: true})
 const editContestSeverityWeightsSchema =
@@ -61,3 +63,45 @@ export const editContestAction = async (request: EditContestRequest) => {
 }
 
 export const editContest = serializeServerErrors(editContestAction)
+
+const addContestRewardsTransferTxHashSchema = z
+  .object({
+    contestId: z.string().uuid(),
+    rewardsTransferTxHash: rewardsTransferTxHashSchema.optional(),
+  })
+  .strict()
+
+export type AddContestRewardsTransferTxHashRequest = z.infer<
+  typeof addContestRewardsTransferTxHashSchema
+>
+
+export const addContestRewardsTransferTxHashAction = async (
+  request: AddContestRewardsTransferTxHashRequest,
+) => {
+  const {contestId, rewardsTransferTxHash} =
+    addContestRewardsTransferTxHashSchema.parse(request)
+
+  const existingContest = await requireEditableContest(contestId)
+
+  if (!existingContest.rewardsTransferAddress) {
+    throw new ServerError(
+      'Transfer wallet address is required to add rewards transfer tx hash.',
+    )
+  }
+
+  if (existingContest.status !== ContestStatus.PENDING) {
+    throw new ServerError(
+      'Only pending contests can have a rewards transfer tx hash.',
+    )
+  }
+
+  return db
+    .update(schema.contests)
+    .set({rewardsTransferTxHash})
+    .where(eq(schema.contests.id, contestId))
+    .returning()
+}
+
+export const addContestRewardsTransferTxHash = serializeServerErrors(
+  addContestRewardsTransferTxHashAction,
+)

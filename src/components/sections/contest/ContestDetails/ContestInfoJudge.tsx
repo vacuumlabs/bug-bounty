@@ -1,5 +1,4 @@
 import {useSession} from 'next-auth/react'
-import Link from 'next/link'
 import {useForm} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import {z} from 'zod'
@@ -117,17 +116,9 @@ const ContestInfoJudge = ({contest}: ContestInfoJudgeProps) => {
     <>
       <div className="mb-12 flex flex-col gap-3">
         <h3 className="text-bodyL text-purple-light">
-          Rewards Transfer TX Hash
+          Rewards Transfer Address
         </h3>
-        {contest.rewardsTransferTxHash ? (
-          <Link
-            href={`https://cardanoscan.io/transaction/${contest.rewardsTransferTxHash}`}
-            className="text-bodyM">
-            {contest.rewardsTransferTxHash}
-          </Link>
-        ) : (
-          <p className="text-bodyM">-</p>
-        )}
+        <p className="text-bodyM">{contest.rewardsTransferAddress}</p>
       </div>
 
       {(contest.status === ContestStatus.IN_REVIEW ||
