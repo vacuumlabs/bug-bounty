@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import {DateTime} from 'luxon'
+import {useState} from 'react'
 
 import JudgeContestActionButton from './JudgeContestActionButton'
 
@@ -22,6 +23,21 @@ const JudgeContestsTableRow = ({
   contest,
   contestOccurence,
 }: JudgeContestsTableRowProps) => {
+  const [openFinalizeRewards, setOpenFinalizeRewards] = useState(false)
+  const {mutate: finalizeRewardsMutate} = useFinalizeRewards()
+
+  const finalizeRewards = () => {
+    finalizeRewardsMutate(contest.id, {
+      onSuccess: () => {
+        setOpenFinalizeRewards(false)
+        toast({
+          title: 'Success',
+          description: 'Contest rewards has been finalized.',
+        })
+      },
+    })
+  }
+
   const getActionButton = () => {
     if (
       contestOccurence === ContestOccurence.FUTURE &&
@@ -59,11 +75,33 @@ const JudgeContestsTableRow = ({
       contest.status === ContestStatus.APPROVED
     ) {
       return (
-        <Button asChild variant="outline" size="small">
-          <Link href="#" className="gap-2 text-buttonS">
-            Finalize Rewards
-          </Link>
-        </Button>
+        <AlertDialog
+          open={openFinalizeRewards}
+          onOpenChange={setOpenFinalizeRewards}>
+          <AlertDialogTrigger>
+            <Button variant="outline" size="small">
+              <span className="uppercase">Finalize Rewards</span>
+            </Button>
+          </AlertDialogTrigger>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="uppercase">
+                Are you sure you want to finalize the rewards for this contest?
+              </AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogDescription className="sr-only">
+              Calculate and finalize rewards. This will also mark the contest as
+              finished.
+            </AlertDialogDescription>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={finalizeRewards}>
+                Yes, finalize
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       )
     }
 
