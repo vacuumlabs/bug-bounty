@@ -118,7 +118,7 @@ const ContestInfoJudge = ({contest}: ContestInfoJudgeProps) => {
         <h3 className="text-bodyL text-purple-light">
           Rewards Transfer Address
         </h3>
-        <p className="text-bodyM">{contest.rewardsTransferAddress}</p>
+        <p className="text-bodyM">{contest.rewardsTransferAddress ?? '-'}</p>
       </div>
 
       {(contest.status === ContestStatus.IN_REVIEW ||

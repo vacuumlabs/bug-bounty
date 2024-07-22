@@ -19,7 +19,9 @@ export const useFinalizeRewards = (
       void queryClient.invalidateQueries({
         queryKey: queryKeys.rewards.all._def,
       })
-      // TODO: invalidate get contest
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.contests._def,
+      })
     },
     ...options,
   })
