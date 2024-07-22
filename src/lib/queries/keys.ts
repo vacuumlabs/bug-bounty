@@ -19,6 +19,7 @@ import {
   GetFindingParams,
   GetFindingsParams,
 } from '@/server/actions/finding/getFinding'
+import {GetJudgeContestsParams} from '@/server/actions/contest/getJudgeContests'
 
 export const queryKeys = createQueryKeyStore({
   users: {
@@ -39,6 +40,8 @@ export const queryKeys = createQueryKeyStore({
     reportCounts: null,
     public: (params: GetPublicContestsParams) => [params],
     publicCounts: (params: GetPublicContestCountsParams) => [params],
+    judgesContestCounts: null,
+    judgeContests: (params: GetJudgeContestsParams) => [params],
   },
   findings: {
     mine: (userId: string | undefined, params: GetMyFindingsParams) => [

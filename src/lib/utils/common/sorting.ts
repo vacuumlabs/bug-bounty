@@ -5,6 +5,7 @@ import {translateEnum} from './enums'
 import {contests} from '@/server/db/schema/contest'
 import {
   ContestSorting,
+  JudgeContestSorting,
   MyFindingsRewardsSorting,
   MyFindingsSorting,
   SortDirection,
@@ -70,6 +71,28 @@ export const contestSortOptions = createSortOptions(
   contestSortFieldLabels,
   translateEnum.contestSorting,
 )
+
+export const judgeContestSortFieldMap = {
+  [JudgeContestSorting.TITLE]: contests.title,
+  [JudgeContestSorting.START_DATE]: contests.startDate,
+  [JudgeContestSorting.END_DATE]: contests.endDate,
+  [JudgeContestSorting.SUBMITTED]: contests.createdAt,
+  [JudgeContestSorting.REWARDS_AMOUNT]: contests.rewardsAmount,
+  [JudgeContestSorting.STATUS]: sql<number>`
+  CASE ${contests.status}
+    WHEN ${ContestStatus.DRAFT} THEN 1
+    WHEN ${ContestStatus.REJECTED} THEN 2
+    WHEN ${ContestStatus.FINISHED} THEN 3
+    WHEN ${ContestStatus.APPROVED} THEN 4
+    WHEN ${ContestStatus.IN_REVIEW} THEN 5
+    WHEN ${ContestStatus.PENDING} THEN 6
+    ELSE 7
+  END`,
+  [JudgeContestSorting.PENDING_FINDINGS]: sql<number>`(SELECT count(*)::int from finding where finding.status = ${FindingStatus.PENDING} and "finding"."contestId" = contests.id)`,
+  [JudgeContestSorting.APPROVED_FINDINGS]: sql<number>`(SELECT count(*)::int from finding where finding.status = ${FindingStatus.APPROVED} and "finding"."contestId" = contests.id)`,
+  [JudgeContestSorting.REJECTED_FINDINGS]: sql<number>`(SELECT count(*)::int from finding where finding.status = ${FindingStatus.REJECTED} and "finding"."contestId" = contests.id)`,
+  [JudgeContestSorting.REWARDED_AUDITORS]: sql<number>`(SELECT count(distinct "finding"."authorId")::int from finding where finding.status = ${FindingStatus.APPROVED} and "finding"."contestId" = contests.id)`,
+}
 
 export const myFindingsRewardsSortFieldMap = {
   [MyFindingsRewardsSorting.PROJECT]: contests.title,

@@ -5,7 +5,7 @@ import {z} from 'zod'
 
 import {db, schema} from '@/server/db'
 import {ContestStatus} from '@/server/db/models'
-import {requireJudgeAuth} from '@/server/utils/auth'
+import {requireJudgeServerSession} from '@/server/utils/auth'
 import {serializeServerErrors} from '@/lib/utils/common/error'
 import {ServerError} from '@/lib/types/error'
 
@@ -27,7 +27,7 @@ export type ApproveOrRejectContestRequest = z.infer<
 export const approveOrRejectContestAction = async (
   request: ApproveOrRejectContestRequest,
 ) => {
-  await requireJudgeAuth()
+  await requireJudgeServerSession()
 
   const {contestId, newStatus} = approveOrRejectContestSchema.parse(request)
 

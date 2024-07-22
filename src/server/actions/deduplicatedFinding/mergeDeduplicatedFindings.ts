@@ -4,7 +4,7 @@ import {z} from 'zod'
 import {isFuture} from 'date-fns'
 import {eq, inArray} from 'drizzle-orm'
 
-import {requireJudgeAuth} from '@/server/utils/auth'
+import {requireJudgeServerSession} from '@/server/utils/auth'
 import {serializeServerErrors} from '@/lib/utils/common/error'
 import {db, schema} from '@/server/db'
 import {ServerError} from '@/lib/types/error'
@@ -25,7 +25,7 @@ export type MergeDeduplicatedFindingsResponse = Awaited<
 export const mergeDeduplicatedFindingsAction = async (
   request: MergeDeduplicatedFindingsRequest,
 ) => {
-  await requireJudgeAuth()
+  await requireJudgeServerSession()
 
   const {bestDeduplicatedFindingId, deduplicatedFindingIds} =
     mergeDeduplicatedFindingsSchema.parse(request)

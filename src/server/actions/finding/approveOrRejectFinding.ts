@@ -5,7 +5,7 @@ import {eq} from 'drizzle-orm'
 import {isFuture} from 'date-fns'
 
 import {FindingStatus} from '@/server/db/models'
-import {requireJudgeAuth} from '@/server/utils/auth'
+import {requireJudgeServerSession} from '@/server/utils/auth'
 import {serializeServerErrors} from '@/lib/utils/common/error'
 import {db, schema} from '@/server/db'
 import {ServerError} from '@/lib/types/error'
@@ -22,7 +22,7 @@ export type ApproveOrRejectFindingRequest = z.infer<
 export const approveOrRejectFindingAction = async (
   request: ApproveOrRejectFindingRequest,
 ) => {
-  await requireJudgeAuth()
+  await requireJudgeServerSession()
 
   const {findingId, newStatus} = approveOrRejectFindingSchema.parse(request)
 

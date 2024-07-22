@@ -2,10 +2,26 @@
 
 import Link from 'next/link'
 import {LinkIcon} from 'lucide-react'
+import {useSession} from 'next-auth/react'
+import {useRouter} from 'next/navigation'
 
 import {Contest} from '@/server/actions/contest/getContest'
 import ContestSeverityWeightsDisplay from '@/components/ui/ContestSeverityWeightsDisplay'
 import {formatAda} from '@/lib/utils/common/format'
+import {Button} from '@/components/ui/Button'
+import {ContestStatus, UserRole} from '@/server/db/models'
+import {useApproveOrRejectContest} from '@/lib/queries/contest/editContest'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/AlertDialog'
+import {PATHS} from '@/lib/utils/common/paths'
 
 type ContestInfoProps = {
   contest: Contest
@@ -16,6 +32,35 @@ const ContestInfo = ({
   contest,
   showRewardsAmount = false,
 }: ContestInfoProps) => {
+  const {data: session} = useSession()
+  const router = useRouter()
+
+  const {mutate} = useApproveOrRejectContest()
+
+  const approveContest = () => {
+    mutate(
+      {
+        contestId: contest.id,
+        newStatus: ContestStatus.APPROVED,
+      },
+      {
+        onSuccess: () => router.push(PATHS.judgeContests),
+      },
+    )
+  }
+
+  const rejectContest = () => {
+    mutate(
+      {
+        contestId: contest.id,
+        newStatus: ContestStatus.REJECTED,
+      },
+      {
+        onSuccess: () => router.push(PATHS.judgeContests),
+      },
+    )
+  }
+
   return (
     <div className="mt-12 xl:mx-[340px]">
       <div className="mb-12 flex flex-col gap-3">
@@ -69,6 +114,55 @@ const ContestInfo = ({
         <h3 className="text-bodyL text-purple-light">Custom conditions</h3>
         <p className="text-bodyM">{contest.customConditions || '-'}</p>
       </div>
+
+      {session?.user.role === UserRole.JUDGE &&
+        contest.status === ContestStatus.IN_REVIEW && (
+          <div className="flex gap-8">
+            <AlertDialog>
+              <AlertDialogTrigger>
+                <Button variant="outline" className="flex gap-3">
+                  <span className="uppercase">Approve contest</span>
+                </Button>
+              </AlertDialogTrigger>
+
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="uppercase">
+                    Are you sure you want to approve this contest?
+                  </AlertDialogTitle>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={approveContest}>
+                    Yes, approve
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+
+            <AlertDialog>
+              <AlertDialogTrigger>
+                <Button variant="outline" className="flex gap-3">
+                  <span className="uppercase">Reject contest</span>
+                </Button>
+              </AlertDialogTrigger>
+
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="uppercase">
+                    Are you sure you want to reject this contest?
+                  </AlertDialogTitle>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={rejectContest}>
+                    Yes, reject
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        )}
     </div>
   )
 }

@@ -5,7 +5,7 @@ import {isFuture} from 'date-fns'
 import {db} from '../../db'
 import {Finding} from '../../db/schema/finding'
 import {InsertReward} from '../../db/schema/reward'
-import {requireJudgeAuth} from '../../utils/auth'
+import {requireJudgeServerSession} from '../../utils/auth'
 import {ContestStatus, FindingSeverity, FindingStatus} from '../../db/models'
 
 import {ContestSeverityWeights} from '@/server/db/schema/contestSeverityWeights'
@@ -59,7 +59,7 @@ const getRewardForFinding = (
 }
 
 export const calculateRewardsAction = async (contestId: string) => {
-  await requireJudgeAuth()
+  await requireJudgeServerSession()
 
   const findings = await db.query.findings.findMany({
     where: (finding, {eq}) => eq(finding.contestId, contestId),

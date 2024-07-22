@@ -1,4 +1,4 @@
-import {redirect} from 'next/navigation'
+import {notFound, redirect} from 'next/navigation'
 import {Session, getServerSession} from 'next-auth'
 import {headers} from 'next/headers'
 
@@ -49,7 +49,17 @@ export const requirePageSession = async () => {
   return session
 }
 
-export const requireJudgeAuth = async () => {
+export const requireJudgeSession = async () => {
+  const session = await getServerAuthSession()
+
+  if (!session || !isJudge(session)) {
+    return notFound()
+  }
+
+  return session
+}
+
+export const requireJudgeServerSession = async () => {
   const session = await getServerAuthSession()
 
   if (!session || session.user.role !== UserRole.JUDGE) {

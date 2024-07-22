@@ -64,12 +64,15 @@ export const contests = pgTable(
     }).notNull(),
     createdAt: timestamp('createdAt', {
       mode: 'date',
-    }).default(sql`CURRENT_TIMESTAMP`),
+    })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
     updatedAt: timestamp('updatedAt', {
       mode: 'date',
     })
       .default(sql`CURRENT_TIMESTAMP`)
-      .$onUpdate(() => new Date()),
+      .$onUpdate(() => new Date())
+      .notNull(),
   },
   (table) => ({
     authorIdIdx: index('contest_authordId_idx').on(table.authorId),
