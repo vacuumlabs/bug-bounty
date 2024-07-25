@@ -39,7 +39,7 @@ const JudgeContestFindingsTableRow = ({
   return (
     <TableRow className="bg-grey-90">
       <TableCell>
-        <Link href="#" className="flex gap-2">
+        <Link href={PATHS.judgeFinding(finding.id)} className="flex gap-2">
           <span className="text-titleS underline">{finding.title}</span>
           {finding.isBestFinding && (
             <div className="flex items-center gap-1">
