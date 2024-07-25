@@ -15,6 +15,7 @@ import {
 import {Button} from '@/components/ui/Button'
 import {useApproveOrRejectFinding} from '@/lib/queries/finding/editFinding'
 import {Finding} from '@/server/actions/finding/getFinding'
+import {toast} from '@/components/ui/Toast'
 
 type FindingDetailsProps = {
   data: Finding
@@ -26,10 +27,22 @@ const FindingDetailsJudge = ({data}: FindingDetailsProps) => {
   const {mutate} = useApproveOrRejectFinding()
 
   const approveFinding = () => {
-    mutate({findingId: data.id, newStatus: FindingStatus.APPROVED})
+    mutate(
+      {findingId: data.id, newStatus: FindingStatus.APPROVED},
+      {
+        onSuccess: () =>
+          toast({title: 'Success', description: 'Finding has been approved.'}),
+      },
+    )
   }
   const rejectFinding = () => {
-    mutate({findingId: data.id, newStatus: FindingStatus.REJECTED})
+    mutate(
+      {findingId: data.id, newStatus: FindingStatus.REJECTED},
+      {
+        onSuccess: () =>
+          toast({title: 'Success', description: 'Finding has been rejected.'}),
+      },
+    )
   }
 
   if (session?.user.role !== UserRole.JUDGE) {
