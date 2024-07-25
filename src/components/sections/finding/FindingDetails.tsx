@@ -2,24 +2,12 @@ import Link from 'next/link'
 import {FileUp, LinkIcon} from 'lucide-react'
 
 import FindingSeverityBadge from './FindingSeverityBadge'
+import FindingDetailsJudge from './FindingDetailsJudge'
 
-import {FindingSeverity} from '@/server/db/models'
+import {Finding} from '@/server/actions/finding/getFinding'
 
 type FindingDetailsProps = {
-  data: {
-    contest: {
-      repoUrl: string
-    }
-    affectedFiles: string[]
-    severity: FindingSeverity
-    title: string
-    description: string
-    proofOfConcept: string | null
-    findingAttachments: {
-      attachmentUrl: string
-      fileName: string
-    }[]
-  }
+  data: Finding
 }
 
 const FindingDetails = ({data}: FindingDetailsProps) => {
@@ -78,6 +66,7 @@ const FindingDetails = ({data}: FindingDetailsProps) => {
           )}
         </div>
       </div>
+      <FindingDetailsJudge data={data} />
     </div>
   )
 }

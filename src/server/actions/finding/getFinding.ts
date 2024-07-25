@@ -10,6 +10,7 @@ import {
   FindingSeverity,
   FindingStatus,
   JudgeFindingStatus,
+  UserRole,
 } from '@/server/db/models'
 import {findings} from '@/server/db/schema/finding'
 import {
@@ -23,6 +24,8 @@ import {JudgeContestFindingSorting, SortDirection} from '@/lib/types/enums'
 export type GetFindingParams = {
   findingId: string
 }
+
+export type Finding = Awaited<ReturnType<typeof getFindingAction>>
 
 const getFindingAction = async ({findingId}: GetFindingParams) => {
   const session = await requireServerSession()
@@ -57,7 +60,14 @@ const getFindingAction = async ({findingId}: GetFindingParams) => {
     },
   })
 
-  if (finding?.contest.authorId !== session.user.id) {
+  if (!finding) {
+    throw new ServerError('Finding not found.')
+  }
+
+  if (
+    finding.contest.authorId !== session.user.id &&
+    session.user.role !== UserRole.JUDGE
+  ) {
     throw new ServerError('Unauthorized access to finding.')
   }
 

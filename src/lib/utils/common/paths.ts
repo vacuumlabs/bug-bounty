@@ -41,6 +41,7 @@ export const PATHS = {
   judgeContestDetails: (id: string) => `/judge/contests/${id}`,
   judgeContestFindings: (id: string) => `/judge/contests/${id}/findings`,
   judgeRewards: '/judge/rewards',
+  judgeFinding: (findingId: string) => `/judge/findings/${findingId}`,
 } as const
 
 export const getDashboardPathByUserRole = (

@@ -8,6 +8,7 @@ import {formatDate} from '@/lib/utils/common/format'
 import {translateEnum} from '@/lib/utils/common/enums'
 import {Button} from '@/components/ui/Button'
 import {FindingStatus} from '@/server/db/models'
+import {PATHS} from '@/lib/utils/common/paths'
 
 type JudgeContestFindingsTableRowProps = {
   finding: ContestFinding
@@ -21,7 +22,7 @@ const JudgeContestFindingsTableRow = ({
       case FindingStatus.PENDING:
         return (
           <Button asChild variant="outline" size="small">
-            <Link href="#">Review</Link>
+            <Link href={PATHS.judgeFinding(finding.id)}>Review</Link>
           </Button>
         )
       case FindingStatus.APPROVED:
