@@ -49,6 +49,12 @@ export enum FindingStatus {
   REJECTED = 'rejected',
 }
 
+export enum JudgeFindingStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+}
+
 export enum ProjectLanguage {
   AIKEN = 'AIKEN',
   PLUTARCH = 'PLUTARCH',

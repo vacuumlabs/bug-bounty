@@ -39,6 +39,7 @@ export const PATHS = {
   signOut: '/api/auth/signout',
   judgeContests: '/judge/contests',
   judgeContestDetails: (id: string) => `/judge/contests/${id}`,
+  judgeContestFindings: (id: string) => `/judge/contests/${id}/findings`,
   judgeRewards: '/judge/rewards',
 } as const
 
