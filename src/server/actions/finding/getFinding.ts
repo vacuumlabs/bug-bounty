@@ -55,6 +55,7 @@ const getFindingAction = async ({findingId}: GetFindingParams) => {
         columns: {
           repoUrl: true,
           authorId: true,
+          status: true,
         },
       },
     },

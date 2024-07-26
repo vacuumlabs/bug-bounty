@@ -32,7 +32,11 @@ const JudgeContestFindingsTableRow = ({
           </Button>
         )
       case FindingStatus.REJECTED:
-        return null
+        return (
+          <Button asChild variant="outline" size="small">
+            <Link href={PATHS.judgeFinding(finding.id)}>Review</Link>
+          </Button>
+        )
     }
   }
 
