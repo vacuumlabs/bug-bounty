@@ -93,7 +93,7 @@ const FindingDetailsJudge = ({data}: FindingDetailsProps) => {
                 </AlertDialogTitle>
               </AlertDialogHeader>
               <AlertDialogDescription className="sr-only">
-                By rejecting this contest, you confirm that the contest does not
+                By rejecting this finding, you confirm that the finding does not
                 meet the requirements and should not be included.
               </AlertDialogDescription>
               <AlertDialogFooter>
