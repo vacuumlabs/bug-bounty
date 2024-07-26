@@ -104,15 +104,15 @@ const JudgeContestFindings = ({contestId}: JudgeContestFindingsProps) => {
           <TabsTrigger
             value={
               JudgeFindingStatus.PENDING
-            }>{`Pending${pendingCount ? formatTabCount(pendingCount) : ''}`}</TabsTrigger>
+            }>{`Pending${formatTabCount(pendingCount)}`}</TabsTrigger>
           <TabsTrigger
             value={
               JudgeFindingStatus.APPROVED
-            }>{`Approved${approvedCount ? formatTabCount(approvedCount) : ''}`}</TabsTrigger>
+            }>{`Approved${formatTabCount(approvedCount)}`}</TabsTrigger>
           <TabsTrigger
             value={
               JudgeFindingStatus.REJECTED
-            }>{`Rejected${rejectedCount ? formatTabCount(rejectedCount) : ''}`}</TabsTrigger>
+            }>{`Rejected${formatTabCount(rejectedCount)}`}</TabsTrigger>
         </TabsList>
         <Separator />
         <div className="flex flex-grow flex-col bg-black px-24 pb-24 pt-12">
