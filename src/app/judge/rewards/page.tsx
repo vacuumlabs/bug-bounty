@@ -40,7 +40,9 @@ const JudgeContestsPage = async () => {
       <h1 className="mx-24 mb-6 text-headlineS uppercase">Rewards</h1>
       <HydrationBoundary>
         <JudgeRewardOverview className="mx-24 mb-12" />
-        <JudgeRewardsTable />
+        <div className="px-24 pb-24 pt-8">
+          <JudgeRewardsTable />
+        </div>
       </HydrationBoundary>
     </main>
   )

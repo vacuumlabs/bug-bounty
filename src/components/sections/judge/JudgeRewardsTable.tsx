@@ -33,11 +33,7 @@ const JudgeRewardsTable = () => {
   })
 
   if (isLoading) {
-    return (
-      <div className="mx-24">
-        <Skeleton className="h-[240px]" />
-      </div>
-    )
+    return <Skeleton className="h-[240px]" />
   }
 
   if (!rewardContests?.data.length) {
@@ -56,7 +52,7 @@ const JudgeRewardsTable = () => {
   }
 
   return (
-    <div className="flex flex-grow flex-col bg-black px-24 pb-24 pt-8">
+    <div className="flex flex-grow flex-col">
       <Table className="border-separate border-spacing-y-6">
         <TableHeader className="[&_tr]:border-b-0">
           <TableRow>
