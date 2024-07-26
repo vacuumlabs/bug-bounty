@@ -52,7 +52,7 @@ const ContestInfo = ({
   showRewardsAmount = false,
 }: ContestInfoProps) => {
   const {data: session} = useSession()
-  const [openAddTransferTxHash, setOpenAddTransferTxHash] = useState(false)
+  const [isAddTxHashPoupupOpen, setIsAddTxHashPoupupOpen] = useState(false)
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -72,7 +72,7 @@ const ContestInfo = ({
       },
       {
         onSuccess: () => {
-          setOpenAddTransferTxHash(false)
+          setIsAddTxHashPoupupOpen(false)
           toast({
             title: 'Success',
             description: 'Rewards transfer TX Hash added.',
@@ -154,8 +154,8 @@ const ContestInfo = ({
       {session?.user.role !== UserRole.JUDGE &&
         contest.status === ContestStatus.PENDING && (
           <DialogRoot
-            open={openAddTransferTxHash}
-            onOpenChange={setOpenAddTransferTxHash}>
+            open={isAddTxHashPoupupOpen}
+            onOpenChange={setIsAddTxHashPoupupOpen}>
             <DialogTrigger>
               <Button variant="outline" className="flex gap-3">
                 <span className="uppercase">
