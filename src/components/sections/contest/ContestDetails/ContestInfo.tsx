@@ -141,11 +141,12 @@ const ContestInfo = ({
           Rewards Transfer TX Hash
         </h3>
         {contest.rewardsTransferTxHash ? (
-          <Link
-            href={`https://cardanoscan.io/transaction/${contest.rewardsTransferTxHash}`}
-            className="text-bodyM underline">
-            {contest.rewardsTransferTxHash}
-          </Link>
+          <Button variant="link" asChild className="justify-start">
+            <Link
+              href={`https://cardanoscan.io/transaction/${contest.rewardsTransferTxHash}`}>
+              {contest.rewardsTransferTxHash}
+            </Link>
+          </Button>
         ) : (
           <p className="text-bodyM">-</p>
         )}
