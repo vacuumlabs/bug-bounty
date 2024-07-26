@@ -1,29 +1,16 @@
 import Link from 'next/link'
 import {DateTime} from 'luxon'
-import {useState} from 'react'
+
+import JudgeContestActionButton from './JudgeContestActionButton'
 
 import cardanoLogo from '@public/images/cardano-logo.png'
 import {TableCell, TableRow} from '@/components/ui/Table'
 import {Avatar, AvatarImage} from '@/components/ui/Avatar'
-import {Button} from '@/components/ui/Button'
 import {formatAda, formatDate, formatTxHash} from '@/lib/utils/common/format'
 import {translateEnum} from '@/lib/utils/common/enums'
 import {JudgeContest} from '@/server/actions/contest/getJudgeContests'
-import {ContestOccurence, ContestStatus} from '@/server/db/models'
+import {ContestOccurence} from '@/server/db/models'
 import {PATHS} from '@/lib/utils/common/paths'
-import {useFinalizeRewards} from '@/lib/queries/reward/finalizeRewards'
-import {toast} from '@/components/ui/Toast'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-  AlertDialogDescription,
-} from '@/components/ui/AlertDialog'
 
 type JudgeContestsTableRowProps = {
   contest: JudgeContest
@@ -34,103 +21,6 @@ const JudgeContestsTableRow = ({
   contest,
   contestOccurence,
 }: JudgeContestsTableRowProps) => {
-  const [openFinalizeRewards, setOpenFinalizeRewards] = useState(false)
-  const {mutate: finalizeRewardsMutate} = useFinalizeRewards()
-
-  const finalizeRewards = () => {
-    finalizeRewardsMutate(contest.id, {
-      onSuccess: () => {
-        setOpenFinalizeRewards(false)
-        toast({
-          title: 'Success',
-          description: 'Contest rewards has been finalized.',
-        })
-      },
-    })
-  }
-
-  const getActionButton = () => {
-    if (
-      contestOccurence === ContestOccurence.FUTURE &&
-      (contest.status === ContestStatus.PENDING ||
-        contest.status === ContestStatus.IN_REVIEW)
-    ) {
-      return (
-        <Button asChild variant="outline" size="small">
-          <Link
-            href={PATHS.judgeContestDetails(contest.id)}
-            className="gap-2 text-buttonS">
-            Review contest
-          </Link>
-        </Button>
-      )
-    }
-
-    if (
-      contestOccurence === ContestOccurence.PAST &&
-      contest.status === ContestStatus.APPROVED &&
-      contest.pendingFindingsCount > 0
-    ) {
-      return (
-        <Button asChild variant="outline" size="small">
-          <Link href="#" className="gap-2 text-buttonS">
-            Judge findings
-          </Link>
-        </Button>
-      )
-    }
-
-    if (
-      contest.pendingFindingsCount === 0 &&
-      contestOccurence === ContestOccurence.PAST &&
-      contest.status === ContestStatus.APPROVED
-    ) {
-      return (
-        <AlertDialog
-          open={openFinalizeRewards}
-          onOpenChange={setOpenFinalizeRewards}>
-          <AlertDialogTrigger>
-            <Button variant="outline" size="small">
-              <span className="uppercase">Finalize Rewards</span>
-            </Button>
-          </AlertDialogTrigger>
-
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="uppercase">
-                Are you sure you want to finalize the rewards for this contest?
-              </AlertDialogTitle>
-            </AlertDialogHeader>
-            <AlertDialogDescription className="sr-only">
-              Calculate and finalize rewards. This will also mark the contest as
-              finished.
-            </AlertDialogDescription>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={finalizeRewards}>
-                Yes, finalize
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )
-    }
-
-    if (
-      contestOccurence === ContestOccurence.PAST &&
-      contest.status === ContestStatus.FINISHED &&
-      contest.rewardsToPay > 0
-    ) {
-      return (
-        <Button asChild variant="outline" size="small">
-          <Link href="#" className="gap-2 text-buttonS">
-            Payout Rewards
-          </Link>
-        </Button>
-      )
-    }
-  }
-
   return (
     <TableRow className="bg-grey-90">
       <TableCell>
@@ -186,7 +76,12 @@ const JudgeContestsTableRow = ({
       <TableCell className="text-bodyM capitalize">
         {translateEnum.contestStatus(contest.status)}
       </TableCell>
-      <TableCell className="text-right">{getActionButton()}</TableCell>
+      <TableCell className="text-right">
+        <JudgeContestActionButton
+          contest={contest}
+          contestOccurence={contestOccurence}
+        />
+      </TableCell>
     </TableRow>
   )
 }
