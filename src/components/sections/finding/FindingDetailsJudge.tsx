@@ -18,7 +18,7 @@ import {Finding} from '@/server/actions/finding/getFinding'
 import {toast} from '@/components/ui/Toast'
 
 type FindingDetailsProps = {
-  data: Finding
+  data: Omit<Finding, 'deduplicatedFinding'>
 }
 
 const FindingDetailsJudge = ({data}: FindingDetailsProps) => {

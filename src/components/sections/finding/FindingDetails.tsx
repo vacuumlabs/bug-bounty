@@ -7,7 +7,7 @@ import FindingDetailsJudge from './FindingDetailsJudge'
 import {Finding} from '@/server/actions/finding/getFinding'
 
 type FindingDetailsProps = {
-  data: Finding
+  data: Omit<Finding, 'deduplicatedFinding'>
 }
 
 const FindingDetails = ({data}: FindingDetailsProps) => {
