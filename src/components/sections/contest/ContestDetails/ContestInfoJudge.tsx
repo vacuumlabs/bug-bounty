@@ -61,7 +61,7 @@ const ContestInfoJudge = ({contest}: ContestInfoJudgeProps) => {
     },
   })
 
-  const [openMarkAsPending, setOpenMarkAsPending] = useState(false)
+  const [isMarkAsPendingOpen, setIsMarkAsPendingOpen] = useState(false)
 
   if (session?.user.role !== UserRole.JUDGE) {
     return null
@@ -102,7 +102,7 @@ const ContestInfoJudge = ({contest}: ContestInfoJudgeProps) => {
       },
       {
         onSuccess: () => {
-          setOpenMarkAsPending(false)
+          setIsMarkAsPendingOpen(false)
           toast({
             title: 'Success',
             description: 'Contest has been marked as pending.',
@@ -125,8 +125,8 @@ const ContestInfoJudge = ({contest}: ContestInfoJudgeProps) => {
         contest.status === ContestStatus.PENDING) && (
         <div className="flex gap-8">
           <DialogRoot
-            open={openMarkAsPending}
-            onOpenChange={setOpenMarkAsPending}>
+            open={isMarkAsPendingOpen}
+            onOpenChange={setIsMarkAsPendingOpen}>
             <DialogTrigger>
               <Button variant="outline" className="flex gap-3">
                 <span className="uppercase">Mark as pending</span>
