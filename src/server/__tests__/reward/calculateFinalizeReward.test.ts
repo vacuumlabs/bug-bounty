@@ -19,12 +19,11 @@ import {InsertContest} from '@/server/db/schema/contest'
 import {InsertContestSeverityWeights} from '@/server/db/schema/contestSeverityWeights'
 import {InsertFinding} from '@/server/db/schema/finding'
 import {InsertDeduplicatedFinding} from '@/server/db/schema/deduplicatedFinding'
-import {
-  BEST_REPORT_BONUS,
-  calculateRewardsAction,
-} from '@/server/actions/reward/calculateRewards'
+import {calculateRewardsAction} from '@/server/actions/reward/calculateRewards'
 import {finalizeRewardsAction} from '@/server/actions/reward/finalizeRewards'
 import {TEST_WALLET_ADDRESS} from '@/server/utils/test'
+
+const BEST_REPORT_BONUS = 0.3 // 30%
 
 const judgeId = uuidv4()
 const contestId = uuidv4()

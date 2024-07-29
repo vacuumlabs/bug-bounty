@@ -111,6 +111,15 @@ const JudgeContestsTable = ({
               />
             </>
           )}
+          {contestOccurence === ContestOccurence.FUTURE && (
+            <TableHeadWithSort
+              title="Rewards Transfer TX"
+              sortParams={sortParams}
+              updateSortSearchParams={updateSortSearchParams}
+              sortField={JudgeContestSorting.SUBMITTED}
+              searchParamsUpdaters={[updatePageSearchParams(1)]}
+            />
+          )}
           <TableHeadWithSort
             title="Status"
             sortParams={sortParams}

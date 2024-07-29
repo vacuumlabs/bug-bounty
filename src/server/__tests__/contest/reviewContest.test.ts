@@ -16,9 +16,9 @@ import {InsertUser} from '@/server/db/schema/user'
 import {db, schema} from '@/server/db'
 import {InsertContest} from '@/server/db/schema/contest'
 import {
-  ApproveOrRejectContestRequest,
-  approveOrRejectContestAction,
-} from '@/server/actions/contest/approveOrRejectContest'
+  ReviewContestRequest,
+  reviewContestAction,
+} from '@/server/actions/contest/reviewContest'
 
 const authorId = uuidv4()
 
@@ -67,13 +67,13 @@ describe('approveOrRejectContest', () => {
 
     const randomContestId = uuidv4()
 
-    const approveRequest: ApproveOrRejectContestRequest = {
+    const approveRequest: ReviewContestRequest = {
       contestId: randomContestId,
       newStatus: ContestStatus.APPROVED,
     }
 
     await expect(async () => {
-      await approveOrRejectContestAction(approveRequest)
+      await reviewContestAction(approveRequest)
     }).rejects.toThrowError('Not authorized - JUDGE role is required.')
   })
 
@@ -96,15 +96,15 @@ describe('approveOrRejectContest', () => {
       throw new Error('Contest not found.')
     }
 
-    const approveRequest: ApproveOrRejectContestRequest = {
+    const approveRequest: ReviewContestRequest = {
       contestId: contest[0].id,
       newStatus: ContestStatus.APPROVED,
     }
 
     await expect(async () => {
-      await approveOrRejectContestAction(approveRequest)
+      await reviewContestAction(approveRequest)
     }).rejects.toThrowError(
-      'Only pending and in review contests can be approved/rejected.',
+      'Only pending and in review contests can be reviewed.',
     )
   })
 
@@ -127,12 +127,12 @@ describe('approveOrRejectContest', () => {
       throw new Error('Contest not found.')
     }
 
-    const approveRequest: ApproveOrRejectContestRequest = {
+    const approveRequest: ReviewContestRequest = {
       contestId: contest[0].id,
       newStatus: ContestStatus.APPROVED,
     }
 
-    const result = await approveOrRejectContestAction(approveRequest)
+    const result = await reviewContestAction(approveRequest)
     const approvedContest = result[0]
 
     if (!approvedContest) {
@@ -166,12 +166,12 @@ describe('approveOrRejectContest', () => {
       throw new Error('Contest not found.')
     }
 
-    const rejectRequest: ApproveOrRejectContestRequest = {
+    const rejectRequest: ReviewContestRequest = {
       contestId: contest[0].id,
       newStatus: ContestStatus.REJECTED,
     }
 
-    const result = await approveOrRejectContestAction(rejectRequest)
+    const result = await reviewContestAction(rejectRequest)
     const rejectedContest = result[0]
 
     if (!rejectedContest) {

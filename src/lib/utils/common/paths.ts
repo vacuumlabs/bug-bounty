@@ -39,6 +39,7 @@ export const PATHS = {
   signOut: '/api/auth/signout',
   judgeContests: '/judge/contests',
   judgeContestDetails: (id: string) => `/judge/contests/${id}`,
+  judgeRewards: '/judge/rewards',
 } as const
 
 export const getDashboardPathByUserRole = (

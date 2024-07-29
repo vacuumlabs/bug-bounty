@@ -2,61 +2,82 @@
 
 import Link from 'next/link'
 import {LinkIcon} from 'lucide-react'
+import {useState} from 'react'
+import {z} from 'zod'
+import {useForm} from 'react-hook-form'
+import {zodResolver} from '@hookform/resolvers/zod'
 import {useSession} from 'next-auth/react'
-import {useRouter} from 'next/navigation'
+
+import ContestInfoJudge from './ContestInfoJudge'
 
 import {Contest} from '@/server/actions/contest/getContest'
 import ContestSeverityWeightsDisplay from '@/components/ui/ContestSeverityWeightsDisplay'
 import {formatAda} from '@/lib/utils/common/format'
-import {Button} from '@/components/ui/Button'
-import {ContestStatus, UserRole} from '@/server/db/models'
-import {useApproveOrRejectContest} from '@/lib/queries/contest/editContest'
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/AlertDialog'
-import {PATHS} from '@/lib/utils/common/paths'
+  DialogRoot,
+  DialogHeader,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/Dialog'
+import {Button} from '@/components/ui/Button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/Form'
+import {rewardsTransferTxHashSchema} from '@/server/utils/validations/schemas'
+import {useAddContestRewardsTransferTxHash} from '@/lib/queries/contest/editContest'
+import {toast} from '@/components/ui/Toast'
+import {Input} from '@/components/ui/Input'
+import {ContestStatus, UserRole} from '@/server/db/models'
 
 type ContestInfoProps = {
   contest: Contest
   showRewardsAmount?: boolean
 }
 
+const formSchema = z.object({
+  rewardsTransferTxHash: rewardsTransferTxHashSchema,
+})
+
+type FormValues = z.infer<typeof formSchema>
+
 const ContestInfo = ({
   contest,
   showRewardsAmount = false,
 }: ContestInfoProps) => {
   const {data: session} = useSession()
-  const router = useRouter()
+  const [isAddTxHashPoupupOpen, setIsAddTxHashPoupupOpen] = useState(false)
 
-  const {mutate} = useApproveOrRejectContest()
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      rewardsTransferTxHash: '',
+    },
+  })
 
-  const approveContest = () => {
-    mutate(
+  const {mutate: addContestRewardsTransferTxHashMutate} =
+    useAddContestRewardsTransferTxHash()
+
+  const addRewardsTransferTxHash = ({rewardsTransferTxHash}: FormValues) => {
+    addContestRewardsTransferTxHashMutate(
       {
         contestId: contest.id,
-        newStatus: ContestStatus.APPROVED,
+        rewardsTransferTxHash,
       },
       {
-        onSuccess: () => router.push(PATHS.judgeContests),
-      },
-    )
-  }
-
-  const rejectContest = () => {
-    mutate(
-      {
-        contestId: contest.id,
-        newStatus: ContestStatus.REJECTED,
-      },
-      {
-        onSuccess: () => router.push(PATHS.judgeContests),
+        onSuccess: () => {
+          setIsAddTxHashPoupupOpen(false)
+          toast({
+            title: 'Success',
+            description: 'Rewards transfer TX Hash added.',
+          })
+        },
       },
     )
   }
@@ -115,54 +136,79 @@ const ContestInfo = ({
         <p className="text-bodyM">{contest.customConditions || '-'}</p>
       </div>
 
-      {session?.user.role === UserRole.JUDGE &&
-        contest.status === ContestStatus.IN_REVIEW && (
-          <div className="flex gap-8">
-            <AlertDialog>
-              <AlertDialogTrigger>
-                <Button variant="outline" className="flex gap-3">
-                  <span className="uppercase">Approve contest</span>
-                </Button>
-              </AlertDialogTrigger>
-
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="uppercase">
-                    Are you sure you want to approve this contest?
-                  </AlertDialogTitle>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={approveContest}>
-                    Yes, approve
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-
-            <AlertDialog>
-              <AlertDialogTrigger>
-                <Button variant="outline" className="flex gap-3">
-                  <span className="uppercase">Reject contest</span>
-                </Button>
-              </AlertDialogTrigger>
-
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="uppercase">
-                    Are you sure you want to reject this contest?
-                  </AlertDialogTitle>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={rejectContest}>
-                    Yes, reject
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
+      <div className="mb-12 flex flex-col gap-3">
+        <h3 className="text-bodyL text-purple-light">
+          Rewards Transfer TX Hash
+        </h3>
+        {contest.rewardsTransferTxHash ? (
+          <Button variant="link" asChild className="justify-start">
+            <Link
+              href={`https://cardanoscan.io/transaction/${contest.rewardsTransferTxHash}`}>
+              {contest.rewardsTransferTxHash}
+            </Link>
+          </Button>
+        ) : (
+          <p className="text-bodyM">-</p>
         )}
+      </div>
+
+      {session?.user.role !== UserRole.JUDGE &&
+        contest.status === ContestStatus.PENDING && (
+          <DialogRoot
+            open={isAddTxHashPoupupOpen}
+            onOpenChange={setIsAddTxHashPoupupOpen}>
+            <DialogTrigger>
+              <Button variant="outline" className="flex gap-3">
+                <span className="uppercase">
+                  {contest.rewardsTransferTxHash ? 'Edit' : 'Add'} rewards
+                  transfer tx hash
+                </span>
+              </Button>
+            </DialogTrigger>
+
+            <DialogContent className="border-0 bg-grey-90">
+              <Form {...form} onSubmit={addRewardsTransferTxHash}>
+                <DialogHeader>
+                  <DialogTitle className="text-titleM uppercase">
+                    {contest.rewardsTransferTxHash ? 'Edit' : 'Add'} rewards
+                    transfer TX Hash
+                  </DialogTitle>
+                  <DialogDescription className="text-bodyM text-white">
+                    Provide the TX hash of the rewards transfer. Please make
+                    sure the transfer address is correct.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div>
+                  <span>Rewards transfer address</span>
+                  <p className="font-bol mt-2 break-all bg-black p-4">
+                    {contest.rewardsTransferAddress}
+                  </p>
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="rewardsTransferTxHash"
+                  render={({field}) => (
+                    <FormItem>
+                      <FormLabel>Rewards transfer tx hash</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="flex w-full justify-end">
+                  <Button type="submit">Save</Button>
+                </div>
+              </Form>
+            </DialogContent>
+          </DialogRoot>
+        )}
+
+      <ContestInfoJudge contest={contest} />
     </div>
   )
 }

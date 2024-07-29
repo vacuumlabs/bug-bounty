@@ -30,7 +30,15 @@ export enum JudgeContestSorting {
   APPROVED_FINDINGS = 'approvedFindings',
   REJECTED_FINDINGS = 'rejectedFindings',
   REWARDED_AUDITORS = 'rewardedAuditors',
+  TRANSFER_TX_HASH = 'transferTxHash',
   STATUS = 'status',
+}
+
+export enum JudgeRewardSorting {
+  TITLE = 'title',
+  REWARDS_AMOUNT = 'rewardsAmount',
+  TRANSFER_TX = 'rewardsTransferTxHash',
+  END_DATE = 'endDate',
 }
 
 export enum MyFindingsSorting {

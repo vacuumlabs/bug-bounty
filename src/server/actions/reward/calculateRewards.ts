@@ -22,7 +22,7 @@ export type CalculateRewardsResponse = Awaited<
   ReturnType<typeof calculateRewards>
 >
 
-export const BEST_REPORT_BONUS = 0.3 // 30%
+const BEST_REPORT_BONUS = 0.3 // 30%
 
 const getSeverityWeights = (customWeights: SeverityWeights | null) => {
   if (customWeights) {

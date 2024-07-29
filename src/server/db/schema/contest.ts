@@ -46,6 +46,9 @@ export const contests = pgTable(
       precision: 20,
       scale: 0,
     }).notNull(),
+    rewardsTransferAddress: char('rewardsTransferAddress', {
+      length: 128,
+    }),
     rewardsTransferTxHash: char('rewardsTransferTxHash', {length: 64}),
     distributedRewardsAmount: numeric('distributedRewardsAmount', {
       precision: 20,

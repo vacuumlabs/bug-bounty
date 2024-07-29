@@ -6,6 +6,8 @@ import {usePayReward} from '@/lib/queries/reward/payReward'
 import {formatAda} from '@/lib/utils/common/format'
 import type {RewardWithUser} from '@/server/actions/reward/getReward'
 
+export const JUDGE_REWARDS_PAGE_SIZE = 20
+
 type JudgeRewardsListRowProps = {
   reward: RewardWithUser
 }
@@ -34,8 +36,7 @@ const JudgeRewardsListRow = ({reward}: JudgeRewardsListRowProps) => {
 }
 
 const JudgeRewardsList = () => {
-  // TODO: add pagination
-  const {data: rewards} = useGetRewards({limit: 20})
+  const {data: rewards} = useGetRewards({limit: JUDGE_REWARDS_PAGE_SIZE})
 
   return (
     <div className="flex flex-col gap-4 self-stretch">

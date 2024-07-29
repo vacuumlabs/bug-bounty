@@ -6,6 +6,7 @@ import {contests} from '@/server/db/schema/contest'
 import {
   ContestSorting,
   JudgeContestSorting,
+  JudgeRewardSorting,
   MyFindingsRewardsSorting,
   MyFindingsSorting,
   SortDirection,
@@ -78,6 +79,7 @@ export const judgeContestSortFieldMap = {
   [JudgeContestSorting.END_DATE]: contests.endDate,
   [JudgeContestSorting.SUBMITTED]: contests.createdAt,
   [JudgeContestSorting.REWARDS_AMOUNT]: contests.rewardsAmount,
+  [JudgeContestSorting.TRANSFER_TX_HASH]: contests.rewardsTransferTxHash,
   [JudgeContestSorting.STATUS]: sql<number>`
   CASE ${contests.status}
     WHEN ${ContestStatus.DRAFT} THEN 1
@@ -92,6 +94,13 @@ export const judgeContestSortFieldMap = {
   [JudgeContestSorting.APPROVED_FINDINGS]: sql<number>`(SELECT count(*)::int from finding where finding.status = ${FindingStatus.APPROVED} and "finding"."contestId" = contests.id)`,
   [JudgeContestSorting.REJECTED_FINDINGS]: sql<number>`(SELECT count(*)::int from finding where finding.status = ${FindingStatus.REJECTED} and "finding"."contestId" = contests.id)`,
   [JudgeContestSorting.REWARDED_AUDITORS]: sql<number>`(SELECT count(distinct "finding"."authorId")::int from finding where finding.status = ${FindingStatus.APPROVED} and "finding"."contestId" = contests.id)`,
+}
+
+export const judgeRewardSortFieldMap = {
+  [JudgeRewardSorting.TITLE]: contests.title,
+  [JudgeRewardSorting.REWARDS_AMOUNT]: contests.distributedRewardsAmount,
+  [JudgeRewardSorting.END_DATE]: contests.endDate,
+  [JudgeRewardSorting.TRANSFER_TX]: contests.rewardsTransferTxHash,
 }
 
 export const myFindingsRewardsSortFieldMap = {

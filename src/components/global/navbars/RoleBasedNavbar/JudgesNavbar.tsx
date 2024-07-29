@@ -34,6 +34,12 @@ const JudgesNavbar = () => {
             className={cn(pathname === PATHS.judgeContests && 'font-bold')}>
             <Link href={PATHS.judgeContests}>Contests</Link>
           </Button>
+          <Button
+            asChild
+            variant="link"
+            className={cn(pathname === PATHS.judgeRewards && 'font-bold')}>
+            <Link href={PATHS.judgeRewards}>Rewards</Link>
+          </Button>
         </nav>
         <div className="flex items-center gap-10">
           <UserAvatar />

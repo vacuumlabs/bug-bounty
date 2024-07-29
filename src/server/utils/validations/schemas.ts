@@ -42,3 +42,7 @@ export const addFindingAttachmentSchema = insertFindingAttachmentSchema.omit({
   findingId: true,
   id: true,
 })
+
+export const rewardsTransferAddressSchema = z.string().min(1).max(128)
+
+export const rewardsTransferTxHashSchema = z.string().min(1).max(64)

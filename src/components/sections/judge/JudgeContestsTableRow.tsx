@@ -1,11 +1,12 @@
 import Link from 'next/link'
 import {DateTime} from 'luxon'
 
+import JudgeContestActionButton from './JudgeContestActionButton'
+
 import cardanoLogo from '@public/images/cardano-logo.png'
 import {TableCell, TableRow} from '@/components/ui/Table'
 import {Avatar, AvatarImage} from '@/components/ui/Avatar'
-import {Button} from '@/components/ui/Button'
-import {formatAda, formatDate} from '@/lib/utils/common/format'
+import {formatAda, formatDate, formatTxHash} from '@/lib/utils/common/format'
 import {translateEnum} from '@/lib/utils/common/enums'
 import {JudgeContest} from '@/server/actions/contest/getJudgeContests'
 import {ContestOccurence} from '@/server/db/models'
@@ -27,7 +28,12 @@ const JudgeContestsTableRow = ({
           <Avatar>
             <AvatarImage src={cardanoLogo.src} />
           </Avatar>
-          <span className="text-titleS">{contest.title}</span>
+
+          <Link
+            href={PATHS.judgeContestDetails(contest.id)}
+            className="gap-2 underline">
+            <span className="text-titleS">{contest.title}</span>
+          </Link>
         </div>
       </TableCell>
       {contestOccurence === ContestOccurence.FUTURE && (
@@ -62,17 +68,19 @@ const JudgeContestsTableRow = ({
           </TableCell>
         </>
       )}
+      {contestOccurence === ContestOccurence.FUTURE && (
+        <TableCell className="text-bodyM">
+          {formatTxHash(contest.rewardsTransferTxHash)}
+        </TableCell>
+      )}
       <TableCell className="text-bodyM capitalize">
         {translateEnum.contestStatus(contest.status)}
       </TableCell>
       <TableCell className="text-right">
-        <Button asChild variant="outline" size="small">
-          <Link
-            href={PATHS.judgeContestDetails(contest.id)}
-            className="gap-2 text-buttonS">
-            Details
-          </Link>
-        </Button>
+        <JudgeContestActionButton
+          contest={contest}
+          contestOccurence={contestOccurence}
+        />
       </TableCell>
     </TableRow>
   )
