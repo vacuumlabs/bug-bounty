@@ -66,7 +66,9 @@ const JudgeContestActionButton = ({
   ) {
     return (
       <Button asChild variant="outline" size="small">
-        <Link href="#" className="gap-2 text-buttonS">
+        <Link
+          href={PATHS.judgeContestFindings(contest.id)}
+          className="gap-2 text-buttonS">
           Judge findings
         </Link>
       </Button>
