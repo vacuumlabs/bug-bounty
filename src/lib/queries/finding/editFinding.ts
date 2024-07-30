@@ -38,6 +38,9 @@ export const useApproveOrRejectFinding = (
       void queryClient.invalidateQueries({
         queryKey: queryKeys.findings._def,
       })
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.contests.judgeContests._def,
+      })
     },
   })
 }
