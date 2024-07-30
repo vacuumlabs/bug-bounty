@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import {ArrowLeft, ArrowRight, VerifiedIcon} from 'lucide-react'
+import {ArrowLeft, ArrowRight, Trash2, VerifiedIcon} from 'lucide-react'
 import {notFound} from 'next/navigation'
 
 import JudgeAddDeduplicatedFinding from './JudgeAddDeduplicatedFinding'
@@ -15,6 +15,8 @@ import {useGetFindings} from '@/lib/queries/finding/getFinding'
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/Tabs'
 import {useSearchParamsEnumState} from '@/lib/hooks/useSearchParamsState'
 import {JudgeDeduplicatedFindingTab} from '@/server/db/models'
+import {useRemoveDededuplicatedFinding} from '@/lib/queries/deduplicatedFinding/removeDeduplicatedFinding'
+import {toast} from '@/components/ui/Toast'
 
 type JudgeDeduplicatedFindingProps = {
   deduplicatedFindingId: string
@@ -34,6 +36,23 @@ const JudgeDeduplicatedFinding = ({
   const {data: findings, isLoading: findingsLoading} = useGetFindings({
     deduplicatedFindingId,
   })
+
+  const {mutate} = useRemoveDededuplicatedFinding()
+
+  const removeDeduplicatedFinding = (findingId: string) => {
+    mutate(
+      {findingId},
+      {
+        onSuccess: () => {
+          toast({
+            title: 'Success',
+            description:
+              'Finding has been removed from this deduplicated finding.',
+          })
+        },
+      },
+    )
+  }
 
   if (deduplicatedFindingLoading || findingsLoading) {
     return (
@@ -120,6 +139,14 @@ const JudgeDeduplicatedFinding = ({
                         {finding.author.alias ?? finding.author.id}
                       </span>
                     </div>
+                    <Button
+                      className="flex items-center gap-2"
+                      size="small"
+                      variant="outline"
+                      onClick={() => removeDeduplicatedFinding(finding.id)}>
+                      <span>Remove</span>
+                      <Trash2 width={16} height={16} />
+                    </Button>
                     <Button asChild size="small" variant="default">
                       <Link href={PATHS.judgeFinding(finding.id)}>
                         <span>Detail</span>

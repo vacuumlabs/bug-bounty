@@ -62,9 +62,14 @@ const JudgeContestFindingsTableRow = ({
         {formatDate(finding.createdAt, DateTime.DATETIME_MED)}
       </TableCell>
       {finding.status === FindingStatus.APPROVED && (
-        <TableCell className="text-bodyM capitalize">
-          {finding.deduplicatedFindingsCount}
-        </TableCell>
+        <>
+          <TableCell className="text-bodyM capitalize">
+            {finding.deduplicatedFindingTitle}
+          </TableCell>
+          <TableCell className="text-bodyM capitalize">
+            {finding.deduplicatedFindingsCount}
+          </TableCell>
+        </>
       )}
       <TableCell className="text-bodyM capitalize">
         {translateEnum.findingSeverity(finding.severity)}

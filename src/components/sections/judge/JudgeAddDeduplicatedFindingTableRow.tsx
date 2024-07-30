@@ -10,7 +10,6 @@ import {TableCell, TableRow} from '@/components/ui/Table'
 import {FindingToDeduplicate} from '@/server/actions/finding/getFinding'
 import {formatDate} from '@/lib/utils/common/format'
 import {translateEnum} from '@/lib/utils/common/enums'
-import {FindingStatus} from '@/server/db/models'
 import {PATHS} from '@/lib/utils/common/paths'
 import {Checkbox} from '@/components/ui/Checkbox'
 
@@ -58,11 +57,6 @@ const JudgeAddDeduplicatedFindingTableRow = ({
       <TableCell className="text-bodyM">
         {formatDate(finding.createdAt, DateTime.DATETIME_MED)}
       </TableCell>
-      {finding.status === FindingStatus.APPROVED && (
-        <TableCell className="text-bodyM capitalize">
-          {finding.deduplicatedFindingsCount}
-        </TableCell>
-      )}
       <TableCell className="text-bodyM capitalize">
         {translateEnum.findingSeverity(finding.severity)}
       </TableCell>

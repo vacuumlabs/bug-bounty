@@ -215,6 +215,7 @@ const getContestFindingsAction = async ({
     [JudgeContestFindingSorting.SUBMITTED]: findings.createdAt,
     [JudgeContestFindingSorting.DEDUPLICATED_FINDINGS]:
       findingsCountSubquery.count,
+    [JudgeContestFindingSorting.DEDUPLICATED_TITLE]: deduplicatedFindings.title,
   }
 
   const contestFindingsQuery = db
@@ -222,6 +223,7 @@ const getContestFindingsAction = async ({
       id: findings.id,
       createdAt: findings.createdAt,
       deduplicatedFindingId: findings.deduplicatedFindingId,
+      deduplicatedFindingTitle: deduplicatedFindings.title,
       contestId: findings.contestId,
       title: findings.title,
       severity: findings.severity,
@@ -236,6 +238,10 @@ const getContestFindingsAction = async ({
         findings.deduplicatedFindingId,
         findingsCountSubquery.deduplicatedFindingId,
       ),
+    )
+    .leftJoin(
+      deduplicatedFindings,
+      eq(deduplicatedFindings.id, findings.deduplicatedFindingId),
     )
     .where(
       and(
@@ -285,7 +291,7 @@ const getFindingsToDeduplicateAction = async ({
   deduplicatedFindingId,
   pageParams: {limit, offset = 0},
   sort = {
-    field: JudgeFindingToDeduplicateSorting.DEDUPLICATED_FINDINGS,
+    field: JudgeFindingToDeduplicateSorting.SEVERITY,
     direction: SortDirection.ASC,
   },
 }: GetFindingsToDeduplicateRequest) => {
@@ -300,6 +306,15 @@ const getFindingsToDeduplicateAction = async ({
     throw new ServerError('Deduplicated finding not found.')
   }
 
+  const findingsCountSubquery = db
+    .select({
+      deduplicatedFindingId: findings.deduplicatedFindingId,
+      count: count(findings.id).as('findingsCount'),
+    })
+    .from(findings)
+    .groupBy(findings.deduplicatedFindingId)
+    .as('findingsCountSubquery')
+
   const findingsToDeduplicateCountPromise = db
     .select({count: count()})
     .from(findings)
@@ -309,17 +324,16 @@ const getFindingsToDeduplicateAction = async ({
         eq(findings.contestId, deduplicatedFinding.contestId),
         eq(findings.status, FindingStatus.APPROVED),
         isNotNull(findings.deduplicatedFindingId),
+        eq(findingsCountSubquery.count, 1),
       ),
     )
-
-  const deduplicatedFindingsCountSubquery = db
-    .select({
-      bestFindingId: deduplicatedFindings.bestFindingId,
-      count: count(deduplicatedFindings.id).as('deduplicatedFindingsCount'),
-    })
-    .from(deduplicatedFindings)
-    .groupBy(deduplicatedFindings.bestFindingId)
-    .as('deduplicatedFindingsCountSubquery')
+    .leftJoin(
+      findingsCountSubquery,
+      eq(
+        findings.deduplicatedFindingId,
+        findingsCountSubquery.deduplicatedFindingId,
+      ),
+    )
 
   const severitySort = sql<number>`
     CASE ${findings.severity}
@@ -335,8 +349,6 @@ const getFindingsToDeduplicateAction = async ({
     [JudgeFindingToDeduplicateSorting.SEVERITY]: severitySort,
     [JudgeFindingToDeduplicateSorting.TITLE]: findings.title,
     [JudgeFindingToDeduplicateSorting.SUBMITTED]: findings.createdAt,
-    [JudgeFindingToDeduplicateSorting.DEDUPLICATED_FINDINGS]:
-      deduplicatedFindingsCountSubquery.count,
   }
 
   const findingsToDeduplicateQuery = db
@@ -348,13 +360,16 @@ const getFindingsToDeduplicateAction = async ({
       title: findings.title,
       severity: findings.severity,
       status: findings.status,
-      deduplicatedFindingsCount: deduplicatedFindingsCountSubquery.count,
+      deduplicatedFindingsCount: findingsCountSubquery.count,
       isBestFinding: sql<boolean>`EXISTS (SELECT 1 FROM ${deduplicatedFindings} WHERE ${deduplicatedFindings.bestFindingId} = ${findings.id})`,
     })
     .from(findings)
     .leftJoin(
-      deduplicatedFindingsCountSubquery,
-      eq(findings.id, deduplicatedFindingsCountSubquery.bestFindingId),
+      findingsCountSubquery,
+      eq(
+        findings.deduplicatedFindingId,
+        findingsCountSubquery.deduplicatedFindingId,
+      ),
     )
     .where(
       and(
@@ -362,6 +377,7 @@ const getFindingsToDeduplicateAction = async ({
         eq(findings.contestId, deduplicatedFinding.contestId),
         eq(findings.status, FindingStatus.APPROVED),
         isNotNull(findings.deduplicatedFindingId),
+        eq(findingsCountSubquery.count, 1),
       ),
     )
     .limit(limit)

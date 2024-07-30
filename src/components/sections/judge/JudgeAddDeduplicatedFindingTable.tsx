@@ -76,14 +76,6 @@ const JudgeAddDeduplicatedFindingTable = ({
             searchParamsUpdaters={[updatePageSearchParams(1)]}
           />
           <TableHeadWithSort
-            title="Deduplicated Findings"
-            sortParams={sortParams}
-            updateSortSearchParams={updateSortSearchParams}
-            sortField={JudgeFindingToDeduplicateSorting.DEDUPLICATED_FINDINGS}
-            searchParamsUpdaters={[updatePageSearchParams(1)]}
-          />
-
-          <TableHeadWithSort
             title="Severity"
             sortParams={sortParams}
             updateSortSearchParams={updateSortSearchParams}
