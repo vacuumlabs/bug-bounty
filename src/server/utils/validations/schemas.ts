@@ -1,6 +1,6 @@
 import {z} from 'zod'
 
-import {ContestStatus, FindingStatus} from '@/server/db/models'
+import {ContestStatus, FindingSeverity, FindingStatus} from '@/server/db/models'
 import {insertContestSchema} from '@/server/db/schema/contest'
 import {insertFindingAttachmentSchema} from '@/server/db/schema/findingAttachment'
 import {insertFindingSchema} from '@/server/db/schema/finding'
@@ -51,4 +51,17 @@ export const addDeduplicatedFindingSchema = z.object({
   deduplicatedFindingIds: z.array(
     z.object({deduplicatedFindingId: z.string().min(1)}),
   ),
+})
+
+export const editDeduplicatedFindingSchema = z.object({
+  deduplicatedFindingId: z.string().uuid(),
+  title: z.string().min(1),
+  severity: z.enum([
+    FindingSeverity.INFO,
+    FindingSeverity.LOW,
+    FindingSeverity.MEDIUM,
+    FindingSeverity.HIGH,
+    FindingSeverity.CRITICAL,
+  ]),
+  description: z.string().min(1),
 })
