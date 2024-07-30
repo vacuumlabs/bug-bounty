@@ -25,6 +25,9 @@ export const useMergeDeduplicatedFindings = (
       void queryClient.invalidateQueries({
         queryKey: queryKeys.deduplicatedFindings._def,
       })
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.findings._def,
+      })
     },
   })
 }

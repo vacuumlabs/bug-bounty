@@ -1,47 +1,44 @@
 import Link from 'next/link'
 import {DateTime} from 'luxon'
 import {VerifiedIcon} from 'lucide-react'
+import {UseFormReturn} from 'react-hook-form'
+import {CheckedState} from '@radix-ui/react-checkbox'
+
+import {AddDeduplicatedFindingForm} from './JudgeAddDeduplicatedFinding'
 
 import {TableCell, TableRow} from '@/components/ui/Table'
-import {ContestFinding} from '@/server/actions/finding/getFinding'
+import {FindingToDeduplicate} from '@/server/actions/finding/getFinding'
 import {formatDate} from '@/lib/utils/common/format'
 import {translateEnum} from '@/lib/utils/common/enums'
-import {Button} from '@/components/ui/Button'
 import {FindingStatus} from '@/server/db/models'
 import {PATHS} from '@/lib/utils/common/paths'
+import {Checkbox} from '@/components/ui/Checkbox'
 
-type JudgeContestFindingsTableRowProps = {
-  finding: ContestFinding
+type JudgeAddDeduplicatedFindingTableRowProps = {
+  finding: FindingToDeduplicate
+  form: UseFormReturn<AddDeduplicatedFindingForm, unknown>
+  removeFinding: (id: string) => void
+  addFinding: (id: string) => void
 }
 
-const JudgeContestFindingsTableRow = ({
+const JudgeAddDeduplicatedFindingTableRow = ({
   finding,
-}: JudgeContestFindingsTableRowProps) => {
-  const getActionButton = () => {
-    switch (finding.status) {
-      case FindingStatus.PENDING:
-        return (
-          <Button asChild variant="outline" size="small">
-            <Link href={PATHS.judgeFinding(finding.id)}>Review</Link>
-          </Button>
-        )
-      case FindingStatus.APPROVED:
-        return (
-          <Button asChild variant="outline" size="small">
-            <Link
-              href={PATHS.judgeDeduplicatedFinding(
-                finding.deduplicatedFindingId ?? '',
-              )}>
-              Deduplicate
-            </Link>
-          </Button>
-        )
-      case FindingStatus.REJECTED:
-        return (
-          <Button asChild variant="outline" size="small">
-            <Link href={PATHS.judgeFinding(finding.id)}>Review</Link>
-          </Button>
-        )
+  form,
+  removeFinding,
+  addFinding,
+}: JudgeAddDeduplicatedFindingTableRowProps) => {
+  const deduplicatedFindingId = finding.deduplicatedFindingId ?? ''
+
+  const deduplicatedFindingIds = form.watch('deduplicatedFindingIds')
+  const checked = deduplicatedFindingIds.some(
+    (value) => value.deduplicatedFindingId === deduplicatedFindingId,
+  )
+
+  const onCheckedChange = (checked: CheckedState) => {
+    if (checked) {
+      addFinding(deduplicatedFindingId)
+    } else {
+      removeFinding(deduplicatedFindingId)
     }
   }
 
@@ -69,9 +66,11 @@ const JudgeContestFindingsTableRow = ({
       <TableCell className="text-bodyM capitalize">
         {translateEnum.findingSeverity(finding.severity)}
       </TableCell>
-      <TableCell className="text-right">{getActionButton()}</TableCell>
+      <TableCell>
+        <Checkbox checked={checked} onCheckedChange={onCheckedChange} />
+      </TableCell>
     </TableRow>
   )
 }
 
-export default JudgeContestFindingsTableRow
+export default JudgeAddDeduplicatedFindingTableRow

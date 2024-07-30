@@ -34,6 +34,7 @@ const TableHeadWithSort = <T extends string>({
         <span className="text-bodyM text-grey-40">{title}</span>
         <div className="flex flex-col">
           <button
+            type="button"
             onClick={() => {
               updateSearchParams(
                 mergeSearchParamsUpdaters([
@@ -56,6 +57,7 @@ const TableHeadWithSort = <T extends string>({
             />
           </button>
           <button
+            type="button"
             onClick={() => {
               updateSearchParams(
                 mergeSearchParamsUpdaters([

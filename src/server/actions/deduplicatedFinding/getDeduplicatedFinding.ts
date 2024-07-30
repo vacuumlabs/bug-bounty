@@ -30,11 +30,21 @@ const getDeduplicatedFindingAction = async (deduplicatedFindingId: string) => {
       eq(deduplicatedFindings.id, deduplicatedFindingId),
   })
 
-  if (deduplicatedFinding?.contest.authorId !== session.user.id) {
+  if (!deduplicatedFinding) {
+    throw new ServerError('Deduplicated finding not found.')
+  }
+
+  if (
+    deduplicatedFinding.contest.authorId !== session.user.id &&
+    !isJudge(session)
+  ) {
     throw new ServerError('Unauthorized access to deduplicated finding.')
   }
 
-  if (deduplicatedFinding.contest.status !== ContestStatus.FINISHED) {
+  if (
+    deduplicatedFinding.contest.status !== ContestStatus.FINISHED &&
+    !isJudge(session)
+  ) {
     throw new ServerError('Contest is not finished.')
   }
 

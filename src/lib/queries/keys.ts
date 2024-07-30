@@ -19,6 +19,7 @@ import {
   GetContestFindingsParams,
   GetFindingParams,
   GetFindingsParams,
+  GetFindingsToDeduplicateRequest,
 } from '@/server/actions/finding/getFinding'
 import {GetJudgeContestsParams} from '@/server/actions/contest/getJudgeContests'
 import {GetJudgeRewardsParams} from '@/server/actions/reward/getJudgeRewards'
@@ -57,6 +58,7 @@ export const queryKeys = createQueryKeyStore({
     byContest: (params: GetContestFindingsParams) => [params],
     byDeduplicatedFinding: (params: GetFindingsParams) => [params],
     one: (params: GetFindingParams) => [params],
+    toDeduplicate: (params: GetFindingsToDeduplicateRequest) => [params],
   },
   deduplicatedFindings: {
     all: (params: GetDeduplicatedFindingsParams) => [params],

@@ -46,3 +46,9 @@ export const addFindingAttachmentSchema = insertFindingAttachmentSchema.omit({
 export const rewardsTransferAddressSchema = z.string().min(1).max(128)
 
 export const rewardsTransferTxHashSchema = z.string().min(1).max(64)
+
+export const addDeduplicatedFindingSchema = z.object({
+  deduplicatedFindingIds: z.array(
+    z.object({deduplicatedFindingId: z.string().min(1)}),
+  ),
+})
