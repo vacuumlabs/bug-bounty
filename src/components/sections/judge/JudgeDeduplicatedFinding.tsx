@@ -18,6 +18,8 @@ import {useGetFindings} from '@/lib/queries/finding/getFinding'
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/Tabs'
 import {useSearchParamsEnumState} from '@/lib/hooks/useSearchParamsState'
 import {JudgeDeduplicatedFindingTab} from '@/server/db/models'
+import {useRemoveDededuplicatedFinding} from '@/lib/queries/deduplicatedFinding/removeDeduplicatedFinding'
+import {toast} from '@/components/ui/Toast'
 
 type JudgeDeduplicatedFindingProps = {
   deduplicatedFindingId: string
@@ -36,6 +38,23 @@ const JudgeDeduplicatedFinding = ({
   const {data: findings, isLoading: findingsLoading} = useGetFindings({
     deduplicatedFindingId,
   })
+
+  const {mutate} = useRemoveDededuplicatedFinding()
+
+  const removeDeduplicatedFinding = (findingId: string) => {
+    mutate(
+      {findingId},
+      {
+        onSuccess: () => {
+          toast({
+            title: 'Success',
+            description:
+              'Finding has been removed from this deduplicated finding.',
+          })
+        },
+      },
+    )
+  }
 
   if (deduplicatedFindingLoading || findingsLoading) {
     return (
