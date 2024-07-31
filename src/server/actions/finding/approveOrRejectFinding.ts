@@ -4,7 +4,7 @@ import {z} from 'zod'
 import {eq} from 'drizzle-orm'
 import {isFuture} from 'date-fns'
 
-import {FindingStatus} from '@/server/db/models'
+import {ContestStatus, FindingStatus} from '@/server/db/models'
 import {requireJudgeServerSession} from '@/server/utils/auth'
 import {serializeServerErrors} from '@/lib/utils/common/error'
 import {db, schema} from '@/server/db'
@@ -37,7 +37,7 @@ export const approveOrRejectFindingAction = async (
     },
     with: {
       contest: {
-        columns: {endDate: true},
+        columns: {endDate: true, status: true},
       },
     },
     where: (finding, {eq}) => eq(finding.id, findingId),
@@ -47,8 +47,10 @@ export const approveOrRejectFindingAction = async (
     throw new ServerError('Finding not found.')
   }
 
-  if (finding.status !== FindingStatus.PENDING) {
-    throw new ServerError('Only pending findings can be approved/rejected.')
+  if (finding.contest.status !== ContestStatus.APPROVED) {
+    throw new ServerError(
+      'Only findings of non-finalized approved contests can be approved/rejected.',
+    )
   }
 
   if (isFuture(finding.contest.endDate)) {
@@ -85,11 +87,38 @@ export const approveOrRejectFindingAction = async (
     })
   }
 
-  return db
-    .update(schema.findings)
-    .set({status: newStatus})
-    .where(eq(schema.findings.id, findingId))
-    .returning()
+  return db.transaction(async (tx) => {
+    // check if deduplicated finding exists before rejecting
+    const deduplicatedFinding = await tx.query.deduplicatedFindings.findFirst({
+      where: (deduplicatedFinding, {eq}) =>
+        eq(deduplicatedFinding.bestFindingId, findingId),
+    })
+
+    if (!deduplicatedFinding) {
+      return tx
+        .update(schema.findings)
+        .set({status: newStatus, deduplicatedFindingId: null})
+        .where(eq(schema.findings.id, findingId))
+        .returning()
+    }
+
+    // remove deduplicated finding id from finding
+    await tx
+      .update(schema.findings)
+      .set({deduplicatedFindingId: null})
+      .where(eq(schema.findings.deduplicatedFindingId, deduplicatedFinding.id))
+
+    // delete deduplicated finding
+    await tx
+      .delete(schema.deduplicatedFindings)
+      .where(eq(schema.deduplicatedFindings.id, deduplicatedFinding.id))
+
+    return tx
+      .update(schema.findings)
+      .set({status: newStatus})
+      .where(eq(schema.findings.id, findingId))
+      .returning()
+  })
 }
 
 export const approveOrRejectFinding = serializeServerErrors(

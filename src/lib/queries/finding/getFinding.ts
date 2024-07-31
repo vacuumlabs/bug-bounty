@@ -5,8 +5,10 @@ import {queryKeys} from '../keys'
 import getServerQueryClient from '@/server/utils/queryClient'
 import {withApiErrorHandler} from '@/lib/utils/common/error'
 import {
+  GetContestFindingsParams,
   GetFindingParams,
   GetFindingsParams,
+  getContestFindings,
   getFinding,
   getFindings,
 } from '@/server/actions/finding/getFinding'
@@ -35,4 +37,19 @@ export const useGetFindings = (params: GetFindingsParams) =>
 export const prefetchGetFindings = async (params: GetFindingsParams) => {
   const queryClient = getServerQueryClient()
   await queryClient.prefetchQuery(getFindingsQueryOptions(params))
+}
+
+const getContestFindingsQueryOptions = (params: GetContestFindingsParams) => ({
+  queryKey: queryKeys.findings.byContest(params).queryKey,
+  queryFn: withApiErrorHandler(() => getContestFindings(params)),
+})
+
+export const useGetContestFindings = (params: GetContestFindingsParams) =>
+  useQuery(getContestFindingsQueryOptions(params))
+
+export const prefetchGetContestFindings = async (
+  params: GetContestFindingsParams,
+) => {
+  const queryClient = getServerQueryClient()
+  await queryClient.prefetchQuery(getContestFindingsQueryOptions(params))
 }

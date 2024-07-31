@@ -11,6 +11,7 @@ import {translateEnum} from '@/lib/utils/common/enums'
 import {JudgeContest} from '@/server/actions/contest/getJudgeContests'
 import {ContestOccurence} from '@/server/db/models'
 import {PATHS} from '@/lib/utils/common/paths'
+import {Button} from '@/components/ui/Button'
 
 type JudgeContestsTableRowProps = {
   contest: JudgeContest
@@ -52,16 +53,31 @@ const JudgeContestsTableRow = ({
       </TableCell>
       {contestOccurence !== ContestOccurence.FUTURE && (
         <TableCell className="text-bodyM">
-          {contest.pendingFindingsCount}
+          <Button asChild variant="link">
+            <Link
+              href={`${PATHS.judgeContestFindings(contest.id)}?type=PENDING`}>
+              {contest.pendingFindingsCount}
+            </Link>
+          </Button>
         </TableCell>
       )}
       {contestOccurence === ContestOccurence.PAST && (
         <>
           <TableCell className="text-bodyM">
-            {contest.approvedFindingsCount}
+            <Button asChild variant="link">
+              <Link
+                href={`${PATHS.judgeContestFindings(contest.id)}?type=APPROVED`}>
+                {contest.approvedFindingsCount}
+              </Link>
+            </Button>
           </TableCell>
           <TableCell className="text-bodyM">
-            {contest.rejectedFindingsCount}
+            <Button asChild variant="link">
+              <Link
+                href={`${PATHS.judgeContestFindings(contest.id)}?type=REJECTED`}>
+                {contest.rejectedFindingsCount}
+              </Link>
+            </Button>
           </TableCell>
           <TableCell className="text-bodyM">
             {contest.rewardedAuditorsCount}

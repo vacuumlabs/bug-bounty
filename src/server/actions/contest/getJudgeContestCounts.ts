@@ -11,6 +11,7 @@ import {
   lt,
   ne,
   or,
+  sql,
   sumDistinct,
 } from 'drizzle-orm'
 
@@ -65,11 +66,15 @@ export const getJudgeContestCountsAction = async () => {
     )
 
   const toFinalizeCountPromise = db
-    .select({count: count()})
+    .select({count: countDistinct(contests.id)})
     .from(contests)
+    .leftJoin(
+      pendingFindingsCountSubQuery,
+      eq(contests.id, pendingFindingsCountSubQuery.contestId),
+    )
     .where(
       and(
-        isNull(contests.distributedRewardsAmount),
+        eq(sql`coalesce(${pendingFindingsCountSubQuery.count}, 0)`, 0),
         eq(contests.status, ContestStatus.APPROVED),
         lt(contests.endDate, new Date()),
       ),

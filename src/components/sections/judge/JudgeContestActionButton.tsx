@@ -1,23 +1,9 @@
-import {useState} from 'react'
 import Link from 'next/link'
 
 import {PATHS} from '@/lib/utils/common/paths'
 import {JudgeContest} from '@/server/actions/contest/getJudgeContests'
 import {ContestOccurence, ContestStatus} from '@/server/db/models'
 import {Button} from '@/components/ui/Button'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-  AlertDialogDescription,
-} from '@/components/ui/AlertDialog'
-import {useFinalizeRewards} from '@/lib/queries/reward/finalizeRewards'
-import {toast} from '@/components/ui/Toast'
 
 type JudgeContestActionButtonProps = {
   contest: JudgeContest
@@ -28,21 +14,6 @@ const JudgeContestActionButton = ({
   contest,
   contestOccurence,
 }: JudgeContestActionButtonProps) => {
-  const [openFinalizeRewards, setOpenFinalizeRewards] = useState(false)
-  const {mutate: finalizeRewardsMutate} = useFinalizeRewards()
-
-  const finalizeRewards = () => {
-    finalizeRewardsMutate(contest.id, {
-      onSuccess: () => {
-        setOpenFinalizeRewards(false)
-        toast({
-          title: 'Success',
-          description: 'Contest rewards has been finalized.',
-        })
-      },
-    })
-  }
-
   if (
     contestOccurence === ContestOccurence.FUTURE &&
     (contest.status === ContestStatus.PENDING ||
@@ -66,7 +37,9 @@ const JudgeContestActionButton = ({
   ) {
     return (
       <Button asChild variant="outline" size="small">
-        <Link href="#" className="gap-2 text-buttonS">
+        <Link
+          href={PATHS.judgeContestFindings(contest.id)}
+          className="gap-2 text-buttonS">
           Judge findings
         </Link>
       </Button>
@@ -79,33 +52,13 @@ const JudgeContestActionButton = ({
     contest.status === ContestStatus.APPROVED
   ) {
     return (
-      <AlertDialog
-        open={openFinalizeRewards}
-        onOpenChange={setOpenFinalizeRewards}>
-        <AlertDialogTrigger>
-          <Button variant="outline" size="small">
-            <span className="uppercase">Finalize Rewards</span>
-          </Button>
-        </AlertDialogTrigger>
-
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="uppercase">
-              Are you sure you want to finalize the rewards for this contest?
-            </AlertDialogTitle>
-          </AlertDialogHeader>
-          <AlertDialogDescription className="sr-only">
-            Calculate and finalize rewards. This will also mark the contest as
-            finished.
-          </AlertDialogDescription>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={finalizeRewards}>
-              Yes, finalize
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <Button asChild variant="outline" size="small">
+        <Link
+          href={PATHS.judgeContestFindings(contest.id)}
+          className="gap-2 text-buttonS">
+          Judge/Finalize
+        </Link>
+      </Button>
     )
   }
 

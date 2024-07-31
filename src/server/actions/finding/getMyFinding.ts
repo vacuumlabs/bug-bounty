@@ -41,10 +41,12 @@ const getMyFindingAction = async ({findingId}: GetMyFindingParams) => {
       author: {
         columns: {
           id: true,
+          alias: true,
         },
       },
       contest: {
         columns: {
+          authorId: true,
           repoUrl: true,
           title: true,
           startDate: true,

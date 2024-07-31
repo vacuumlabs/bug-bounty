@@ -16,6 +16,7 @@ import {
 import {GetMyFindingsRewardsParams} from '@/server/actions/reward/getMyFindingsRewards'
 import {GetContestLeaderboardParams} from '@/server/actions/contest/getContestLeaderboard'
 import {
+  GetContestFindingsParams,
   GetFindingParams,
   GetFindingsParams,
 } from '@/server/actions/finding/getFinding'
@@ -53,6 +54,7 @@ export const queryKeys = createQueryKeyStore({
     ],
     mineOne: (params: GetMyFindingParams) => [params],
     counts: null,
+    byContest: (params: GetContestFindingsParams) => [params],
     byDeduplicatedFinding: (params: GetFindingsParams) => [params],
     one: (params: GetFindingParams) => [params],
   },

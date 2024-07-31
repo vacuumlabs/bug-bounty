@@ -63,11 +63,11 @@ const MyFindings = () => {
           <TabsTrigger
             value={
               FindingOccurence.PRESENT
-            }>{`Live${liveCount ? formatTabCount(liveCount) : ''}`}</TabsTrigger>
+            }>{`Live${formatTabCount(liveCount)}`}</TabsTrigger>
           <TabsTrigger
             value={
               FindingOccurence.PAST
-            }>{`Past${pastCount ? formatTabCount(pastCount) : ''}`}</TabsTrigger>
+            }>{`Past${formatTabCount(pastCount)}`}</TabsTrigger>
         </TabsList>
         <Separator />
         <div className="flex flex-grow flex-col bg-black px-24 pb-24 pt-12">

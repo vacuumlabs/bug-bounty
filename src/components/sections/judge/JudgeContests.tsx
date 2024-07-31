@@ -124,15 +124,15 @@ const JudgeContests = () => {
           <TabsTrigger
             value={
               ContestOccurence.PAST
-            }>{`Past${pastCount ? formatTabCount(pastCount) : ''}`}</TabsTrigger>
+            }>{`Past${formatTabCount(pastCount)}`}</TabsTrigger>
           <TabsTrigger
             value={
               ContestOccurence.PRESENT
-            }>{`Present${liveCount ? formatTabCount(liveCount) : ''}`}</TabsTrigger>
+            }>{`Present${formatTabCount(liveCount)}`}</TabsTrigger>
           <TabsTrigger
             value={
               ContestOccurence.FUTURE
-            }>{`Future${liveCount ? formatTabCount(futureCount) : ''}`}</TabsTrigger>
+            }>{`Future${formatTabCount(futureCount)}`}</TabsTrigger>
         </TabsList>
         <Separator />
         <div className="flex flex-grow flex-col bg-black px-24 pb-24 pt-12">
