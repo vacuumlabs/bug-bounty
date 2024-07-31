@@ -32,7 +32,8 @@ const JudgeContestActionButton = ({
 
   if (
     contestOccurence === ContestOccurence.PAST &&
-    contest.status === ContestStatus.APPROVED
+    contest.status === ContestStatus.APPROVED &&
+    contest.pendingFindingsCount > 0
   ) {
     return (
       <Button asChild variant="outline" size="small">
@@ -40,6 +41,22 @@ const JudgeContestActionButton = ({
           href={PATHS.judgeContestFindings(contest.id)}
           className="gap-2 text-buttonS">
           Judge findings
+        </Link>
+      </Button>
+    )
+  }
+
+  if (
+    contest.pendingFindingsCount === 0 &&
+    contestOccurence === ContestOccurence.PAST &&
+    contest.status === ContestStatus.APPROVED
+  ) {
+    return (
+      <Button asChild variant="outline" size="small">
+        <Link
+          href={PATHS.judgeContestFindings(contest.id)}
+          className="gap-2 text-buttonS">
+          Judge/Finalize
         </Link>
       </Button>
     )
