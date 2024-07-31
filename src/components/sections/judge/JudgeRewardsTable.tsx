@@ -78,7 +78,7 @@ const JudgeRewardsTable = () => {
               searchParamsUpdaters={[updatePageSearchParams(1)]}
             />
             <TableHeadWithSort
-              title="Transfer TX Hash"
+              title="Rewards Transfer TX"
               sortParams={sortParams}
               updateSortSearchParams={updateSortSearchParams}
               sortField={JudgeRewardSorting.TRANSFER_TX}

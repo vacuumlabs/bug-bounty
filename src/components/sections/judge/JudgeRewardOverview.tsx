@@ -6,6 +6,7 @@ import JudgeContestOverviewTile from './JudgeContestOverviewTile'
 
 import {cn} from '@/lib/utils/client/tailwind'
 import {useGetJudgeRewardCounts} from '@/lib/queries/reward/getJudgeRewardCounts'
+import {formatAda} from '@/lib/utils/common/format'
 
 type JudgeRewardOverviewProps = {
   className?: string
@@ -26,7 +27,9 @@ const JudgeRewardOverview = ({className}: JudgeRewardOverviewProps) => {
       },
       {
         title: 'Amount to payout',
-        count: data?.contestsToPayoutAmount ?? '-',
+        count: data?.contestsToPayoutAmount
+          ? formatAda(data.contestsToPayoutAmount)
+          : '-',
       },
     ],
     [data],

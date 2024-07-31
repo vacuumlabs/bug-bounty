@@ -10,8 +10,8 @@ export const clearDb = async () => {
       .map((table) => `"${table.dbName}"`)
       .join(', ')
 
-    await db.execute(sql.raw(`truncate table ${tableNames};`))
+    await db.execute(sql.raw(`drop table ${tableNames};`))
 
-    console.log('Truncated all DB tables')
+    console.log('Dropped all DB tables')
   }
 }

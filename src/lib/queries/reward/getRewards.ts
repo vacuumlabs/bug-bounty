@@ -4,20 +4,22 @@ import {queryKeys} from '../keys'
 
 import getServerQueryClient from '@/server/utils/queryClient'
 import {
-  getRewards,
-  type GetRewardsParams,
+  getRewardsPayout,
+  GetRewardsPayoutParams,
 } from '@/server/actions/reward/getReward'
 import {withApiErrorHandler} from '@/lib/utils/common/error'
 
-const getQueryOptions = (params: GetRewardsParams) => ({
-  queryKey: queryKeys.rewards.all(params).queryKey,
-  queryFn: withApiErrorHandler(() => getRewards(params)),
+const getQueryOptions = (params: GetRewardsPayoutParams) => ({
+  queryKey: queryKeys.rewards.toPayout(params).queryKey,
+  queryFn: withApiErrorHandler(() => getRewardsPayout(params)),
 })
 
-export const useGetRewards = (params: GetRewardsParams) =>
+export const useGetRewardsPayout = (params: GetRewardsPayoutParams) =>
   useQuery(getQueryOptions(params))
 
-export const prefetchGetRewards = async (params: GetRewardsParams) => {
+export const prefetchGetRewardsPayout = async (
+  params: GetRewardsPayoutParams,
+) => {
   const queryClient = getServerQueryClient()
   await queryClient.prefetchQuery(getQueryOptions(params))
 }

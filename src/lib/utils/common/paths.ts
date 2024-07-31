@@ -43,6 +43,7 @@ export const PATHS = {
   judgeDeduplicatedFinding: (deduplicatedFindingId: string) =>
     `/judge/deduplicatedFindings/${deduplicatedFindingId}`,
   judgeRewards: '/judge/rewards',
+  judgeRewardsPayout: (contestId: string) => `/judge/rewards/${contestId}`,
   judgeFinding: (findingId: string) => `/judge/findings/${findingId}`,
 } as const
 

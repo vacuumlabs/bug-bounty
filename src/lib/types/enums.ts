@@ -55,6 +55,15 @@ export enum JudgeRewardSorting {
   END_DATE = 'endDate',
 }
 
+export enum JudgePayoutRewardSorting {
+  USER_NAME = 'userName',
+  USER_EMAIL = 'userEmail',
+  WALLET_ADDRESS = 'walletAddress',
+  TRANSFER_TX_HASH = 'transferTxHash',
+  AMOUNT = 'amount',
+  PAYOUT_DATE = 'payoutDate',
+}
+
 export enum MyFindingsSorting {
   PROJECT = 'project',
   FINDING = 'finding',

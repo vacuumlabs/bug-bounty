@@ -44,7 +44,9 @@ export const usePayReward = () => {
   return useMutation({
     mutationFn: (rewardId: string) => payReward(wallet, rewardId),
     onSuccess: () => {
-      void queryClient.invalidateQueries({queryKey: queryKeys.rewards.all._def})
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.rewards.toPayout._def,
+      })
     },
   })
 }

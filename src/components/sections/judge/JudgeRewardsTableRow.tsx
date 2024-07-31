@@ -38,37 +38,25 @@ const JudgeRewardsTableRow = ({rewardContest}: JudgeRewardsTableRowProps) => {
       <TableCell className="text-bodyM capitalize">{rewardsAmount}</TableCell>
 
       <TableCell className="text-bodyM capitalize">
-        {txHash ? (
-          <Button asChild variant="outline" size="small">
-            <Link
-              href={`https://cardanoscan.io/transaction/${txHash}`}
-              target="_blank"
-              className="gap-2 text-buttonS">
-              {formatTxHash(txHash)}
-              <Wallet width={16} height={16} />
-            </Link>
-          </Button>
-        ) : (
-          <span className="text-bodyM">-</span>
-        )}
+        <Button asChild variant="outline" size="small">
+          <Link
+            href={`https://cardanoscan.io/transaction/${txHash}`}
+            target="_blank"
+            className="gap-2 text-buttonS">
+            {formatTxHash(txHash)}
+            <Wallet width={16} height={16} />
+          </Link>
+        </Button>
       </TableCell>
 
       <TableCell className="text-right">
-        {txHash ? (
-          <Button asChild variant="outline" size="small">
-            <Link href={'#'} className="gap-2 text-buttonS">
-              Payout rewards
-            </Link>
-          </Button>
-        ) : (
-          <Button asChild variant="outline" size="small">
-            <Link
-              href={PATHS.judgeContestDetails(rewardContest.id)}
-              className="gap-2 text-buttonS">
-              Contest Details
-            </Link>
-          </Button>
-        )}
+        <Button asChild variant="outline" size="small">
+          <Link
+            href={PATHS.judgeRewardsPayout(rewardContest.id)}
+            className="gap-2 text-buttonS">
+            Payout rewards
+          </Link>
+        </Button>
       </TableCell>
     </TableRow>
   )
