@@ -3,10 +3,6 @@
 import Link from 'next/link'
 import {ArrowLeft} from 'lucide-react'
 import {notFound} from 'next/navigation'
-import {useState} from 'react'
-import {useForm} from 'react-hook-form'
-import {zodResolver} from '@hookform/resolvers/zod'
-import {z} from 'zod'
 
 import JudgeAddDeduplicatedFinding from './JudgeAddDeduplicatedFinding'
 import FindingSeverityBadge from '../finding/FindingSeverityBadge'
@@ -22,41 +18,14 @@ import {useGetFindings} from '@/lib/queries/finding/getFinding'
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/Tabs'
 import {useSearchParamsEnumState} from '@/lib/hooks/useSearchParamsState'
 import {JudgeDeduplicatedFindingTab} from '@/server/db/models'
-import {useRemoveDededuplicatedFinding} from '@/lib/queries/deduplicatedFinding/removeDeduplicatedFinding'
-import {toast} from '@/components/ui/Toast'
-import {
-  DialogRoot,
-  DialogHeader,
-  DialogTrigger,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/Dialog'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/Form'
-import {Input} from '@/components/ui/Input'
-import {editDeduplicatedFindingSchema} from '@/server/utils/validations/schemas'
-import {useEditDeduplicatedFinding} from '@/lib/queries/deduplicatedFinding/editDeduplicatedFinding'
-import Textarea from '@/components/ui/Textarea'
 
 type JudgeDeduplicatedFindingProps = {
   deduplicatedFindingId: string
 }
 
-type FormValues = z.infer<typeof editDeduplicatedFindingSchema>
-
 const JudgeDeduplicatedFinding = ({
   deduplicatedFindingId,
 }: JudgeDeduplicatedFindingProps) => {
-  const [isOpenEditDeduplicatedFinding, setIsOpenEditDeduplicatedFinding] =
-    useState(false)
-
   const [tab, {setValue: setTabValue}] = useSearchParamsEnumState(
     'tab',
     JudgeDeduplicatedFindingTab,
@@ -67,60 +36,6 @@ const JudgeDeduplicatedFinding = ({
   const {data: findings, isLoading: findingsLoading} = useGetFindings({
     deduplicatedFindingId,
   })
-
-  const {mutate: removeDeduplicatedFindingMutate} =
-    useRemoveDededuplicatedFinding()
-
-  const removeDeduplicatedFinding = (findingId: string) => {
-    removeDeduplicatedFindingMutate(
-      {findingId},
-      {
-        onSuccess: () => {
-          toast({
-            title: 'Success',
-            description:
-              'Finding has been removed from this deduplicated finding.',
-          })
-        },
-      },
-    )
-  }
-
-  const {mutate: editDeduplicatedFindingMutate} = useEditDeduplicatedFinding()
-
-  const form = useForm<FormValues>({
-    resolver: zodResolver(editDeduplicatedFindingSchema),
-    defaultValues: {
-      deduplicatedFindingId,
-      description: deduplicatedFinding?.description,
-      severity: deduplicatedFinding?.severity,
-      title: deduplicatedFinding?.title,
-    },
-  })
-
-  const editDeduplicatedFinding = ({
-    description,
-    severity,
-    title,
-  }: FormValues) => {
-    editDeduplicatedFindingMutate(
-      {
-        deduplicatedFindingId,
-        description,
-        severity,
-        title,
-      },
-      {
-        onSuccess: () => {
-          toast({
-            title: 'Success',
-            description: 'Deduplicated finding has been updated.',
-          })
-          setIsOpenEditDeduplicatedFinding(false)
-        },
-      },
-    )
-  }
 
   if (deduplicatedFindingLoading || findingsLoading) {
     return (
