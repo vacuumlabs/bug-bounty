@@ -57,14 +57,16 @@ const JudgeDeduplicatedFindingReportsList = ({
             {finding.author.alias ?? finding.author.id}
           </span>
         </div>
-        <Button
-          className="flex items-center gap-2"
-          size="small"
-          variant="outline"
-          onClick={() => removeDeduplicatedFinding(finding.id)}>
-          <span>Remove</span>
-          <Trash2 width={16} height={16} />
-        </Button>
+        {deduplicatedFinding.bestFindingId !== finding.id && (
+          <Button
+            className="flex items-center gap-2"
+            size="small"
+            variant="outline"
+            onClick={() => removeDeduplicatedFinding(finding.id)}>
+            <span>Remove</span>
+            <Trash2 width={16} height={16} />
+          </Button>
+        )}
         <Button asChild size="small" variant="default">
           <Link href={PATHS.judgeFinding(finding.id)}>
             <span>Detail</span>
