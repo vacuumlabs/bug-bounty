@@ -13,6 +13,10 @@ import {SortParams, sortByColumn} from '@/lib/utils/common/sorting'
 import {ContestStatus, FindingSeverity} from '@/server/db/models'
 import {PaginatedParams} from '@/lib/utils/common/pagination'
 
+export type GetDeduplicatedFindingReturn = Awaited<
+  ReturnType<typeof getDeduplicatedFindingAction>
+>
+
 const getDeduplicatedFindingAction = async (deduplicatedFindingId: string) => {
   const session = await requireServerSession()
 

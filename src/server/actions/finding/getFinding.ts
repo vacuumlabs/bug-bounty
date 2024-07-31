@@ -86,6 +86,8 @@ export type GetFindingsParams = {
   deduplicatedFindingId: string
 }
 
+export type GetFindingsReturn = Awaited<ReturnType<typeof getFindingsAction>>
+
 const getFindingsAction = async ({
   deduplicatedFindingId,
 }: GetFindingsParams) => {
