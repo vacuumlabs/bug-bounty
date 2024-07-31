@@ -49,6 +49,7 @@ const PaginationLink = ({
   <Button
     asChild
     disabled={disabled}
+    type="button"
     size={size}
     variant="link"
     className={cn(

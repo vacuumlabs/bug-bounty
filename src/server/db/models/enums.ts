@@ -55,6 +55,11 @@ export enum JudgeFindingStatus {
   REJECTED = 'REJECTED',
 }
 
+export enum JudgeDeduplicatedFindingTab {
+  REPORTS = 'REPORTS',
+  ADD_FINDINGS = 'ADD_FINDINGS',
+}
+
 export enum ProjectLanguage {
   AIKEN = 'AIKEN',
   PLUTARCH = 'PLUTARCH',

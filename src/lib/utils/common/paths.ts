@@ -40,6 +40,8 @@ export const PATHS = {
   judgeContests: '/judge/contests',
   judgeContestDetails: (id: string) => `/judge/contests/${id}`,
   judgeContestFindings: (id: string) => `/judge/contests/${id}/findings`,
+  judgeDeduplicatedFinding: (deduplicatedFindingId: string) =>
+    `/judge/deduplicatedFindings/${deduplicatedFindingId}`,
   judgeRewards: '/judge/rewards',
   judgeFinding: (findingId: string) => `/judge/findings/${findingId}`,
 } as const

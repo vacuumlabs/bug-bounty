@@ -1,6 +1,6 @@
 'use server'
 
-import {and, count, eq, sql} from 'drizzle-orm'
+import {and, count, eq, isNotNull, ne, sql} from 'drizzle-orm'
 
 import {ServerError} from '@/lib/types/error'
 import {serializeServerErrors} from '@/lib/utils/common/error'
@@ -14,12 +14,17 @@ import {
 } from '@/server/db/models'
 import {findings} from '@/server/db/schema/finding'
 import {
+  isJudge,
   requireJudgeServerSession,
   requireServerSession,
 } from '@/server/utils/auth'
 import {deduplicatedFindings} from '@/server/db/schema/deduplicatedFinding'
 import {sortByColumn, SortParams} from '@/lib/utils/common/sorting'
-import {JudgeContestFindingSorting, SortDirection} from '@/lib/types/enums'
+import {
+  JudgeContestFindingSorting,
+  JudgeFindingToDeduplicateSorting,
+  SortDirection,
+} from '@/lib/types/enums'
 
 export type GetFindingParams = {
   findingId: string
@@ -81,6 +86,8 @@ export type GetFindingsParams = {
   deduplicatedFindingId: string
 }
 
+export type GetFindingsReturn = Awaited<ReturnType<typeof getFindingsAction>>
+
 const getFindingsAction = async ({
   deduplicatedFindingId,
 }: GetFindingsParams) => {
@@ -98,7 +105,14 @@ const getFindingsAction = async ({
       eq(deduplicatedFindings.id, deduplicatedFindingId),
   })
 
-  if (deduplicatedFinding?.contest.authorId !== session.user.id) {
+  if (!deduplicatedFinding) {
+    throw new ServerError('Deduplicated finding not found.')
+  }
+
+  if (
+    deduplicatedFinding.contest.authorId !== session.user.id &&
+    !isJudge(session)
+  ) {
     throw new ServerError('Unauthorized access to findings.')
   }
 
@@ -132,7 +146,7 @@ export type ContestFinding = Awaited<
 
 const getContestFindingsAction = async ({
   contestId,
-  status = JudgeFindingStatus.PENDING,
+  status,
   pageParams: {limit, offset = 0},
   sort = {
     field: JudgeContestFindingSorting.SEVERITY,
@@ -173,17 +187,19 @@ const getContestFindingsAction = async ({
         return FindingStatus.APPROVED
       case JudgeFindingStatus.REJECTED:
         return FindingStatus.REJECTED
+      default:
+        return FindingStatus.PENDING
     }
   }
 
-  const deduplicatedFindingsCountSubquery = db
+  const findingsCountSubquery = db
     .select({
-      bestFindingId: deduplicatedFindings.bestFindingId,
-      count: count(deduplicatedFindings.id).as('deduplicatedFindingsCount'),
+      deduplicatedFindingId: findings.deduplicatedFindingId,
+      count: count(findings.id).as('findingsCount'),
     })
-    .from(deduplicatedFindings)
-    .groupBy(deduplicatedFindings.bestFindingId)
-    .as('deduplicatedFindingsCountSubquery')
+    .from(findings)
+    .groupBy(findings.deduplicatedFindingId)
+    .as('findingsCountSubquery')
 
   const severitySort = sql<number>`
     CASE ${findings.severity}
@@ -200,28 +216,39 @@ const getContestFindingsAction = async ({
     [JudgeContestFindingSorting.TITLE]: findings.title,
     [JudgeContestFindingSorting.SUBMITTED]: findings.createdAt,
     [JudgeContestFindingSorting.DEDUPLICATED_FINDINGS]:
-      deduplicatedFindingsCountSubquery.count,
+      findingsCountSubquery.count,
+    [JudgeContestFindingSorting.DEDUPLICATED_TITLE]: deduplicatedFindings.title,
   }
 
   const contestFindingsQuery = db
     .select({
       id: findings.id,
       createdAt: findings.createdAt,
+      deduplicatedFindingId: findings.deduplicatedFindingId,
+      deduplicatedFindingTitle: deduplicatedFindings.title,
+      contestId: findings.contestId,
       title: findings.title,
       severity: findings.severity,
       status: findings.status,
-      deduplicatedFindingsCount: deduplicatedFindingsCountSubquery.count,
+      deduplicatedFindingsCount: findingsCountSubquery.count,
       isBestFinding: sql<boolean>`EXISTS (SELECT 1 FROM ${deduplicatedFindings} WHERE ${deduplicatedFindings.bestFindingId} = ${findings.id})`,
     })
     .from(findings)
     .leftJoin(
-      deduplicatedFindingsCountSubquery,
-      eq(findings.id, deduplicatedFindingsCountSubquery.bestFindingId),
+      findingsCountSubquery,
+      eq(
+        findings.deduplicatedFindingId,
+        findingsCountSubquery.deduplicatedFindingId,
+      ),
+    )
+    .leftJoin(
+      deduplicatedFindings,
+      eq(deduplicatedFindings.id, findings.deduplicatedFindingId),
     )
     .where(
       and(
         eq(findings.contestId, contestId),
-        eq(findings.status, getFindingStatus()),
+        status ? eq(findings.status, getFindingStatus()) : undefined,
       ),
     )
     .limit(limit)
@@ -249,4 +276,130 @@ const getContestFindingsAction = async ({
 
 export const getContestFindings = serializeServerErrors(
   getContestFindingsAction,
+)
+
+export type FindingToDeduplicate = Awaited<
+  ReturnType<typeof getFindingsToDeduplicateAction>
+>['data'][number]
+
+export type GetFindingsToDeduplicateRequest = PaginatedParams<
+  {
+    deduplicatedFindingId: string
+  },
+  SortParams<JudgeFindingToDeduplicateSorting>
+>
+
+const getFindingsToDeduplicateAction = async ({
+  deduplicatedFindingId,
+  pageParams: {limit, offset = 0},
+  sort = {
+    field: JudgeFindingToDeduplicateSorting.SEVERITY,
+    direction: SortDirection.ASC,
+  },
+}: GetFindingsToDeduplicateRequest) => {
+  await requireJudgeServerSession()
+
+  const deduplicatedFinding = await db.query.deduplicatedFindings.findFirst({
+    where: (deduplicatedFindings, {eq}) =>
+      eq(deduplicatedFindings.id, deduplicatedFindingId),
+  })
+
+  if (!deduplicatedFinding) {
+    throw new ServerError('Deduplicated finding not found.')
+  }
+
+  const findingsCountSubquery = db
+    .select({
+      deduplicatedFindingId: findings.deduplicatedFindingId,
+      count: count(findings.id).as('findingsCount'),
+    })
+    .from(findings)
+    .groupBy(findings.deduplicatedFindingId)
+    .as('findingsCountSubquery')
+
+  const findingsToDeduplicateCountPromise = db
+    .select({count: count()})
+    .from(findings)
+    .where(
+      and(
+        ne(findings.deduplicatedFindingId, deduplicatedFindingId),
+        eq(findings.contestId, deduplicatedFinding.contestId),
+        eq(findings.status, FindingStatus.APPROVED),
+        isNotNull(findings.deduplicatedFindingId),
+        eq(findingsCountSubquery.count, 1),
+      ),
+    )
+    .leftJoin(
+      findingsCountSubquery,
+      eq(
+        findings.deduplicatedFindingId,
+        findingsCountSubquery.deduplicatedFindingId,
+      ),
+    )
+
+  const severitySort = sql<number>`
+    CASE ${findings.severity}
+      WHEN ${FindingSeverity.INFO} THEN 1
+      WHEN ${FindingSeverity.LOW} THEN 2
+      WHEN ${FindingSeverity.MEDIUM} THEN 3
+      WHEN ${FindingSeverity.HIGH} THEN 4
+      WHEN ${FindingSeverity.CRITICAL} THEN 5
+      ELSE 6
+    END`
+
+  const sortFieldMap = {
+    [JudgeFindingToDeduplicateSorting.SEVERITY]: severitySort,
+    [JudgeFindingToDeduplicateSorting.TITLE]: findings.title,
+    [JudgeFindingToDeduplicateSorting.SUBMITTED]: findings.createdAt,
+  }
+
+  const findingsToDeduplicateQuery = db
+    .select({
+      id: findings.id,
+      createdAt: findings.createdAt,
+      deduplicatedFindingId: findings.deduplicatedFindingId,
+      contestId: findings.contestId,
+      title: findings.title,
+      severity: findings.severity,
+      status: findings.status,
+      deduplicatedFindingsCount: findingsCountSubquery.count,
+      isBestFinding: sql<boolean>`EXISTS (SELECT 1 FROM ${deduplicatedFindings} WHERE ${deduplicatedFindings.bestFindingId} = ${findings.id})`,
+    })
+    .from(findings)
+    .leftJoin(
+      findingsCountSubquery,
+      eq(
+        findings.deduplicatedFindingId,
+        findingsCountSubquery.deduplicatedFindingId,
+      ),
+    )
+    .where(
+      and(
+        ne(findings.deduplicatedFindingId, deduplicatedFindingId),
+        eq(findings.contestId, deduplicatedFinding.contestId),
+        eq(findings.status, FindingStatus.APPROVED),
+        isNotNull(findings.deduplicatedFindingId),
+        eq(findingsCountSubquery.count, 1),
+      ),
+    )
+    .limit(limit)
+    .offset(offset)
+    .orderBy(sortByColumn(sort.direction, sortFieldMap[sort.field]))
+
+  const [findingsToDeduplicate, findingsToDeduplicateCount] = await Promise.all(
+    [findingsToDeduplicateQuery, findingsToDeduplicateCountPromise],
+  )
+
+  if (!findingsToDeduplicateCount[0]) {
+    throw new ServerError('Failed to get judge contest findings counts.')
+  }
+
+  return {
+    data: findingsToDeduplicate,
+    pageParams: {totalCount: findingsToDeduplicateCount[0].count},
+  }
+}
+
+export const getFindingsToDeduplicate = serializeServerErrors(
+  getFindingsToDeduplicateAction,
 )

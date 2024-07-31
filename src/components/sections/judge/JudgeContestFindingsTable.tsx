@@ -55,13 +55,22 @@ const JudgeContestFindingsTable = ({
             searchParamsUpdaters={[updatePageSearchParams(1)]}
           />
           {findingStatus === JudgeFindingStatus.APPROVED && (
-            <TableHeadWithSort
-              title="Deduplicated Findings"
-              sortParams={sortParams}
-              updateSortSearchParams={updateSortSearchParams}
-              sortField={JudgeContestFindingSorting.DEDUPLICATED_FINDINGS}
-              searchParamsUpdaters={[updatePageSearchParams(1)]}
-            />
+            <>
+              <TableHeadWithSort
+                title="Deduplicated Title"
+                sortParams={sortParams}
+                updateSortSearchParams={updateSortSearchParams}
+                sortField={JudgeContestFindingSorting.DEDUPLICATED_TITLE}
+                searchParamsUpdaters={[updatePageSearchParams(1)]}
+              />
+              <TableHeadWithSort
+                title="Deduplicated Findings"
+                sortParams={sortParams}
+                updateSortSearchParams={updateSortSearchParams}
+                sortField={JudgeContestFindingSorting.DEDUPLICATED_FINDINGS}
+                searchParamsUpdaters={[updatePageSearchParams(1)]}
+              />
+            </>
           )}
           <TableHeadWithSort
             title="Severity"

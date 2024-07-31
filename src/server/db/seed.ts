@@ -1,6 +1,6 @@
 import {faker} from '@faker-js/faker'
 import bcrypt from 'bcryptjs'
-import {sql} from 'drizzle-orm'
+import {eq, sql} from 'drizzle-orm'
 
 import {InsertUser} from './schema/user'
 import {env} from '../../env.js'
@@ -190,6 +190,43 @@ export const seedDb = async () => {
       .values(getFindingsToInsert(pastContestId, auditorUserId))
       .returning()
 
+    const approvedPastFindings = await tx.query.findings.findMany({
+      where: (findings, {eq}) => eq(findings.status, FindingStatus.APPROVED),
+    })
+
+    let deduplicatedFindingLength = 0
+
+    if (approvedPastFindings.length > 0) {
+      const deduplicatedFindings = await tx
+        .insert(schema.deduplicatedFindings)
+        .values(
+          approvedPastFindings.map((finding) => ({
+            contestId: finding.contestId,
+            description: finding.description,
+            severity: finding.severity,
+            title: finding.title,
+            bestFindingId: finding.id,
+          })),
+        )
+        .returning()
+
+      const updateFindings = approvedPastFindings.map((finding) => {
+        const deduplicatedFindingId = deduplicatedFindings.find(
+          (deduplicatedFinding) =>
+            deduplicatedFinding.bestFindingId === finding.id,
+        )?.id
+
+        return tx
+          .update(schema.findings)
+          .set({deduplicatedFindingId: deduplicatedFindingId})
+          .where(eq(schema.findings.id, finding.id))
+      })
+
+      await Promise.all(updateFindings)
+
+      deduplicatedFindingLength = deduplicatedFindings.length
+    }
+
     const currentContestFindings = await tx
       .insert(schema.findings)
       .values(getFindingsToInsert(currentContestId, auditorUserId))
@@ -208,6 +245,7 @@ export const seedDb = async () => {
     console.log(
       `Inserted ${pastContestFindings.length + currentContestFindings.length} findings`,
     )
+    console.log(`Inserted ${deduplicatedFindingLength} deduplicated findings`)
     console.log(`Inserted ${rewards.length} rewards`)
   })
 }

@@ -38,7 +38,14 @@ export enum JudgeContestFindingSorting {
   TITLE = 'title',
   SEVERITY = 'severity',
   SUBMITTED = 'submitted',
+  DEDUPLICATED_TITLE = 'deduplicatedTitle',
   DEDUPLICATED_FINDINGS = 'deduplicatedFindings',
+}
+
+export enum JudgeFindingToDeduplicateSorting {
+  TITLE = 'title',
+  SEVERITY = 'severity',
+  SUBMITTED = 'submitted',
 }
 
 export enum JudgeRewardSorting {

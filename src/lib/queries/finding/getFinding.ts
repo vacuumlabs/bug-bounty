@@ -8,9 +8,11 @@ import {
   GetContestFindingsParams,
   GetFindingParams,
   GetFindingsParams,
+  GetFindingsToDeduplicateRequest,
   getContestFindings,
   getFinding,
   getFindings,
+  getFindingsToDeduplicate,
 } from '@/server/actions/finding/getFinding'
 
 const getFindingQueryOptions = (params: GetFindingParams) => ({
@@ -52,4 +54,22 @@ export const prefetchGetContestFindings = async (
 ) => {
   const queryClient = getServerQueryClient()
   await queryClient.prefetchQuery(getContestFindingsQueryOptions(params))
+}
+
+const getFindingsToDeduplicateQueryOptions = (
+  params: GetFindingsToDeduplicateRequest,
+) => ({
+  queryKey: queryKeys.findings.toDeduplicate(params).queryKey,
+  queryFn: withApiErrorHandler(() => getFindingsToDeduplicate(params)),
+})
+
+export const useGetFindingsToDeduplicate = (
+  params: GetFindingsToDeduplicateRequest,
+) => useQuery(getFindingsToDeduplicateQueryOptions(params))
+
+export const prefetchGetFindingsToDeduplicate = async (
+  params: GetFindingsToDeduplicateRequest,
+) => {
+  const queryClient = getServerQueryClient()
+  await queryClient.prefetchQuery(getFindingsToDeduplicateQueryOptions(params))
 }
