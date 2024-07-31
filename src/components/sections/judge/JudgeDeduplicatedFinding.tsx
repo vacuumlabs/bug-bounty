@@ -171,11 +171,10 @@ const JudgeDeduplicatedFinding = ({
                   <Form {...form} onSubmit={editDeduplicatedFinding}>
                     <DialogHeader>
                       <DialogTitle className="text-titleM uppercase">
-                        Mark as pending
+                        Edit Deduplicated Finding
                       </DialogTitle>
                       <DialogDescription className="text-bodyM text-white">
-                        Provide the address the contest rewards should be
-                        transferred to
+                        Edit the deduplicated finding details
                       </DialogDescription>
                     </DialogHeader>
 
