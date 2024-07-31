@@ -3,8 +3,10 @@
 import {useMemo, useState} from 'react'
 import {ArrowLeft} from 'lucide-react'
 import Link from 'next/link'
+import {useRouter} from 'next/navigation'
 
 import JudgeContestFindingsTable from './JudgeContestFindingsTable'
+import ContestStatusBadge from '../contest/ContestStatusBadge'
 
 import {Button} from '@/components/ui/Button'
 import {useGetContestFindings} from '@/lib/queries/finding/getFinding'
@@ -17,7 +19,7 @@ import {
   useSearchParamsNumericState,
   useUpdateSearchParams,
 } from '@/lib/hooks/useSearchParamsState'
-import {JudgeFindingStatus} from '@/server/db/models'
+import {ContestStatus, JudgeFindingStatus} from '@/server/db/models'
 import Skeleton from '@/components/ui/Skeleton'
 import TablePagination from '@/components/ui/TablePagination'
 import {formatTabCount} from '@/lib/utils/common/format'
@@ -57,6 +59,7 @@ const JudgeContestFindings = ({contestId}: JudgeContestFindingsProps) => {
     useSearchParamsNumericState('page', 1)
   const [sortParams, {getSortParamsUpdaters: updateSortSearchParams}] =
     useSortingSearchParams(JudgeContestFindingSorting)
+  const router = useRouter()
 
   const [openFinalizeRewards, setOpenFinalizeRewards] = useState(false)
   const {mutate: finalizeRewardsMutate} = useFinalizeRewards()
@@ -102,6 +105,7 @@ const JudgeContestFindings = ({contestId}: JudgeContestFindingsProps) => {
           title: 'Success',
           description: 'Contest rewards has been finalized.',
         })
+        router.push(PATHS.judgeRewardsPayout(contestId))
       },
     })
   }
@@ -123,11 +127,13 @@ const JudgeContestFindings = ({contestId}: JudgeContestFindingsProps) => {
                 className="text-headlineS">
                 {contest?.title}
               </Link>
+
+              {contest && <ContestStatusBadge contest={contest} />}
             </div>
             <span className="text-titleS">Findings</span>
           </div>
 
-          {pendingCount === 0 && (
+          {pendingCount === 0 && contest?.status !== ContestStatus.FINISHED && (
             <AlertDialog
               open={openFinalizeRewards}
               onOpenChange={setOpenFinalizeRewards}>
