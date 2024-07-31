@@ -7,6 +7,7 @@ import {useRemoveDededuplicatedFinding} from '@/lib/queries/deduplicatedFinding/
 import {toast} from '@/components/ui/Toast'
 import {GetFindingsReturn} from '@/server/actions/finding/getFinding'
 import {GetDeduplicatedFindingReturn} from '@/server/actions/deduplicatedFinding/getDeduplicatedFinding'
+import {useSetBestFinding} from '@/lib/queries/deduplicatedFinding/editDeduplicatedFinding'
 
 type JudgeDeduplicatedFindingReportsListProps = {
   finding: GetFindingsReturn[number]
@@ -19,16 +20,34 @@ const JudgeDeduplicatedFindingReportsList = ({
 }: JudgeDeduplicatedFindingReportsListProps) => {
   const {mutate: removeDeduplicatedFindingMutate} =
     useRemoveDededuplicatedFinding()
+  const {mutate: setBestFindingMutate} = useSetBestFinding()
 
-  const removeDeduplicatedFinding = (findingId: string) => {
+  const removeDeduplicatedFinding = () => {
     removeDeduplicatedFindingMutate(
-      {findingId},
+      {findingId: finding.id},
       {
         onSuccess: () => {
           toast({
             title: 'Success',
             description:
               'Finding has been removed from this deduplicated finding.',
+          })
+        },
+      },
+    )
+  }
+
+  const setBestFinding = () => {
+    setBestFindingMutate(
+      {
+        deduplicatedFindingId: deduplicatedFinding.id,
+        bestFindingId: finding.id,
+      },
+      {
+        onSuccess: () => {
+          toast({
+            title: 'Success',
+            description: 'Best finding has been set.',
           })
         },
       },
@@ -58,14 +77,24 @@ const JudgeDeduplicatedFindingReportsList = ({
           </span>
         </div>
         {deduplicatedFinding.bestFindingId !== finding.id && (
-          <Button
-            className="flex items-center gap-2"
-            size="small"
-            variant="outline"
-            onClick={() => removeDeduplicatedFinding(finding.id)}>
-            <span>Remove</span>
-            <Trash2 width={16} height={16} />
-          </Button>
+          <>
+            <Button
+              className="flex items-center gap-2"
+              size="small"
+              variant="outline"
+              onClick={() => removeDeduplicatedFinding()}>
+              <span>Remove</span>
+              <Trash2 width={16} height={16} />
+            </Button>
+            <Button
+              className="flex items-center gap-2"
+              size="small"
+              variant="purple"
+              onClick={() => setBestFinding()}>
+              <span>Set as best</span>
+              <VerifiedIcon width={16} height={16} />
+            </Button>
+          </>
         )}
         <Button asChild size="small" variant="default">
           <Link href={PATHS.judgeFinding(finding.id)}>
