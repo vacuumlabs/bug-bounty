@@ -118,7 +118,11 @@ const JudgeContestFindings = ({contestId}: JudgeContestFindingsProps) => {
           </Button>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-6">
-              <h1 className="text-headlineS">{contest?.title}</h1>
+              <Link
+                href={PATHS.judgeContestDetails(contestId)}
+                className="text-headlineS">
+                {contest?.title}
+              </Link>
             </div>
             <span className="text-titleS">Findings</span>
           </div>
