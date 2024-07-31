@@ -1,6 +1,6 @@
 'use client'
 
-import {useMemo} from 'react'
+import {useMemo, useState} from 'react'
 import {ArrowLeft} from 'lucide-react'
 import Link from 'next/link'
 
@@ -23,6 +23,19 @@ import TablePagination from '@/components/ui/TablePagination'
 import {formatTabCount} from '@/lib/utils/common/format'
 import {useSortingSearchParams} from '@/lib/hooks/useSortingSearchParams'
 import {JudgeContestFindingSorting} from '@/lib/types/enums'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+  AlertDialogDescription,
+} from '@/components/ui/AlertDialog'
+import {useFinalizeRewards} from '@/lib/queries/reward/finalizeRewards'
+import {toast} from '@/components/ui/Toast'
 
 export const JUDGE_CONTEST_FINDINGS_PAGE_SIZE = 10
 
@@ -44,6 +57,9 @@ const JudgeContestFindings = ({contestId}: JudgeContestFindingsProps) => {
     useSearchParamsNumericState('page', 1)
   const [sortParams, {getSortParamsUpdaters: updateSortSearchParams}] =
     useSortingSearchParams(JudgeContestFindingSorting)
+
+  const [openFinalizeRewards, setOpenFinalizeRewards] = useState(false)
+  const {mutate: finalizeRewardsMutate} = useFinalizeRewards()
 
   const {data: contest} = useGetContest(contestId)
   const {data: findings, isLoading} = useGetContestFindings({
@@ -78,6 +94,18 @@ const JudgeContestFindings = ({contestId}: JudgeContestFindingsProps) => {
     ])
   }
 
+  const finalizeRewards = () => {
+    finalizeRewardsMutate(contestId, {
+      onSuccess: () => {
+        setOpenFinalizeRewards(false)
+        toast({
+          title: 'Success',
+          description: 'Contest rewards has been finalized.',
+        })
+      },
+    })
+  }
+
   return (
     <>
       <div className="mb-12 px-24">
@@ -94,6 +122,37 @@ const JudgeContestFindings = ({contestId}: JudgeContestFindingsProps) => {
             </div>
             <span className="text-titleS">Findings</span>
           </div>
+
+          {pendingCount === 0 && (
+            <AlertDialog
+              open={openFinalizeRewards}
+              onOpenChange={setOpenFinalizeRewards}>
+              <AlertDialogTrigger>
+                <Button variant="outline" size="small">
+                  <span className="uppercase">Finalize Rewards</span>
+                </Button>
+              </AlertDialogTrigger>
+
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="uppercase">
+                    Are you sure you want to finalize the rewards for this
+                    contest?
+                  </AlertDialogTitle>
+                </AlertDialogHeader>
+                <AlertDialogDescription className="sr-only">
+                  Calculate and finalize rewards. This will also mark the
+                  contest as finished.
+                </AlertDialogDescription>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={finalizeRewards}>
+                    Yes, finalize
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
         </div>
       </div>
       <Tabs
