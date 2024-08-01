@@ -9,7 +9,13 @@ import {Button} from '@/components/ui/Button'
 import Skeleton from '@/components/ui/Skeleton'
 import {useGetRewardsPayout} from '@/lib/queries/reward/getRewards'
 import {PATHS} from '@/lib/utils/common/paths'
-import {Table, TableBody, TableHeader, TableRow} from '@/components/ui/Table'
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/Table'
 import TableHeadWithSort from '@/components/ui/TableHeadWithSort'
 import TablePagination from '@/components/ui/TablePagination'
 import {useSearchParamsNumericState} from '@/lib/hooks/useSearchParamsState'
@@ -47,7 +53,7 @@ const JudgeRewardsPayoutTable = ({contestId}: JudgeRewardsPayoutTableProps) => {
     )
   }
 
-  const rewardContest = rewards?.data[0]?.contest
+  const rewardContest = rewards?.data[0]?.rewardDetails[0]?.contest
 
   if (!rewards?.data.length || !rewardContest) {
     return (
@@ -106,25 +112,17 @@ const JudgeRewardsPayoutTable = ({contestId}: JudgeRewardsPayoutTableProps) => {
               sortField={JudgePayoutRewardSorting.AMOUNT}
               searchParamsUpdaters={[updatePageSearchParams(1)]}
             />
-            <TableHeadWithSort
-              title="Payout Date"
-              sortParams={sortParams}
-              updateSortSearchParams={updateSortSearchParams}
-              sortField={JudgePayoutRewardSorting.PAYOUT_DATE}
-              searchParamsUpdaters={[updatePageSearchParams(1)]}
-            />
-            <TableHeadWithSort
-              title="Transfer TX Hash"
-              sortParams={sortParams}
-              updateSortSearchParams={updateSortSearchParams}
-              sortField={JudgePayoutRewardSorting.TRANSFER_TX_HASH}
-              searchParamsUpdaters={[updatePageSearchParams(1)]}
-            />
+            <TableHead>
+              <span className="text-bodyM text-grey-40">Payout Date</span>
+            </TableHead>
+            <TableHead title="Transfer TX Hash">
+              <span className="text-bodyM text-grey-40">Transfer TX Hash</span>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="[&_tr]:border-b-0">
           {rewards.data.map((reward) => (
-            <JudgeRewardsPayoutTableRow key={reward.id} reward={reward} />
+            <JudgeRewardsPayoutTableRow key={reward.user?.id} reward={reward} />
           ))}
         </TableBody>
       </Table>

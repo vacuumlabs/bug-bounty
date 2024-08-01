@@ -46,7 +46,7 @@ export const formatTimeRemaining = (endDate: Date) => {
 }
 
 export const formatTxHash = (
-  txHash: string | null,
+  txHash: string | null | undefined,
   startChars = 6,
   endChars = 6,
 ) => {
