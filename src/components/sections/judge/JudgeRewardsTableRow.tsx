@@ -27,7 +27,11 @@ const JudgeRewardsTableRow = ({rewardContest}: JudgeRewardsTableRowProps) => {
           <Avatar>
             <AvatarImage src={cardanoLogo.src} />
           </Avatar>
-          <span className="text-titleS">{rewardContest.title}</span>
+          <Link
+            href={PATHS.judgeContestDetails(rewardContest.id)}
+            className="text-titleS">
+            {rewardContest.title}
+          </Link>
         </div>
       </TableCell>
 
