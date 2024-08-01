@@ -4,7 +4,12 @@ import {Clipboard} from 'lucide-react'
 import {Button} from '@/components/ui/Button'
 import {TableCell, TableRow} from '@/components/ui/Table'
 import {usePayReward} from '@/lib/queries/reward/payReward'
-import {formatAda, formatDate, formatTxHash} from '@/lib/utils/common/format'
+import {
+  formatAda,
+  formatAddress,
+  formatDate,
+  formatTxHash,
+} from '@/lib/utils/common/format'
 import {RewardsPayout} from '@/server/actions/reward/getReward'
 import {toast} from '@/components/ui/Toast'
 
@@ -31,7 +36,7 @@ const JudgeRewardsPayoutTableRow = ({
     await navigator.clipboard.writeText(reward.user.walletAddress)
     toast({
       title: 'Copied to Clipboard',
-      description: `Wallet address ${formatTxHash(reward.user.walletAddress)} copied to clipboard`,
+      description: `Wallet address ${formatAddress(reward.user.walletAddress)} copied to clipboard`,
     })
   }
 
@@ -43,7 +48,7 @@ const JudgeRewardsPayoutTableRow = ({
       <TableCell className="text-bodyM">{reward.user?.email ?? '-'}</TableCell>
       <TableCell className="text-bodyM">
         <div className="flex items-center gap-2">
-          {formatTxHash(reward.user?.walletAddress)}
+          {formatAddress(reward.user?.walletAddress)}
           <Button variant="ghost" onClick={copyWalletAddress}>
             <Clipboard width={16} height={16} />
           </Button>

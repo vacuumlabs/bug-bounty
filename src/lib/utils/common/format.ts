@@ -56,3 +56,15 @@ export const formatTxHash = (
 
   return `${txHash.slice(0, startChars)}..${txHash.slice(-endChars)}`
 }
+
+export const formatAddress = (
+  address: string | null | undefined,
+  startChars = 9,
+  endChars = 4,
+) => {
+  if (!address) {
+    return '-'
+  }
+
+  return `${address.slice(0, startChars)}..${address.slice(-endChars)}`
+}
