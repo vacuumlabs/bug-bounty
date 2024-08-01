@@ -19,10 +19,6 @@ const payReward = async (
     await getRewardPaymentDetails(contestId, userId),
   )
 
-  if (!receiverAddress) {
-    throw new Error("The auditor hasn't added his wallet address yet.")
-  }
-
   const tx = new Transaction({initiator: wallet}).sendLovelace(
     {address: receiverAddress},
     amount,

@@ -23,32 +23,35 @@ const JudgeRewardsPayoutTableRow = ({
   const {mutate, isPending} = usePayReward()
 
   const payReward = () => {
-    if (!reward.rewardDetails[0]?.contest.id || !reward.user?.id) return
+    if (!reward.rewardDetails[0]?.contest.id || !reward.userDetails[0]?.id)
+      return
 
     mutate({
       contestId: reward.rewardDetails[0]?.contest.id,
-      userId: reward.user.id,
+      userId: reward.userDetails[0]?.id,
     })
   }
 
   const copyWalletAddress = async () => {
-    if (!reward.user?.walletAddress) return
-    await navigator.clipboard.writeText(reward.user.walletAddress)
+    if (!reward.rewardWalletAddress) return
+    await navigator.clipboard.writeText(reward.rewardWalletAddress)
     toast({
       title: 'Copied to Clipboard',
-      description: `Wallet address ${formatAddress(reward.user.walletAddress)} copied to clipboard`,
+      description: `Wallet address ${formatAddress(reward.rewardWalletAddress)} copied to clipboard`,
     })
   }
 
   return (
     <TableRow>
       <TableCell className="text-titleS">
-        {reward.user?.name ?? reward.user?.alias ?? '-'}
+        {reward.userDetails[0]?.name ?? reward.userDetails[0]?.alias ?? '-'}
       </TableCell>
-      <TableCell className="text-bodyM">{reward.user?.email ?? '-'}</TableCell>
+      <TableCell className="text-bodyM">
+        {reward.userDetails[0]?.email ?? '-'}
+      </TableCell>
       <TableCell className="text-bodyM">
         <div className="flex items-center gap-2">
-          {formatAddress(reward.user?.walletAddress)}
+          {formatAddress(reward.rewardWalletAddress)}
           <Button variant="ghost" onClick={copyWalletAddress}>
             <Clipboard width={16} height={16} />
           </Button>

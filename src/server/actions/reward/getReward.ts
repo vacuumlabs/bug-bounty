@@ -38,13 +38,13 @@ export const getRewardPaymentDetailsAction = async (
   const reward = await db
     .select({
       amount: sum(rewards.amount),
-      userWalletAddress: users.walletAddress,
+      userWalletAddress: findings.rewardWalletAddress,
     })
     .from(rewards)
     .leftJoin(users, eq(rewards.userId, users.id))
     .leftJoin(findings, eq(rewards.findingId, findings.id))
     .leftJoin(contests, eq(findings.contestId, contests.id))
-    .groupBy(users.id)
+    .groupBy(findings.rewardWalletAddress)
     .where(
       and(
         eq(rewards.userId, userId),
@@ -61,6 +61,10 @@ export const getRewardPaymentDetailsAction = async (
 
   if (!userReward.amount) {
     throw new ServerError('Reward amount not found')
+  }
+
+  if (!userReward.userWalletAddress) {
+    throw new ServerError('Finding reward wallet address not found')
   }
 
   return {
@@ -93,6 +97,14 @@ type RewardDetail = {
   }
 }
 
+type UserDetail = {
+  id: string
+  name: string
+  walletAddress: string
+  alias: string
+  email: string
+}
+
 const getRewardsPayoutAction = async ({
   contestId,
   pageParams: {limit, offset = 0},
@@ -121,26 +133,21 @@ const getRewardsPayoutAction = async ({
           'title', ${contests.title}
         )
       ))`.as('rewardDetails'),
-      user: {
-        id: users.id,
-        name: users.name,
-        walletAddress: users.walletAddress,
-        alias: users.alias,
-        email: users.email,
-      },
+      rewardWalletAddress: findings.rewardWalletAddress,
+      userDetails: sql<UserDetail[]>`json_agg(json_build_object(
+        'id', ${users.id},
+        'name', ${users.name},
+        'walletAddress', ${users.walletAddress},
+        'alias', ${users.alias},
+        'email', ${users.email}
+      ))`.as('userDetails'),
     })
     .from(rewards)
     .leftJoin(users, eq(rewards.userId, users.id))
     .leftJoin(findings, eq(rewards.findingId, findings.id))
     .leftJoin(contests, eq(findings.contestId, contests.id))
     .where(eq(contests.id, contestId))
-    .groupBy(
-      users.id,
-      users.name,
-      users.walletAddress,
-      users.alias,
-      users.email,
-    )
+    .groupBy(findings.rewardWalletAddress)
     .limit(limit)
     .offset(offset)
     .orderBy(

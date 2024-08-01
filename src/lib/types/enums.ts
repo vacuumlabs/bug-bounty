@@ -56,10 +56,8 @@ export enum JudgeRewardSorting {
 }
 
 export enum JudgePayoutRewardSorting {
-  USER_NAME = 'userName',
-  USER_EMAIL = 'userEmail',
-  WALLET_ADDRESS = 'walletAddress',
   AMOUNT = 'amount',
+  WALLET_ADDRESS = 'walletAddress',
 }
 
 export enum MyFindingsSorting {

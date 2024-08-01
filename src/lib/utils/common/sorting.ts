@@ -15,7 +15,6 @@ import {
 import {rewards} from '@/server/db/schema/reward'
 import {findings} from '@/server/db/schema/finding'
 import {ContestStatus, FindingSeverity, FindingStatus} from '@/server/db/models'
-import {users} from '@/server/db/schema/user'
 
 export type SortParams<T extends string> = {
   direction: SortDirection
@@ -106,10 +105,8 @@ export const judgeRewardSortFieldMap = {
 }
 
 export const judgeRewardPayoutSortFieldMap = {
-  [JudgePayoutRewardSorting.USER_NAME]: users.name,
-  [JudgePayoutRewardSorting.USER_EMAIL]: users.email,
-  [JudgePayoutRewardSorting.WALLET_ADDRESS]: users.walletAddress,
   [JudgePayoutRewardSorting.AMOUNT]: sum(rewards.amount),
+  [JudgePayoutRewardSorting.WALLET_ADDRESS]: findings.rewardWalletAddress,
 }
 
 export const myFindingsRewardsSortFieldMap = {

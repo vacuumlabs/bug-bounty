@@ -84,20 +84,12 @@ const JudgeRewardsPayoutTable = ({contestId}: JudgeRewardsPayoutTableProps) => {
       <Table className="mt-8 border-separate border-spacing-y-6">
         <TableHeader className="[&_tr]:border-b-0">
           <TableRow>
-            <TableHeadWithSort
-              title="User"
-              sortParams={sortParams}
-              updateSortSearchParams={updateSortSearchParams}
-              sortField={JudgePayoutRewardSorting.USER_NAME}
-              searchParamsUpdaters={[updatePageSearchParams(1)]}
-            />
-            <TableHeadWithSort
-              title="User Email"
-              sortParams={sortParams}
-              updateSortSearchParams={updateSortSearchParams}
-              sortField={JudgePayoutRewardSorting.USER_EMAIL}
-              searchParamsUpdaters={[updatePageSearchParams(1)]}
-            />
+            <TableHead>
+              <span className="text-bodyM text-grey-40">User</span>
+            </TableHead>
+            <TableHead>
+              <span className="text-bodyM text-grey-40">User Email</span>
+            </TableHead>
             <TableHeadWithSort
               title="Wallet Address"
               sortParams={sortParams}
@@ -122,7 +114,10 @@ const JudgeRewardsPayoutTable = ({contestId}: JudgeRewardsPayoutTableProps) => {
         </TableHeader>
         <TableBody className="[&_tr]:border-b-0">
           {rewards.data.map((reward) => (
-            <JudgeRewardsPayoutTableRow key={reward.user?.id} reward={reward} />
+            <JudgeRewardsPayoutTableRow
+              key={reward.rewardWalletAddress}
+              reward={reward}
+            />
           ))}
         </TableBody>
       </Table>
