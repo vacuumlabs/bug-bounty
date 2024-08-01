@@ -1,10 +1,12 @@
 import Link from 'next/link'
+import {Clipboard} from 'lucide-react'
 
 import {Button} from '@/components/ui/Button'
 import {TableCell, TableRow} from '@/components/ui/Table'
 import {usePayReward} from '@/lib/queries/reward/payReward'
 import {formatAda, formatDate, formatTxHash} from '@/lib/utils/common/format'
 import {RewardsPayout} from '@/server/actions/reward/getReward'
+import {toast} from '@/components/ui/Toast'
 
 type JudgeRewardsPayoutTableRowProps = {
   reward: RewardsPayout
@@ -24,6 +26,15 @@ const JudgeRewardsPayoutTableRow = ({
     })
   }
 
+  const copyWalletAddress = async () => {
+    if (!reward.user?.walletAddress) return
+    await navigator.clipboard.writeText(reward.user.walletAddress)
+    toast({
+      title: 'Copied to Clipboard',
+      description: `Wallet address ${formatTxHash(reward.user.walletAddress)} copied to clipboard`,
+    })
+  }
+
   return (
     <TableRow>
       <TableCell className="text-titleS">
@@ -31,7 +42,12 @@ const JudgeRewardsPayoutTableRow = ({
       </TableCell>
       <TableCell className="text-bodyM">{reward.user?.email ?? '-'}</TableCell>
       <TableCell className="text-bodyM">
-        {reward.user?.walletAddress ?? '-'}
+        <div className="flex items-center gap-2">
+          {formatTxHash(reward.user?.walletAddress)}
+          <Button variant="ghost" onClick={copyWalletAddress}>
+            <Clipboard width={16} height={16} />
+          </Button>
+        </div>
       </TableCell>
       <TableCell className="text-bodyM">
         {reward.totalAmount ? formatAda(reward.totalAmount) : '-'}
