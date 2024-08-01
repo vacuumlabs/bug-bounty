@@ -19,8 +19,6 @@ const payReward = async (
     await getRewardPaymentDetails(contestId, userId),
   )
 
-  console.log('receiverAddress', receiverAddress, 'amount', amount)
-
   if (!receiverAddress) {
     throw new Error("The auditor hasn't added his wallet address yet.")
   }
