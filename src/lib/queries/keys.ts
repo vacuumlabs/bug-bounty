@@ -1,6 +1,5 @@
 import {createQueryKeyStore} from '@lukemorales/query-key-factory'
 
-import {type GetRewardsParams} from '@/server/actions/reward/getReward'
 import {type GetPublicContestsParams} from '@/server/actions/contest/getPublicContests'
 import {type GetDeduplicatedFindingsParams} from '@/server/actions/deduplicatedFinding/getDeduplicatedFinding'
 import {
@@ -23,13 +22,14 @@ import {
 } from '@/server/actions/finding/getFinding'
 import {GetJudgeContestsParams} from '@/server/actions/contest/getJudgeContests'
 import {GetJudgeRewardsParams} from '@/server/actions/reward/getJudgeRewards'
+import {GetRewardsPayoutParams} from '@/server/actions/reward/getReward'
 
 export const queryKeys = createQueryKeyStore({
   users: {
     detail: (userId: string | undefined) => [userId],
   },
   rewards: {
-    all: (params: GetRewardsParams) => [params],
+    toPayout: (params: GetRewardsPayoutParams) => [params],
     mine: (userId: string | undefined, params: GetMyFindingsRewardsParams) => [
       userId,
       params,

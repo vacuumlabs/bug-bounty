@@ -55,6 +55,11 @@ export enum JudgeRewardSorting {
   END_DATE = 'endDate',
 }
 
+export enum JudgePayoutRewardSorting {
+  AMOUNT = 'amount',
+  WALLET_ADDRESS = 'walletAddress',
+}
+
 export enum MyFindingsSorting {
   PROJECT = 'project',
   FINDING = 'finding',

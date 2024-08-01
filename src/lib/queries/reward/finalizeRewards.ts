@@ -17,7 +17,7 @@ export const useFinalizeRewards = (
     mutationFn: withApiErrorHandler(finalizeRewards),
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: queryKeys.rewards.all._def,
+        queryKey: queryKeys.rewards._def,
       })
       void queryClient.invalidateQueries({
         queryKey: queryKeys.contests._def,

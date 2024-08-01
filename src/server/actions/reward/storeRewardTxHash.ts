@@ -1,6 +1,6 @@
 'use server'
 
-import {eq} from 'drizzle-orm'
+import {and, eq, inArray, isNull} from 'drizzle-orm'
 import {z} from 'zod'
 
 import {db} from '../../db'
@@ -9,9 +9,12 @@ import {requireJudgeServerSession} from '../../utils/auth'
 
 import {serializeServerErrors} from '@/lib/utils/common/error'
 import {ServerError} from '@/lib/types/error'
+import {findings} from '@/server/db/schema/finding'
+import {contests} from '@/server/db/schema/contest'
 
 const storeRewardTxHashSchema = z.object({
-  rewardId: z.string().uuid(),
+  contestId: z.string().uuid(),
+  userId: z.string().uuid(),
   txHash: z.string().min(1),
 })
 
@@ -21,15 +24,36 @@ export const storeRewardTxHashAction = async (
   request: StoreRewardTxHashRequest,
 ) => {
   await requireJudgeServerSession()
-  const {rewardId, txHash} = storeRewardTxHashSchema.parse(request)
+  const {contestId, userId, txHash} = storeRewardTxHashSchema.parse(request)
 
-  const reward = await db.query.rewards.findFirst({
-    where: (rewards, {eq}) => eq(rewards.id, rewardId),
-  })
+  const reward = await db
+    .select({
+      userId: rewards.userId,
+    })
+    .from(rewards)
+    .leftJoin(findings, eq(rewards.findingId, findings.id))
+    .leftJoin(contests, eq(findings.contestId, contests.id))
+    .groupBy(rewards.userId)
+    .where(
+      and(
+        eq(contests.id, contestId),
+        eq(rewards.userId, userId),
+        isNull(rewards.transferTxHash),
+      ),
+    )
 
-  if (!reward) {
+  if (reward.length === 0) {
     throw new ServerError('Reward not found.')
   }
+
+  const contestRewards = await db
+    .select({id: rewards.id})
+    .from(rewards)
+    .leftJoin(findings, eq(rewards.findingId, findings.id))
+    .leftJoin(contests, eq(findings.contestId, contests.id))
+    .where(and(eq(contests.id, contestId)))
+
+  const contestRewardIds = contestRewards.map((r) => r.id)
 
   return db
     .update(rewards)
@@ -37,7 +61,13 @@ export const storeRewardTxHashAction = async (
       transferTxHash: txHash,
       payoutDate: new Date(),
     })
-    .where(eq(rewards.id, rewardId))
+    .where(
+      and(
+        inArray(rewards.id, contestRewardIds),
+        eq(rewards.userId, userId),
+        isNull(rewards.transferTxHash),
+      ),
+    )
     .returning()
 }
 

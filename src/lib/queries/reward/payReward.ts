@@ -9,21 +9,15 @@ import {storeRewardTxHash} from '@/server/actions/reward/storeRewardTxHash'
 import {getRewardPaymentDetails} from '@/server/actions/reward/getReward'
 import {handleApiErrors} from '@/lib/utils/common/error'
 
-const payReward = async (browserWallet: BrowserWallet, rewardId: string) => {
+const payReward = async (
+  browserWallet: BrowserWallet,
+  contestId: string,
+  userId: string,
+) => {
   const wallet = await requireConnectedWallet(browserWallet)
-
-  const {
-    amount,
-    walletAddress: receiverAddress,
-    transferTxHash,
-  } = handleApiErrors(await getRewardPaymentDetails(rewardId))
-
-  if (!receiverAddress) {
-    throw new Error("The auditor hasn't added his wallet address yet.")
-  }
-  if (transferTxHash) {
-    throw new Error('Reward already paid.')
-  }
+  const {amount, walletAddress: receiverAddress} = handleApiErrors(
+    await getRewardPaymentDetails(contestId, userId),
+  )
 
   const tx = new Transaction({initiator: wallet}).sendLovelace(
     {address: receiverAddress},
@@ -33,7 +27,7 @@ const payReward = async (browserWallet: BrowserWallet, rewardId: string) => {
   const signedTx = await wallet.signTx(unsignedTx)
   const txHash = await wallet.submitTx(signedTx)
 
-  const result = await storeRewardTxHash({rewardId, txHash})
+  const result = await storeRewardTxHash({contestId, userId, txHash})
   return handleApiErrors(result)
 }
 
@@ -42,9 +36,15 @@ export const usePayReward = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (rewardId: string) => payReward(wallet, rewardId),
+    mutationFn: ({contestId, userId}: {contestId: string; userId: string}) =>
+      payReward(wallet, contestId, userId),
     onSuccess: () => {
-      void queryClient.invalidateQueries({queryKey: queryKeys.rewards.all._def})
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.rewards._def,
+      })
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.findings._def,
+      })
     },
   })
 }

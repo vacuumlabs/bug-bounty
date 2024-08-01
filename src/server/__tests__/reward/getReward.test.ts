@@ -6,7 +6,7 @@ import {eq} from 'drizzle-orm'
 import {faker} from '@faker-js/faker'
 
 import {trunacateDb} from '../utils/db'
-import {expectAnyDate, expectAnyString} from '../utils/expect'
+import {expectAnyDate} from '../utils/expect'
 
 import {
   ContestStatus,
@@ -21,8 +21,8 @@ import {InsertContestSeverityWeights} from '@/server/db/schema/contestSeverityWe
 import {InsertFinding} from '@/server/db/schema/finding'
 import {InsertDeduplicatedFinding} from '@/server/db/schema/deduplicatedFinding'
 import {InsertReward} from '@/server/db/schema/reward'
-import {getRewards} from '@/server/actions/reward/getReward'
 import {TEST_WALLET_ADDRESS} from '@/server/utils/test'
+import {getJudgeRewardsAction} from '@/server/actions/reward/getJudgeRewards'
 
 const judgeId = uuidv4()
 const contestId = uuidv4()
@@ -38,7 +38,7 @@ const contestToInsert: InsertContest = {
   rewardsAmount: '1000',
   customConditions: 'There are four custom conditions.',
   filesInScope: faker.helpers.multiple(() => faker.internet.url()),
-  status: ContestStatus.PENDING,
+  status: ContestStatus.FINISHED,
   distributedRewardsAmount: '0',
   startDate: subDays(new Date(), 7),
   endDate: subDays(new Date(), 1),
@@ -157,29 +157,39 @@ describe('getReward', () => {
     // Insert rewards
     await db.insert(schema.rewards).values(rewardToInsert)
 
-    const result = await getRewards({
-      findingId: finding1Id,
-      limit: 10,
+    const result = await getJudgeRewardsAction({
+      pageParams: {limit: 10},
+      sort: undefined,
     })
 
-    expect(result).toEqual([
-      {
-        user: {
-          name: 'finding1Author',
-          alias: 'finding1Author',
-          image: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d',
-          walletAddress:
-            'addr1qx2fxv4am9j0dmqscsk8y8sm9f2fsrxslt7vft5hpm7euv9u7a6xs07hs92m60fyzhqjfj83uw97rf5vmrsjnsw8d35s6f4vlg',
+    expect(result).toEqual({
+      data: [
+        {
+          authorId: contestAuthorId,
+          createdAt: expectAnyDate,
+          updatedAt: expectAnyDate,
+          customConditions: contestToInsert.customConditions,
+          description: contestToInsert.description,
+          distributedRewardsAmount: contestToInsert.distributedRewardsAmount,
+          startDate: contestToInsert.startDate,
+          endDate: contestToInsert.endDate,
+          filesInScope: contestToInsert.filesInScope,
+          id: contestId,
+          knownIssuesDescription: null,
+          projectCategory: null,
+          projectLanguage: null,
+          repoBranch: contestToInsert.repoBranch,
+          repoUrl: contestToInsert.repoUrl,
+          rewardsAmount: contestToInsert.rewardsAmount,
+          rewardsTransferAddress: null,
+          rewardsTransferTxHash: null,
+          status: contestToInsert.status,
+          title: contestToInsert.title,
         },
-        id: expectAnyString,
-        userId: finding1AuthorId,
-        createdAt: expectAnyDate,
-        updatedAt: expectAnyDate,
-        amount: '1000',
-        findingId: finding1Id,
-        payoutDate: null,
-        transferTxHash: null,
+      ],
+      pageParams: {
+        totalCount: 1,
       },
-    ])
+    })
   })
 })

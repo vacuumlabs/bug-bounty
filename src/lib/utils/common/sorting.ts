@@ -1,4 +1,4 @@
-import {AnyColumn, SQLWrapper, asc, desc, sql} from 'drizzle-orm'
+import {AnyColumn, SQLWrapper, asc, desc, sql, sum} from 'drizzle-orm'
 
 import {translateEnum} from './enums'
 
@@ -6,6 +6,7 @@ import {contests} from '@/server/db/schema/contest'
 import {
   ContestSorting,
   JudgeContestSorting,
+  JudgePayoutRewardSorting,
   JudgeRewardSorting,
   MyFindingsRewardsSorting,
   MyFindingsSorting,
@@ -101,6 +102,11 @@ export const judgeRewardSortFieldMap = {
   [JudgeRewardSorting.REWARDS_AMOUNT]: contests.distributedRewardsAmount,
   [JudgeRewardSorting.END_DATE]: contests.endDate,
   [JudgeRewardSorting.TRANSFER_TX]: contests.rewardsTransferTxHash,
+}
+
+export const judgeRewardPayoutSortFieldMap = {
+  [JudgePayoutRewardSorting.AMOUNT]: sum(rewards.amount),
+  [JudgePayoutRewardSorting.WALLET_ADDRESS]: findings.rewardWalletAddress,
 }
 
 export const myFindingsRewardsSortFieldMap = {

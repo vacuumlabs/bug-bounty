@@ -46,7 +46,7 @@ export const formatTimeRemaining = (endDate: Date) => {
 }
 
 export const formatTxHash = (
-  txHash: string | null,
+  txHash: string | null | undefined,
   startChars = 6,
   endChars = 6,
 ) => {
@@ -55,4 +55,16 @@ export const formatTxHash = (
   }
 
   return `${txHash.slice(0, startChars)}..${txHash.slice(-endChars)}`
+}
+
+export const formatAddress = (
+  address: string | null | undefined,
+  startChars = 9,
+  endChars = 4,
+) => {
+  if (!address) {
+    return '-'
+  }
+
+  return `${address.slice(0, startChars)}..${address.slice(-endChars)}`
 }
