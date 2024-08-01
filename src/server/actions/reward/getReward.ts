@@ -3,7 +3,7 @@ import {and, countDistinct, eq, isNull, sql, sum} from 'drizzle-orm'
 
 import {db} from '../../db'
 
-import {getApiError, serializeServerErrors} from '@/lib/utils/common/error'
+import {serializeServerErrors} from '@/lib/utils/common/error'
 import {rewards} from '@/server/db/schema/reward'
 import {findings} from '@/server/db/schema/finding'
 import {contests} from '@/server/db/schema/contest'
@@ -17,19 +17,21 @@ import {
 } from '@/lib/utils/common/sorting'
 import {JudgePayoutRewardSorting, SortDirection} from '@/lib/types/enums'
 
-export const getReward = async (id: string) => {
+export const getRewardAction = async (id: string) => {
   const reward = await db.query.rewards.findFirst({
     where: (reward, {eq}) => eq(reward.id, id),
   })
 
   if (!reward) {
-    return getApiError('Reward not found')
+    throw new ServerError('Reward not found')
   }
 
   return reward
 }
 
-export const getRewardPaymentDetails = async (
+export const getReward = serializeServerErrors(getRewardAction)
+
+export const getRewardPaymentDetailsAction = async (
   contestId: string,
   userId: string,
 ) => {
@@ -54,11 +56,11 @@ export const getRewardPaymentDetails = async (
   const userReward = reward[0]
 
   if (!userReward) {
-    return getApiError('Reward not found')
+    throw new ServerError('Reward not found')
   }
 
   if (!userReward.amount) {
-    return getApiError('Reward amount not found')
+    throw new ServerError('Reward amount not found')
   }
 
   return {
@@ -66,6 +68,10 @@ export const getRewardPaymentDetails = async (
     walletAddress: userReward.userWalletAddress,
   }
 }
+
+export const getRewardPaymentDetails = serializeServerErrors(
+  getRewardPaymentDetailsAction,
+)
 
 export type GetRewardsPayoutParams = PaginatedParams<
   {
