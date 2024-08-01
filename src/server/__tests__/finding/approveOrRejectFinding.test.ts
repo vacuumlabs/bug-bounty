@@ -40,7 +40,7 @@ const contestRequest: InsertContest = {
   filesInScope: faker.helpers.multiple(() => faker.internet.url()),
   projectCategory: [ProjectCategory.DEFI, ProjectCategory.INFRASTRUCTURE],
   projectLanguage: [ProjectLanguage.AIKEN],
-  status: ContestStatus.PENDING,
+  status: ContestStatus.APPROVED,
   distributedRewardsAmount: '0',
   startDate: subDays(new Date(), 3),
   endDate: subDays(new Date(), 1),
@@ -117,7 +117,9 @@ describe('approveOrRejectFinding', () => {
 
     await expect(async () => {
       await approveOrRejectFindingAction(approveRequest)
-    }).rejects.toThrowError('Only pending findings can be approved/rejected.')
+    }).rejects.toThrowError(
+      'Only findings of non-finalized approved contests can be approved/rejected.',
+    )
   })
 
   it('approves a finding successfully', async () => {

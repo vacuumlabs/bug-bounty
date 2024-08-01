@@ -1,6 +1,6 @@
 'use server'
 
-import {and, eq, isNull} from 'drizzle-orm'
+import {and, eq, inArray, isNull} from 'drizzle-orm'
 import {z} from 'zod'
 
 import {db} from '../../db'
@@ -43,8 +43,17 @@ export const storeRewardTxHashAction = async (
     )
 
   if (reward.length === 0) {
-    throw new ServerError('Reward not found')
+    throw new ServerError('Reward not found.')
   }
+
+  const contestRewards = await db
+    .select({id: rewards.id})
+    .from(rewards)
+    .leftJoin(findings, eq(rewards.findingId, findings.id))
+    .leftJoin(contests, eq(findings.contestId, contests.id))
+    .where(and(eq(contests.id, contestId)))
+
+  const contestRewardIds = contestRewards.map((r) => r.id)
 
   return db
     .update(rewards)
@@ -54,7 +63,7 @@ export const storeRewardTxHashAction = async (
     })
     .where(
       and(
-        eq(contests.id, contestId),
+        inArray(rewards.id, contestRewardIds),
         eq(rewards.userId, userId),
         isNull(rewards.transferTxHash),
       ),
