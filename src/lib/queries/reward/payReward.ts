@@ -46,7 +46,10 @@ export const usePayReward = () => {
       payReward(wallet, contestId, userId),
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: queryKeys.rewards.toPayout._def,
+        queryKey: queryKeys.rewards._def,
+      })
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.findings._def,
       })
     },
   })
