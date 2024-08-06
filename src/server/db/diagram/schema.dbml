@@ -27,20 +27,21 @@ table contest {
   name varchar(255) [not null]
   repoUrl varchar(255) [not null]
   repoBranch varchar(255) [not null]
-  filesInScope "varchar(255)[]"
+  filesInScope "varchar(255)[]" [not null]
   description text [not null]
   customConditions text
   projectLanguage "varchar(32)[]"
   projectCategory "varchar(32)[]"
   rewardsAmount "numeric(20, 0)" [not null]
+  rewardsTransferAddress char(128)
   rewardsTransferTxHash char(64)
   distributedRewardsAmount "numeric(20, 0)"
   knownIssuesDescription text
   startDate timestamp [not null]
   endDate timestamp [not null]
   status varchar(32) [not null]
-  createdAt timestamp [default: `CURRENT_TIMESTAMP`]
-  updatedAt timestamp [default: `CURRENT_TIMESTAMP`]
+  createdAt timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updatedAt timestamp [not null, default: `CURRENT_TIMESTAMP`]
 
   indexes {
     authorId [name: 'contest_authordId_idx']
@@ -86,11 +87,13 @@ table finding {
   deduplicatedFindingId uuid
   name varchar(255) [not null]
   description text [not null]
-  targetFileUrl varchar(255) [not null]
+  proofOfConcept text
+  affectedFiles "varchar(255)[]" [not null]
   severity varchar(8) [not null]
+  rewardWalletAddress varchar(255) [not null]
   status varchar(8) [not null]
-  createdAt timestamp [default: `CURRENT_TIMESTAMP`]
-  updatedAt timestamp [default: `CURRENT_TIMESTAMP`]
+  createdAt timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updatedAt timestamp [not null, default: `CURRENT_TIMESTAMP`]
 
   indexes {
     authorId [name: 'finding_authorId_idx']
@@ -105,6 +108,7 @@ table findingAttachment {
   id uuid [pk, not null, default: `gen_random_uuid()`]
   findingId uuid [not null]
   url varchar(255) [not null]
+  fileName varchar(255) [not null]
   mimeType varchar(255)
   createdAt timestamp [default: `CURRENT_TIMESTAMP`]
   updatedAt timestamp [default: `CURRENT_TIMESTAMP`]
@@ -160,7 +164,7 @@ table user {
   id uuid [pk, not null, default: `gen_random_uuid()`]
   name varchar(255)
   alias varchar(255) [unique]
-  role varchar(8) [not null, default: 'auditor']
+  role varchar(24)
   walletAddress varchar(255)
   email varchar(255) [not null]
   emailVerified timestamp [default: `CURRENT_TIMESTAMP`]
