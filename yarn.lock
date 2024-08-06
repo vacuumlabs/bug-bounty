@@ -3404,12 +3404,12 @@ domutils@^3.0.1:
     domelementtype "^2.3.0"
     domhandler "^5.0.3"
 
-drizzle-dbml-generator@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/drizzle-dbml-generator/-/drizzle-dbml-generator-0.6.1.tgz#deec8ef8bbbd937ccade604586131d6c1d3a3b17"
-  integrity sha512-Ax5lknrB2lMsrpsx1jSiMHCyKnROSKqhJNi4o7l/NDfKzq1NeGJ0Vts3Y8v+6sdrENvTnTzrV8Nd6xIW8cTv0w==
+drizzle-dbml-generator@0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/drizzle-dbml-generator/-/drizzle-dbml-generator-0.8.0.tgz#bf26e5bbd85d16ed195ba98439db327c4834cc19"
+  integrity sha512-aNKsjKrpkYPTzOozzPh9kUp2QIS/YG3on0j2IrR7yRD+/hb/vdj5bPA5mj6MxyAGHnTxBIYrCJnSIeFS7p9grw==
   dependencies:
-    drizzle-orm "^0.29.0"
+    drizzle-orm "^0.32.0"
 
 drizzle-kit@^0.23.0:
   version "0.23.0"
@@ -3419,11 +3419,6 @@ drizzle-kit@^0.23.0:
     "@esbuild-kit/esm-loader" "^2.5.5"
     esbuild "^0.19.7"
     esbuild-register "^3.5.0"
-
-drizzle-orm@^0.29.0:
-  version "0.29.5"
-  resolved "https://registry.yarnpkg.com/drizzle-orm/-/drizzle-orm-0.29.5.tgz#b82bb6d67101fff9438dacd4b09e9cd23109f49c"
-  integrity sha512-jS3+uyzTz4P0Y2CICx8FmRQ1eplURPaIMWDn/yq6k4ShRFj9V7vlJk67lSf2kyYPzQ60GkkNGXcJcwrxZ6QCRw==
 
 drizzle-orm@^0.32.0:
   version "0.32.0"
