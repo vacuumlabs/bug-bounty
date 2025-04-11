@@ -35,6 +35,7 @@ import {useAddContestRewardsTransferTxHash} from '@/lib/queries/contest/editCont
 import {toast} from '@/components/ui/Toast'
 import {Input} from '@/components/ui/Input'
 import {ContestStatus, UserRole} from '@/server/db/models'
+import MarkdownPreview from '@/components/markdown/MarkdownPreview'
 
 type ContestInfoProps = {
   contest: Contest
@@ -117,7 +118,10 @@ const ContestInfo = ({
 
       <div className="mb-12 flex flex-col gap-3">
         <h3 className="text-bodyL text-purple-light">Description</h3>
-        <p className="text-bodyM">{contest.description}</p>
+        <MarkdownPreview
+          className="border-none px-0 py-0 text-bodyM"
+          doc={contest.description}
+        />
       </div>
 
       <div className="mb-12 flex flex-col gap-3">
