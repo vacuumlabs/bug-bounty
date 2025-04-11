@@ -66,7 +66,7 @@ export const queryKeys = createQueryKeyStore({
     totalSize: (contestId: string) => [contestId],
   },
   gitHub: {
-    publicRepos: (userId: string | undefined) => [userId],
+    publicRepos: (userId: string | undefined, page: number) => [userId, page],
     repoBranches: (params: GetRepoBranchesParams | undefined) => [params],
     repoFiles: (params: GetRepoFilesParams | undefined) => [params],
   },
