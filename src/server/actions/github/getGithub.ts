@@ -10,18 +10,29 @@ export type GetPublicReposResponse = Awaited<
   ReturnType<typeof getPublicReposAction>
 >
 
-export type GithubRepository = GetPublicReposResponse[number]
+export type GithubRepository = GetPublicReposResponse['repos'][number]
 
-const getPublicReposAction = async () => {
+const getPublicReposSchema = z.object({
+  page: z.number().default(0),
+})
+
+export type GetPublicReposParams = z.infer<typeof getPublicReposSchema>
+
+const getPublicReposAction = async (request: GetPublicReposParams) => {
   const {account} = await requireGitHubAuth()
 
   const octokit = new Octokit({
     auth: account.access_token,
   })
 
-  const {data} = await octokit.rest.repos.listForAuthenticatedUser()
+  const {data, headers} = await octokit.rest.repos.listForAuthenticatedUser({
+    page: request.page,
+    visibility: 'public',
+    sort: 'updated',
+    per_page: 30,
+  })
 
-  return data
+  const repos = data
     .filter((repo) => !repo.private)
     .map((repo) => ({
       id: repo.id,
@@ -31,6 +42,10 @@ const getPublicReposAction = async () => {
       defaultBranch: repo.default_branch,
       url: repo.html_url,
     }))
+
+  const isLastPage = !headers.link?.includes('rel="next"')
+
+  return {repos, isLastPage}
 }
 
 export const getPublicRepos = serializeServerErrors(getPublicReposAction)

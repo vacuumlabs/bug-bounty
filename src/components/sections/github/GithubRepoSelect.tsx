@@ -1,5 +1,6 @@
 'use client'
 
+import {useState} from 'react'
 import {X} from 'lucide-react'
 import {useSession} from 'next-auth/react'
 
@@ -13,11 +14,17 @@ import {ScrollArea} from '@/components/ui/ScrollArea'
 type RepoListProps = {
   repos: GithubRepository[] | undefined
   isLoading: boolean
+  isFetching: boolean
   selectRepo: (params: GithubRepository) => void
 }
 
-const RepoList = ({repos, isLoading, selectRepo}: RepoListProps) => {
-  if (!repos && isLoading) return <span>Loading...</span>
+const RepoList = ({
+  repos,
+  isLoading,
+  isFetching,
+  selectRepo,
+}: RepoListProps) => {
+  if (isLoading || isFetching) return <span>Loading...</span>
 
   if (!repos || repos.length === 0) return <span>No public repos found</span>
 
@@ -42,9 +49,18 @@ const GithubRepoSelect = ({
   onSelectRepo,
 }: GithubRepoSelectProps) => {
   const session = useSession()
+  const [page, setPage] = useState(1)
 
-  const {data: publicReposData, isLoading: publicReposIsLoading} =
-    useGetPublicRepos()
+  const {
+    data: publicReposResponse,
+    isLoading: publicReposIsLoading,
+    isFetching,
+  } = useGetPublicRepos({page})
+
+  const repos = publicReposResponse?.repos ?? []
+  const isLastPage = publicReposResponse?.isLastPage ?? true
+
+  const hasPrevPage = page > 1
 
   if (session.data?.user.provider !== 'github') {
     return (
@@ -61,12 +77,31 @@ const GithubRepoSelect = ({
           <ScrollArea className="h-96 w-full" thumbClassname="bg-gray-20">
             <div className="flex flex-col items-start">
               <RepoList
-                repos={publicReposData}
+                repos={repos}
                 isLoading={publicReposIsLoading}
                 selectRepo={onSelectRepo}
+                isFetching={isFetching}
               />
             </div>
           </ScrollArea>
+
+          <div className="mt-2 flex w-full items-center justify-between">
+            <Button
+              variant="ghost"
+              disabled={!hasPrevPage || isFetching}
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}>
+              Previous
+            </Button>
+
+            <span className="text-muted-foreground text-sm">Page {page}</span>
+
+            <Button
+              variant="ghost"
+              disabled={isLastPage || isFetching}
+              onClick={() => setPage((prev) => prev + 1)}>
+              Next
+            </Button>
+          </div>
         </div>
       ) : (
         <div>

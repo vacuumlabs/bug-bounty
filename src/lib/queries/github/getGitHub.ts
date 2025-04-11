@@ -4,6 +4,7 @@ import {useSession} from 'next-auth/react'
 import {queryKeys} from '../keys'
 
 import {
+  GetPublicReposParams,
   GetRepoBranchesParams,
   GetRepoFilesParams,
   getPublicRepos,
@@ -13,17 +14,20 @@ import {
 import {useUserId} from '@/lib/hooks/useUserId'
 import {withApiErrorHandler} from '@/lib/utils/common/error'
 
-const getPublicReposQueryOptions = (userId: string | undefined) => ({
-  queryKey: queryKeys.gitHub.publicRepos(userId).queryKey,
-  queryFn: withApiErrorHandler(() => getPublicRepos()),
+const getPublicReposQueryOptions = (
+  userId: string | undefined,
+  page: number,
+) => ({
+  queryKey: queryKeys.gitHub.publicRepos(userId, page).queryKey,
+  queryFn: withApiErrorHandler(() => getPublicRepos({page})),
 })
 
-export const useGetPublicRepos = () => {
+export const useGetPublicRepos = (params: GetPublicReposParams) => {
   const userId = useUserId()
   const session = useSession()
 
   return useQuery({
-    ...getPublicReposQueryOptions(userId),
+    ...getPublicReposQueryOptions(userId, params.page),
     enabled: !!userId && session.data?.user.provider === 'github',
   })
 }
